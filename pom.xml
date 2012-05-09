@@ -6,7 +6,6 @@
     <version>1.424</version>
   </parent>
 
-  <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>embeddable-build-status</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
@@ -24,4 +23,10 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  <scm>
+    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+    <url>http://github.com/jenkinsci/git-plugin</url>
+  </scm>
 </project>

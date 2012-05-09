@@ -16,7 +16,7 @@ public class BadgeAction implements Action {
     }
 
     public String getIconFileName() {
-        return Jenkins.RESOURCE_PATH+"/plugin/gripper/images/24x24/shield.png";
+        return Jenkins.RESOURCE_PATH+"/plugin/embeddable-build-status/images/24x24/shield.png";
     }
 
     public String getDisplayName() {
@@ -48,6 +48,6 @@ public class BadgeAction implements Action {
             break;
         }
 
-        return HttpResponses.redirectViaContextPath(Jenkins.RESOURCE_PATH + "/plugin/gripper/status/" + file);
+        return HttpResponses.redirectViaContextPath(Jenkins.RESOURCE_PATH + "/plugin/embeddable-build-status/status/" + file);
     }
 }

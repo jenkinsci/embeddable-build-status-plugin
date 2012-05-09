@@ -30,7 +30,7 @@ l.layout {
 </style>
 """)
 
-        def base =  "${app.rootUrl}job/${my.project.parent.name}/job/${my.project.name}/";
+        def base =  "${app.rootUrl}${my.project.url}";
         def badge = base + "badge/icon"
         h3 {
             text(_("Image"))
