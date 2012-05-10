@@ -41,6 +41,12 @@ l.layout {
         h3(_("Markdown"))
         input(type:"text",value:"[![Build Status](${badge})](${base})",class:"select-all")
 
+        h3(_("RDoc"))
+        input(type:"text",value:"{<img src='${badge}'/>}[${base}]",class:"select-all")
+
+        h3(_("Textile"))
+        input(type:"text",value:"\"!${badge}!\":${base}",class:"select-all")
+
         h3(_("HTML"))
         input(type:"text",value:"<a href='${base}'><img src='${badge}'></a>",class:"select-all")
 
