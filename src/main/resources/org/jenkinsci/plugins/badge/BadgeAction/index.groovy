@@ -46,5 +46,8 @@ l.layout {
 
         h3(_("Confluence"))
         input(type:"text",value:"[!${badge}!|${base}]",class:"select-all")
+
+        h3(_("XWiki"))
+        input(type:"text",value:"[[image:${badge}>>${base}||target='__new']]",class:"select-all")
     }
 }
