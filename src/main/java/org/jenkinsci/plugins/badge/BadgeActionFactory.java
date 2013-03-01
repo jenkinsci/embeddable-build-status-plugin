@@ -15,13 +15,16 @@ import java.util.Collections;
  */
 @Extension
 public class BadgeActionFactory extends TransientProjectActionFactory {
-    private final StatusImage[] images = new StatusImage[4];
+    private final StatusImage[] images;
 
     public BadgeActionFactory() throws IOException {
-        images[0] = new StatusImage("failure.png");
-        images[1] = new StatusImage("unstable.png");
-        images[2] = new StatusImage("success.png");
-        images[3] = new StatusImage("running.png");
+        images = new StatusImage[] {
+                new StatusImage("failure.png"),
+                new StatusImage("unstable.png"),
+                new StatusImage("success.png"),
+                new StatusImage("running.png"),
+                new StatusImage("unknown.png")
+        };
     }
 
     @Override
@@ -30,7 +33,10 @@ public class BadgeActionFactory extends TransientProjectActionFactory {
     }
 
     public StatusImage getImage(BallColor color) {
-        switch (color.noAnime()) {
+        if (color.isAnimated())
+            return images[3];
+
+        switch (color) {
         case RED:
         case ABORTED:
             return images[0];
@@ -39,7 +45,7 @@ public class BadgeActionFactory extends TransientProjectActionFactory {
         case BLUE:
             return images[2];
         default:
-            return images[3];
+            return images[4];
         }
     }
 
