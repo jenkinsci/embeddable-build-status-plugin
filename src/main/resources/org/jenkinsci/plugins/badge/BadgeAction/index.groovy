@@ -26,6 +26,7 @@ l.layout {
     }
     IMG#badge {
         margin-left:2em;
+        height: 18px;
     }
     h3 p.note {
         font-style: italic;
