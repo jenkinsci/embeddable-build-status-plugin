@@ -19,11 +19,11 @@ public class BadgeActionFactory extends TransientProjectActionFactory {
 
     public BadgeActionFactory() throws IOException {
         images = new StatusImage[] {
-                new StatusImage("failure.png"),
-                new StatusImage("unstable.png"),
-                new StatusImage("success.png"),
-                new StatusImage("running.png"),
-                new StatusImage("unknown.png")
+                new StatusImage("failure@2x.png"),
+                new StatusImage("unstable@2x.png"),
+                new StatusImage("success@2x.png"),
+                new StatusImage("running@2x.png"),
+                new StatusImage("unknown@2x.png")
         };
     }
 
