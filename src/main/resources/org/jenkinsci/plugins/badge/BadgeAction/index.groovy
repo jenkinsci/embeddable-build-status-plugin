@@ -54,7 +54,7 @@ l.layout {
 
         h3 {
             text(_("Markdown"))
-            p(_("mardown_note"),class:"note")
+            p(_("markdown_note"),class:"note")
         }
         b {text(_("protected"))}
         input(type:"text",value:"[![Build Status](${badge})](${base})",class:"select-all")
