@@ -27,6 +27,13 @@ l.layout {
     IMG#badge {
         margin-left:2em;
     }
+    h3 p.note {
+        font-style: italic;
+        font-size: 0.7em;
+        font-weight: normal;
+        display: inline !important;
+        margin-left: 10px;
+    }
 </style>
 """)
 
@@ -38,7 +45,10 @@ l.layout {
         }
         input(type:"text",value:badge,class:"select-all")
 
-        h3(_("Markdown"))
+        h3 {
+            text(_("Markdown"))
+            p(_("mardown_note"),class:"note")
+        }
         input(type:"text",value:"[![Build Status](${badge})](${base})",class:"select-all")
 
         h3(_("HTML"))
