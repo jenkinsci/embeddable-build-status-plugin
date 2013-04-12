@@ -42,12 +42,12 @@ l.layout {
         input(type:"text",value:"[![Build Status](${badge})](${base})",class:"select-all")
 
         h3(_("HTML"))
-        input(type:"text",value:"<a href='${base}'><img src='${badge}'></a>",class:"select-all")
+        input(type:"text",value:"<a href='${base}'><img src='${badge}' height='18' /></a>",class:"select-all")
 
         h3(_("Confluence"))
-        input(type:"text",value:"[!${badge}!|${base}]",class:"select-all")
+        input(type:"text",value:"[!${badge}!height=18px|${base}]",class:"select-all")
 
         h3(_("XWiki"))
-        input(type:"text",value:"[[image:${badge}>>${base}||target='__new']]",class:"select-all")
+        input(type:"text",value:"[[image:${badge}>>${base}||height='18' target='__new']]",class:"select-all")
     }
 }
