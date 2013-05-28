@@ -33,7 +33,8 @@ l.layout {
         def base =  "${app.rootUrl}${my.project.url}";
         def badge = base + "badge/icon"
         
-        def publicbadge = "${app.rootUrl}buildstatus/icon?job=${my.project.name}";
+        def fullJobName = h.escape(my.project.fullName);
+        def publicbadge = "${app.rootUrl}buildStatus/icon?job=${fullJobName}";
         h3 {
             text(_("Image"))
             img(id:"badge",src:badge)

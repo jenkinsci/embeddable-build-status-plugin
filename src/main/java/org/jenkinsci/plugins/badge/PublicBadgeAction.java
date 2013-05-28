@@ -60,7 +60,7 @@ import org.kohsuke.stapler.StaplerResponse;
 @Extension
 public class PublicBadgeAction implements UnprotectedRootAction {
 
-    public static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Permission.READ, PermissionScope.ITEM);
+    final public static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
 
     private final ImageResolver iconResolver;
 
@@ -69,7 +69,7 @@ public class PublicBadgeAction implements UnprotectedRootAction {
     }
 
     public String getUrlName() {
-        return "buildstatus";
+        return "buildStatus";
     }
 
     public String getIconFileName() {
@@ -100,7 +100,7 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         }
 
         // check if user has permission to view the status
-        if(p == null || !(p.hasPermission(VIEW_STATUS) || p.hasPermission(Item.READ))){
+        if(p == null || !(p.hasPermission(VIEW_STATUS))){
             throw HttpResponses.notFound();            
         }
         
