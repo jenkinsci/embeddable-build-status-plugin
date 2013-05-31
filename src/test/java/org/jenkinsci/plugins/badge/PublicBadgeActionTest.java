@@ -25,10 +25,7 @@ package org.jenkinsci.plugins.badge;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import hudson.model.User;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
-import hudson.security.HudsonPrivateSecurityRealm;
 import hudson.security.SecurityRealm;
 
 import java.net.HttpURLConnection;
@@ -87,7 +84,30 @@ public class PublicBadgeActionTest {
         }
     }
 
-    
+    @Test
+    public void validAnonymousViewStatusAccess() throws Exception {
+
+        final SecurityRealm realm = j.createDummySecurityRealm();
+        j.jenkins.setSecurityRealm(realm);
+        GlobalMatrixAuthorizationStrategy auth = new GlobalMatrixAuthorizationStrategy();
+        auth.add(PublicBadgeAction.VIEW_STATUS, "anonymous");
+        j.getInstance().setSecurityRealm(realm);
+        j.getInstance().setAuthorizationStrategy(auth);
+
+        j.createFreeStyleProject("free");
+
+        JenkinsRule.WebClient wc = j.createWebClient();
+        try {
+            // try with wrong job name
+            wc.goTo("buildStatus/icon?job=dummy");
+            fail("should fail, because there is no job with this name");
+        } catch (FailingHttpStatusCodeException x) {
+            assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
+        }
+        
+        wc.goTo("buildStatus/icon?job=free", "image/png");
+    }
+
     @PresetData(PresetData.DataSet.ANONYMOUS_READONLY)
     @Test
     public void validAnonymousAccess() throws Exception {
