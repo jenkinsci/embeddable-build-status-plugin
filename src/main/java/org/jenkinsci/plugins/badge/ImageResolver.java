@@ -34,27 +34,34 @@ public class ImageResolver {
     public ImageResolver() throws IOException{
         images = new StatusImage[] {
                 new StatusImage("failure.png"),
+                new StatusImage("failure_running.png"),
                 new StatusImage("unstable.png"),
+                new StatusImage("unstable_running.png"),
                 new StatusImage("success.png"),
+                new StatusImage("success_running.png"),
                 new StatusImage("running.png"),
                 new StatusImage("unknown.png")
         };
     }
     
     public StatusImage getImage(BallColor color) {
-        if (color.isAnimated())
-            return images[3];
-
         switch (color) {
         case RED:
         case ABORTED:
             return images[0];
-        case YELLOW:
+        case RED_ANIME:
+        case ABORTED_ANIME:
             return images[1];
-        case BLUE:
+        case YELLOW:
             return images[2];
-        default:
+        case YELLOW_ANIME:
+            return images[3];
+        case BLUE:
             return images[4];
+        case BLUE_ANIME:
+            return images[5];
+        default:
+            return color.isAnimated() ? images[6] : images[7];
         }
     }
 
