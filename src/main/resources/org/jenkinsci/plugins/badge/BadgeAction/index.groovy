@@ -26,6 +26,14 @@ l.layout {
     }
     IMG#badge {
         margin-left:2em;
+        height: 18px;
+    }
+    h3 p.note {
+        font-style: italic;
+        font-size: 0.7em;
+        font-weight: normal;
+        display: inline !important;
+        margin-left: 10px;
     }
 </style>
 """)
@@ -44,7 +52,10 @@ l.layout {
         b {text(_("unprotected"))}
         input(type:"text",value:publicbadge,class:"select-all")
 
-        h3(_("Markdown"))
+        h3 {
+            text(_("Markdown"))
+            p(_("markdown_note"),class:"note")
+        }
         b {text(_("protected"))}
         input(type:"text",value:"[![Build Status](${badge})](${base})",class:"select-all")
         b {text(_("unprotected"))}
@@ -52,20 +63,20 @@ l.layout {
 
         h3(_("HTML"))
         b {text(_("protected"))}
-        input(type:"text",value:"<a href='${base}'><img src='${badge}'></a>",class:"select-all")
+        input(type:"text",value:"<a href='${base}'><img src='${badge}' height='18' /></a>",class:"select-all")
         b {text(_("unprotected"))}
-        input(type:"text",value:"<a href='${base}'><img src='${publicbadge}'></a>",class:"select-all")
+        input(type:"text",value:"<a href='${base}'><img src='${publicbadge}' height='18' /></a>",class:"select-all")
 
         h3(_("Confluence"))
         b {text(_("protected"))}
-        input(type:"text",value:"[!${badge}!|${base}]",class:"select-all")
+        input(type:"text",value:"[!${badge}!height=18px|${base}]",class:"select-all")
         b {text(_("unprotected"))}
-        input(type:"text",value:"[!${publicbadge}!|${base}]",class:"select-all")
+        input(type:"text",value:"[!${publicbadge}!height=18px|${base}]",class:"select-all")
 
         h3(_("XWiki"))
         b {text(_("protected"))}
-        input(type:"text",value:"[[image:${badge}>>${base}||target='__new']]",class:"select-all")
+        input(type:"text",value:"[[image:${badge}>>${base}||height='18' target='__new']]",class:"select-all")
         b {text(_("unprotected"))}
-        input(type:"text",value:"[[image:${publicbadge}>>${base}||target='__new']]",class:"select-all")
+        input(type:"text",value:"[[image:${publicbadge}>>${base}||height='18' target='__new']]",class:"select-all")
     }
 }
