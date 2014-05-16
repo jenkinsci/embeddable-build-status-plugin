@@ -33,7 +33,7 @@ public class ImageResolver {
     
     public ImageResolver() throws IOException{
         images = new StatusImage[] {
-                new StatusImage("build-failure-red.svg"),
+                new StatusImage("build-failing-red.svg"),
                 new StatusImage("build-unstable-yellow.svg"),
                 new StatusImage("build-passing-brightgreen.svg"),
                 new StatusImage("build-running-blue.svg"),
