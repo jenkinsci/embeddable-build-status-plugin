@@ -1,2 +1,6 @@
+# IntelliJ
+.idea
+*.iml
+
 target
 work
