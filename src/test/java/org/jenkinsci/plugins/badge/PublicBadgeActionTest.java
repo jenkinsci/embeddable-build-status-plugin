@@ -42,6 +42,8 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
  */
 public class PublicBadgeActionTest {
 
+    private static final String EXPECTED_CONTENT_TYPE = "image/svg+xml";
+
     @Rule
     public JenkinsRule j = new JenkinsRule();
 
@@ -58,7 +60,7 @@ public class PublicBadgeActionTest {
         } catch (FailingHttpStatusCodeException x) {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
-        wc.goTo("buildStatus/icon?job=free", "image/png");
+        wc.goTo("buildStatus/icon?job=free", EXPECTED_CONTENT_TYPE);
     }
 
     @PresetData(PresetData.DataSet.NO_ANONYMOUS_READACCESS)
@@ -76,7 +78,7 @@ public class PublicBadgeActionTest {
 
         try {
             // try with correct job name
-            wc.goTo("buildStatus/icon?job=free", "image/png");
+            wc.goTo("buildStatus/icon?job=free", EXPECTED_CONTENT_TYPE);
             fail("should fail, because there is no job with this name");
         } catch (FailingHttpStatusCodeException x) {
             // make sure return code does not leak security relevant information (must 404)
@@ -105,7 +107,7 @@ public class PublicBadgeActionTest {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
         
-        wc.goTo("buildStatus/icon?job=free", "image/png");
+        wc.goTo("buildStatus/icon?job=free", EXPECTED_CONTENT_TYPE);
     }
 
     @PresetData(PresetData.DataSet.ANONYMOUS_READONLY)
@@ -122,6 +124,6 @@ public class PublicBadgeActionTest {
         }
 
         // try with correct job name
-        wc.goTo("buildStatus/icon?job=free", "image/png");
+        wc.goTo("buildStatus/icon?job=free", EXPECTED_CONTENT_TYPE);
     }
 }

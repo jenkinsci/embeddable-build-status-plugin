@@ -33,11 +33,11 @@ public class ImageResolver {
     
     public ImageResolver() throws IOException{
         images = new StatusImage[] {
-                new StatusImage("failure.png"),
-                new StatusImage("unstable.png"),
-                new StatusImage("success.png"),
-                new StatusImage("running.png"),
-                new StatusImage("unknown.png")
+                new StatusImage("failure.svg"),
+                new StatusImage("unstable.svg"),
+                new StatusImage("success.svg"),
+                new StatusImage("running.svg"),
+                new StatusImage("unknown.svg")
         };
     }
     
@@ -57,6 +57,4 @@ public class ImageResolver {
             return images[4];
         }
     }
-
-
 }
