@@ -58,7 +58,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Dominik Bartholdi (imod)
  */
 @Extension
-public class PublicBadgeAction implements UnprotectedRootAction {
+public class PublicBadgeAction extends AbstractBadgeAction implements UnprotectedRootAction {
 
     final public static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
 
@@ -88,16 +88,7 @@ public class PublicBadgeAction implements UnprotectedRootAction {
                                @QueryParameter String job,
                                @QueryParameter("branch") String branchName) throws IOException, ServletException {
         AbstractProject<?, ?> project = getProject(job, req, rsp);
-        BallColor status;
-
-        if(branchName != null) {
-            status = GitScmSupport.getStatusForBranch(project, branchName);
-        } else {
-            status = project.getIconColor();
-        }
-
-        if(status == null) return HttpResponses.notFound();
-        else return iconResolver.getImage(status);
+        return respondWithStatusImageOr404(project, branchName);
     }
 
     private AbstractProject<?, ?> getProject(String job, StaplerRequest req, StaplerResponse rsp) throws IOException, HttpResponses.HttpResponseException {
@@ -119,4 +110,8 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         return p;
     }
 
+    @Override
+    StatusImage createStatusImage(BallColor status) {
+        return iconResolver.getImage(status);
+    }
 }

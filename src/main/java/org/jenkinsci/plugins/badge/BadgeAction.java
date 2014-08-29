@@ -24,7 +24,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 /**
 * @author Kohsuke Kawaguchi
 */
-public class BadgeAction implements Action {
+public class BadgeAction extends AbstractBadgeAction implements Action {
     private final BadgeActionFactory factory;
     public final AbstractProject project;
 
@@ -49,15 +49,11 @@ public class BadgeAction implements Action {
      * Serves the badge image.
      */
     public HttpResponse doIcon(@QueryParameter("branch") String branchName) {
-        BallColor status;
+        return respondWithStatusImageOr404(project, branchName);
+    }
 
-        if(branchName != null) {
-            status = GitScmSupport.getStatusForBranch(project, branchName);
-        } else {
-            status = project.getIconColor();
-        }
-
-        if(status == null) return HttpResponses.notFound();
-        else return factory.getImage(status);
+    @Override
+    StatusImage createStatusImage(BallColor status) {
+        return factory.getImage(status);
     }
 }
