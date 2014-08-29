@@ -1,11 +1,16 @@
 package org.jenkinsci.plugins.badge;
 
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.BallColor;
+import hudson.plugins.git.Branch;
+import hudson.plugins.git.util.BuildData;
 import hudson.util.HttpResponses;
 import hudson.util.IOUtils;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -43,7 +48,16 @@ public class BadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon() {
-        return factory.getImage(project.getIconColor());
+    public HttpResponse doIcon(@QueryParameter("branch") String branchName) {
+        BallColor status;
+
+        if(branchName != null) {
+            status = GitScmSupport.getStatusForBranch(project, branchName);
+        } else {
+            status = project.getIconColor();
+        }
+
+        if(status == null) return HttpResponses.notFound();
+        else return factory.getImage(status);
     }
 }
