@@ -35,6 +35,8 @@ l.layout {
         
         def fullJobName = h.escape(my.project.fullName);
         def publicbadge = "${app.rootUrl}buildStatus/icon?job=${fullJobName}";
+        def publicbadgeWithBranch = "${app.rootUrl}buildStatus/icon?job=${fullJobName}&branch=master";
+
         h3 {
             text(_("Image"))
             img(id:"badge",src:badge)
@@ -43,6 +45,8 @@ l.layout {
         input(type:"text",value:badge,class:"select-all")
         b {text(_("unprotected"))}
         input(type:"text",value:publicbadge,class:"select-all")
+        b {text(_("with branch specified"))}
+        input(type:"text",value:publicbadgeWithBranch,class:"select-all")
 
         h3(_("Markdown"))
         b {text(_("protected"))}
