@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.577</version>
+    <version>1.554</version>
   </parent>
 
   <artifactId>embeddable-build-status</artifactId>
