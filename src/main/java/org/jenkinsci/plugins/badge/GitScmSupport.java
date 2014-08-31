@@ -20,6 +20,9 @@ public class GitScmSupport {
 
             if(buildData != null) {
                 Branch branch = buildData.lastBuild.getRevision().getBranches().iterator().next();
+
+                // clean up the branch name to only include the actual branch name
+                // this value can contain references to the remote etc.
                 String runBranchName = branch.getName().replaceFirst(".*/", "");
 
                 if(runBranchName.equals(branchName)) {
