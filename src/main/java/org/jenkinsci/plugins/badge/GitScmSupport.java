@@ -18,7 +18,9 @@ public class GitScmSupport {
 
             if(buildData != null) {
                 Branch branch = buildData.lastBuild.getRevision().getBranches().iterator().next();
-                if(branch.getName().equals("refs/remotes/origin/" + branchName)) {
+                String runBranchName = branch.getName().replaceFirst(".*/", "");
+
+                if(runBranchName.equals(branchName)) {
                     return run.getIconColor();
                 }
             }
