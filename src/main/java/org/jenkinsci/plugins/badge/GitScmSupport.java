@@ -3,11 +3,14 @@ package org.jenkinsci.plugins.badge;
 import hudson.model.*;
 import hudson.plugins.git.Branch;
 import hudson.plugins.git.util.BuildData;
-
-import java.util.Collection;
+import jenkins.model.Jenkins;
 
 public class GitScmSupport {
     public static BallColor getStatusForBranch(AbstractProject project, String branchName) {
+        if (Jenkins.getInstance().getPlugin("git") == null) {
+            return null;
+        }
+
         RunMap<?> runs = project._getRuns();
 
         for(Run run : runs) {
