@@ -25,8 +25,6 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
 import hudson.model.*;
-import hudson.plugins.git.Branch;
-import hudson.plugins.git.util.BuildData;
 import hudson.security.ACL;
 import hudson.security.Permission;
 import hudson.security.PermissionScope;
