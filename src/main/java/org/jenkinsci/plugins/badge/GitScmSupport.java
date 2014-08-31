@@ -5,13 +5,15 @@ import hudson.plugins.git.Branch;
 import hudson.plugins.git.util.BuildData;
 import jenkins.model.Jenkins;
 
+import java.util.Collection;
+
 public class GitScmSupport {
-    public static BallColor getStatusForBranch(AbstractProject project, String branchName) {
+    public static BallColor getStatusForBranch(AbstractProject<?, ?> project, String branchName) {
         if (Jenkins.getInstance().getPlugin("git") == null) {
             return null;
         }
 
-        RunMap<?> runs = project._getRuns();
+        Collection<?extends AbstractBuild> runs = project._getRuns().values();
 
         for(Run run : runs) {
             BuildData buildData = run.getAction(BuildData.class);
