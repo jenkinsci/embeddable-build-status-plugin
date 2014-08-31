@@ -25,17 +25,31 @@ package org.jenkinsci.plugins.badge;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import hudson.model.AbstractProject;
+import hudson.model.FreeStyleBuild;
+import hudson.model.FreeStyleProject;
+import hudson.model.RunMap;
+import hudson.plugins.git.Branch;
+import hudson.plugins.git.Revision;
+import hudson.plugins.git.util.Build;
+import hudson.plugins.git.util.BuildData;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
 import hudson.security.SecurityRealm;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 
+import org.eclipse.jgit.lib.ObjectId;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.PresetData;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * @author Dominik Bartholdi (imod)
@@ -59,6 +73,18 @@ public class PublicBadgeActionTest {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
+    }
+
+    @PresetData(PresetData.DataSet.NO_ANONYMOUS_READACCESS)
+    @Test
+    public void authenticatedBranchSpecified() throws Exception {
+        FreeStyleProject project = j.createFreeStyleProject("free");
+        addBuildToProject(buildForBranch(project, "develop"));
+
+        JenkinsRule.WebClient wc = j.createWebClient();
+        wc.login("alice", "alice");
+
+        wc.goTo("buildStatus/icon?job=free&branch=develop", "image/svg+xml");
     }
 
     @PresetData(PresetData.DataSet.NO_ANONYMOUS_READACCESS)
@@ -104,7 +130,7 @@ public class PublicBadgeActionTest {
         } catch (FailingHttpStatusCodeException x) {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
-        
+
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
     }
 
@@ -124,4 +150,53 @@ public class PublicBadgeActionTest {
         // try with correct job name
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
     }
+
+    @PresetData(PresetData.DataSet.ANONYMOUS_READONLY)
+    @Test
+    public void specifyExistingBranch() throws Exception {
+        FreeStyleProject project = j.createFreeStyleProject("free");
+        addBuildToProject(buildForBranch(project, "develop"));
+
+        JenkinsRule.WebClient wc = j.createWebClient();
+        wc.goTo("buildStatus/icon?job=free&branch=develop", "image/svg+xml");
+    }
+
+    @PresetData(PresetData.DataSet.NO_ANONYMOUS_READACCESS)
+    @Test
+    public void specifyNonExistingBranch() throws Exception {
+        FreeStyleProject project = j.createFreeStyleProject("free");
+        addBuildToProject(buildForBranch(project, "develop"));
+
+        JenkinsRule.WebClient wc = j.createWebClient();
+
+        try {
+            wc.goTo("buildStatus/icon?job=free&branch=foobar", "image/svg+xml");
+        } catch (FailingHttpStatusCodeException x) {
+            assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addBuildToProject(FreeStyleBuild build) throws Exception {
+        Field field = AbstractProject.class.getDeclaredField("builds");
+        ReflectionUtils.makeAccessible(field);
+
+        RunMap<FreeStyleBuild> runMap = (RunMap<FreeStyleBuild>)ReflectionUtils.getField(field, build.getParent());
+        runMap.put(build);
+    }
+
+    private FreeStyleBuild buildForBranch(FreeStyleProject project, String branchName) throws IOException {
+        FreeStyleBuild build = new FreeStyleBuild(project);
+
+        BuildData buildData = new BuildData();
+        build.addAction(buildData);
+
+        Branch branch = new Branch("refs/remotes/origin/" + branchName, SOME_SHA1);
+        Revision revision = new Revision(SOME_SHA1, Arrays.asList(branch));
+        buildData.lastBuild = new Build(revision, 1, null);
+
+        return build;
+    }
+
+    private static final ObjectId SOME_SHA1 = ObjectId.fromString("508911b993b97ee92c383a0df9cc13abe606d037");
 }

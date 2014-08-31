@@ -24,9 +24,7 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
-import hudson.model.Item;
-import hudson.model.UnprotectedRootAction;
-import hudson.model.AbstractProject;
+import hudson.model.*;
 import hudson.security.ACL;
 import hudson.security.Permission;
 import hudson.security.PermissionScope;
@@ -58,7 +56,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Dominik Bartholdi (imod)
  */
 @Extension
-public class PublicBadgeAction implements UnprotectedRootAction {
+public class PublicBadgeAction extends AbstractBadgeAction implements UnprotectedRootAction {
 
     final public static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
 
@@ -83,9 +81,12 @@ public class PublicBadgeAction implements UnprotectedRootAction {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job) throws IOException, ServletException {
+    public HttpResponse doIcon(StaplerRequest req,
+                               StaplerResponse rsp,
+                               @QueryParameter String job,
+                               @QueryParameter("branch") String branchName) throws IOException, ServletException {
         AbstractProject<?, ?> project = getProject(job, req, rsp);
-        return iconResolver.getImage(project.getIconColor());
+        return respondWithStatusImageOr404(project, branchName);
     }
 
     private AbstractProject<?, ?> getProject(String job, StaplerRequest req, StaplerResponse rsp) throws IOException, HttpResponses.HttpResponseException {
@@ -107,4 +108,8 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         return p;
     }
 
+    @Override
+    StatusImage createStatusImage(BallColor status) {
+        return iconResolver.getImage(status);
+    }
 }
