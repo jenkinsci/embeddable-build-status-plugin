@@ -25,6 +25,7 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
 import hudson.model.Item;
+import hudson.model.Run;
 import hudson.model.UnprotectedRootAction;
 import hudson.model.AbstractProject;
 import hudson.security.ACL;
@@ -52,6 +53,12 @@ import org.kohsuke.stapler.StaplerResponse;
  * 
  * <li>http://localhost:8080/buildstatus/icon?job=[JOBNAME] <li>e.g. http://localhost:8080/buildstatus/icon?job=free1 <br/>
  * <br/>
+ *
+ * The status of a particular build can be checked like this:
+ *
+ * <li>http://localhost:8080/buildstatus/icon?job=[JOBNAME]&build=[BUILDNUMBER] <li>e.g. http://localhost:8080/buildstatus/icon?job=free1&build=5<br/>
+ * <br/>
+ *
  * Even though the URL is unprotected, the user does still need the 'ViewStatus' permission on the given Job. If you want the status icons to be public readable/accessible, just grant the 'ViewStatus'
  * permission globally to 'anonymous'.
  * 
@@ -60,7 +67,7 @@ import org.kohsuke.stapler.StaplerResponse;
 @Extension
 public class PublicBadgeAction implements UnprotectedRootAction {
 
-    final public static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
+    public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
 
     private final ImageResolver iconResolver;
 
@@ -83,12 +90,17 @@ public class PublicBadgeAction implements UnprotectedRootAction {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job) throws IOException, ServletException {
-        AbstractProject<?, ?> project = getProject(job, req, rsp);
-        return iconResolver.getImage(project.getIconColor());
+    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+        if(build != null) {
+            Run run = getRun(job, build);
+            return iconResolver.getImage(run.getIconColor());
+        } else {
+            AbstractProject<?, ?> project = getProject(job);
+            return iconResolver.getImage(project.getIconColor());
+        }
     }
 
-    private AbstractProject<?, ?> getProject(String job, StaplerRequest req, StaplerResponse rsp) throws IOException, HttpResponses.HttpResponseException {
+    private AbstractProject<?, ?> getProject(String job) {
         AbstractProject<?, ?> p;
 
         // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
@@ -107,4 +119,22 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         return p;
     }
 
+    private Run<?, ?> getRun(String job, String build) {
+        Run<?, ?> run;
+
+        // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
+        SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
+        try {
+            run = Jenkins.getInstance().getItemByFullName(job, AbstractProject.class).getBuildByNumber(Integer.parseInt(build));
+        } finally {
+            SecurityContextHolder.setContext(orig);
+        }
+
+        // check if user has permission to view the status
+        if(run == null || !(run.hasPermission(VIEW_STATUS))){
+            throw HttpResponses.notFound();
+        }
+
+        return run;
+    }
 }

@@ -25,6 +25,8 @@ package org.jenkinsci.plugins.badge;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import hudson.model.FreeStyleProject;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
 import hudson.security.SecurityRealm;
 
@@ -48,7 +50,7 @@ public class PublicBadgeActionTest {
     @PresetData(PresetData.DataSet.NO_ANONYMOUS_READACCESS)
     @Test
     public void authenticatedAccess() throws Exception {
-        j.createFreeStyleProject("free");
+        final FreeStyleProject project = j.createFreeStyleProject("free");
         JenkinsRule.WebClient wc = j.createWebClient();
         wc.login("alice", "alice");
         try {
@@ -59,12 +61,14 @@ public class PublicBadgeActionTest {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
+        j.buildAndAssertSuccess(project);
+        wc.goTo("buildStatus/icon?job=free&build=1", "image/svg+xml");
     }
 
     @PresetData(PresetData.DataSet.NO_ANONYMOUS_READACCESS)
     @Test
     public void invalidAnonymousAccess() throws Exception {
-        j.createFreeStyleProject("free");
+        final FreeStyleProject project = j.createFreeStyleProject("free");
         JenkinsRule.WebClient wc = j.createWebClient();
         try {
             // try with wrong job name
@@ -82,6 +86,17 @@ public class PublicBadgeActionTest {
             // make sure return code does not leak security relevant information (must 404)
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
+
+        j.buildAndAssertSuccess(project);
+
+        try {
+            // try with correct job name
+            wc.goTo("buildStatus/icon?job=free&build=1", "image/svg+xml");
+            fail("should fail, because there is no job with this name");
+        } catch (FailingHttpStatusCodeException x) {
+            // make sure return code does not leak security relevant information (must 404)
+            assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
+        }
     }
 
     @Test
@@ -94,7 +109,7 @@ public class PublicBadgeActionTest {
         j.getInstance().setSecurityRealm(realm);
         j.getInstance().setAuthorizationStrategy(auth);
 
-        j.createFreeStyleProject("free");
+        final FreeStyleProject project = j.createFreeStyleProject("free");
 
         JenkinsRule.WebClient wc = j.createWebClient();
         try {
@@ -104,18 +119,36 @@ public class PublicBadgeActionTest {
         } catch (FailingHttpStatusCodeException x) {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
         }
+
+        try {
+            // try with wrong job name
+            wc.goTo("buildStatus/icon?job=free&build=1");
+            fail("should fail, because there is no job with this name");
+        } catch (FailingHttpStatusCodeException x) {
+            assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
+        }
         
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
+        j.buildAndAssertSuccess(project);
+        wc.goTo("buildStatus/icon?job=free&build=1", "image/svg+xml");
     }
 
     @PresetData(PresetData.DataSet.ANONYMOUS_READONLY)
     @Test
     public void validAnonymousAccess() throws Exception {
-        j.createFreeStyleProject("free");
+        final FreeStyleProject project = j.createFreeStyleProject("free");
         JenkinsRule.WebClient wc = j.createWebClient();
         try {
             // try with wrong job name
             wc.goTo("buildStatus/icon?job=dummy");
+            fail("should fail, because there is no job with this name");
+        } catch (FailingHttpStatusCodeException x) {
+            assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
+        }
+
+        try {
+            // try with wrong job name
+            wc.goTo("buildStatus/icon?job=free&build=1");
             fail("should fail, because there is no job with this name");
         } catch (FailingHttpStatusCodeException x) {
             assertEquals(HttpURLConnection.HTTP_NOT_FOUND, x.getStatusCode());
@@ -123,5 +156,7 @@ public class PublicBadgeActionTest {
 
         // try with correct job name
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
+        j.buildAndAssertSuccess(project);
+        wc.goTo("buildStatus/icon?job=free&build=1", "image/svg+xml");
     }
 }
