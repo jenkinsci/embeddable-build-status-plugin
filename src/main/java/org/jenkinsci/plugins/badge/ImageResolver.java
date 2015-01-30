@@ -26,22 +26,47 @@ package org.jenkinsci.plugins.badge;
 import hudson.model.BallColor;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class ImageResolver {
-    
-    private final StatusImage[] images;
-    
+
+    private final HashMap<String, StatusImage[]> styles;
+    private final StatusImage[] defaultStyle;
+
     public ImageResolver() throws IOException{
-        images = new StatusImage[] {
+        styles = new HashMap<String, StatusImage[]>();
+        // shields.io "plastic" style (aka the old default)
+        StatusImage[] plasticImages = new StatusImage[] {
                 new StatusImage("build-failing-red.svg"),
                 new StatusImage("build-unstable-yellow.svg"),
                 new StatusImage("build-passing-brightgreen.svg"),
                 new StatusImage("build-running-blue.svg"),
                 new StatusImage("build-unknown-lightgrey.svg")
         };
+        styles.put("plastic", plasticImages);
+        // shields.io "flat" style (new default from Feb 1 2015)
+        StatusImage[] flatImages = new StatusImage[] {
+                new StatusImage("build-failing-red-flat.svg"),
+                new StatusImage("build-unstable-yellow-flat.svg"),
+                new StatusImage("build-passing-brightgreen-flat.svg"),
+                new StatusImage("build-running-blue-flat.svg"),
+                new StatusImage("build-unknown-lightgrey-flat.svg")
+        };
+        styles.put("flat", flatImages);
+        // Pick a default style
+        defaultStyle = flatImages;
+        styles.put("default", defaultStyle);
     }
-    
+
     public StatusImage getImage(BallColor color) {
+        return getImage(color, "default");
+    }
+
+    public StatusImage getImage(BallColor color, String style) {
+        StatusImage[] images = styles.get(style);
+        if (images == null)
+            images = defaultStyle;
+
         if (color.isAnimated())
             return images[3];
 
@@ -57,6 +82,5 @@ public class ImageResolver {
             return images[4];
         }
     }
-
 
 }

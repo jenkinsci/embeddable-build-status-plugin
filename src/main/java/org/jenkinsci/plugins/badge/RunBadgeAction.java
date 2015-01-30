@@ -5,6 +5,7 @@ import hudson.model.Action;
 import hudson.model.Run;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.QueryParameter;
 
 public class RunBadgeAction implements Action {
     private final RunBadgeActionFactory factory;
@@ -32,7 +33,7 @@ public class RunBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon() {
-        return factory.getImage(run.getIconColor());
+    public HttpResponse doIcon(@QueryParameter String style) {
+        return factory.getImage(run.getIconColor(), style);
     }
 }

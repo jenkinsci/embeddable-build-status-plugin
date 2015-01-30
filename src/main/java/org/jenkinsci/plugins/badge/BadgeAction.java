@@ -8,6 +8,7 @@ import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class BadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon() {
-        return factory.getImage(project.getIconColor());
+    public HttpResponse doIcon(@QueryParameter String style) {
+        return factory.getImage(project.getIconColor(), style);
     }
 }

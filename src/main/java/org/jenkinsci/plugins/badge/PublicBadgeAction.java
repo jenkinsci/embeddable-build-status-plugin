@@ -90,13 +90,13 @@ public class PublicBadgeAction implements UnprotectedRootAction {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build, @QueryParameter String style) {
         if(build != null) {
             Run run = getRun(job, build);
-            return iconResolver.getImage(run.getIconColor());
+            return iconResolver.getImage(run.getIconColor(), style);
         } else {
             AbstractProject<?, ?> project = getProject(job);
-            return iconResolver.getImage(project.getIconColor());
+            return iconResolver.getImage(project.getIconColor(), style);
         }
     }
 

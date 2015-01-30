@@ -17,7 +17,7 @@ import java.util.Collections;
 public class BadgeActionFactory extends TransientProjectActionFactory {
 
     private final ImageResolver iconResolver;
-    
+
     public BadgeActionFactory() throws IOException {
         iconResolver = new ImageResolver();
     }
@@ -29,6 +29,10 @@ public class BadgeActionFactory extends TransientProjectActionFactory {
 
     public StatusImage getImage(BallColor color) {
         return iconResolver.getImage(color);
+    }
+
+    public StatusImage getImage(BallColor color, String style) {
+        return iconResolver.getImage(color, style);
     }
 
 }

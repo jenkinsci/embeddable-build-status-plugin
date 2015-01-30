@@ -38,6 +38,8 @@ l.layout {
         h3 {
             text(_("Image"))
             img(id:"badge",src:badge)
+            text(_(" or "))
+            img(src:badge + "?style=plastic")
         }
         b {text(_("protected"))}
         input(type:"text",value:badge,class:"select-all")
