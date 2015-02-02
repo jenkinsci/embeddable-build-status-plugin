@@ -24,4 +24,8 @@ public class RunBadgeActionFactory extends TransientBuildActionFactory {
     public StatusImage getImage(BallColor color) {
         return iconResolver.getImage(color);
     }
+
+    public StatusImage getImage(BallColor color, String style) {
+        return iconResolver.getImage(color, style);
+    }
 }
