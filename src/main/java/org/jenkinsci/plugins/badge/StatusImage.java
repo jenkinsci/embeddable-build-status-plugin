@@ -41,7 +41,7 @@ class StatusImage implements HttpResponse {
     private final String length;
 
     StatusImage(String fileName) throws IOException {
-        etag = Jenkins.RESOURCE_PATH+'/'+fileName;
+        etag = '"' + Jenkins.RESOURCE_PATH + '/' + fileName + '"';
 
         URL image = new URL(
             Jenkins.getInstance().pluginManager.getPlugin("embeddable-build-status").baseResourceURL,
