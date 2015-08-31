@@ -80,7 +80,7 @@ public class ImageResolver {
         case BLUE:
             return images[2];
         case ABORTED:
-			return images[4];
+            return images[4];
         default:
             return images[5];
         }
