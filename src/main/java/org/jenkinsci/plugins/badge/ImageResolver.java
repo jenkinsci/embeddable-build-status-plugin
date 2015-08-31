@@ -41,6 +41,7 @@ public class ImageResolver {
                 new StatusImage("build-unstable-yellow.svg"),
                 new StatusImage("build-passing-brightgreen.svg"),
                 new StatusImage("build-running-blue.svg"),
+                new StatusImage("build-aborted-lightgrey.svg"),
                 new StatusImage("build-unknown-lightgrey.svg")
         };
         styles.put("plastic", plasticImages);
@@ -50,6 +51,7 @@ public class ImageResolver {
                 new StatusImage("build-unstable-yellow-flat.svg"),
                 new StatusImage("build-passing-brightgreen-flat.svg"),
                 new StatusImage("build-running-blue-flat.svg"),
+                new StatusImage("build-aborted-lightgrey-flat.svg"),
                 new StatusImage("build-unknown-lightgrey-flat.svg")
         };
         styles.put("flat", flatImages);
@@ -72,14 +74,15 @@ public class ImageResolver {
 
         switch (color) {
         case RED:
-        case ABORTED:
             return images[0];
         case YELLOW:
             return images[1];
         case BLUE:
             return images[2];
+        case ABORTED:
+			return images[4];
         default:
-            return images[4];
+            return images[5];
         }
     }
 
