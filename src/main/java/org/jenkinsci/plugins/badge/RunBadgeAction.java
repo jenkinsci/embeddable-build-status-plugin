@@ -1,7 +1,7 @@
 package org.jenkinsci.plugins.badge;
 
-import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.Job;
 import hudson.model.Run;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
@@ -10,12 +10,12 @@ import org.kohsuke.stapler.QueryParameter;
 public class RunBadgeAction implements Action {
     private final RunBadgeActionFactory factory;
     public final Run run;
-    public final AbstractProject project;
+    public final Job project;
 
     public RunBadgeAction(RunBadgeActionFactory factory, Run run) {
         this.factory = factory;
         this.run = run;
-        this.project = (AbstractProject)run.getParent();
+        this.project = run.getParent();
     }
 
     public String getIconFileName() {
