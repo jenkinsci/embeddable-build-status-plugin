@@ -31,7 +31,7 @@ public class WorkflowBadgeActionTest {
         wc.goTo("buildStatus/icon?job=wf", "image/svg+xml");
         job.setQuietPeriod(0);
         job.scheduleBuild();
-        j.waitUntilNoActivityUpTo(500);
+        j.waitUntilNoActivityUpTo(5000);
         wc.goTo("buildStatus/icon?job=wf&build=1", "image/svg+xml");
     }
 
