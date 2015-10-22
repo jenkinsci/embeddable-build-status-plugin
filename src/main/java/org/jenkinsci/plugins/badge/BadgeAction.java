@@ -38,4 +38,11 @@ public class BadgeAction implements Action {
     public HttpResponse doIcon(@QueryParameter String style) {
         return factory.getImage(project.getIconColor(), style);
     }
+
+    /**
+     * Serves text.
+     */
+    public String doText() {
+        return project.getIconColor().getDescription();
+    }
 }
