@@ -25,9 +25,9 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
 import hudson.model.Item;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.UnprotectedRootAction;
-import hudson.model.AbstractProject;
 import hudson.security.ACL;
 import hudson.security.Permission;
 import hudson.security.PermissionScope;
@@ -95,18 +95,18 @@ public class PublicBadgeAction implements UnprotectedRootAction {
             Run run = getRun(job, build);
             return iconResolver.getImage(run.getIconColor(), style);
         } else {
-            AbstractProject<?, ?> project = getProject(job);
+            Job<?, ?> project = getProject(job);
             return iconResolver.getImage(project.getIconColor(), style);
         }
     }
 
-    private AbstractProject<?, ?> getProject(String job) {
-        AbstractProject<?, ?> p;
+    private Job<?, ?> getProject(String job) {
+        Job<?, ?> p;
 
         // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
         SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
         try {
-            p = Jenkins.getInstance().getItemByFullName(job, AbstractProject.class);
+            p = Jenkins.getInstance().getItemByFullName(job, Job.class);
         } finally {
             SecurityContextHolder.setContext(orig);
         }
@@ -125,7 +125,7 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
         SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
         try {
-            run = Jenkins.getInstance().getItemByFullName(job, AbstractProject.class).getBuildByNumber(Integer.parseInt(build));
+            run = Jenkins.getInstance().getItemByFullName(job, Job.class).getBuildByNumber(Integer.parseInt(build));
         } finally {
             SecurityContextHolder.setContext(orig);
         }

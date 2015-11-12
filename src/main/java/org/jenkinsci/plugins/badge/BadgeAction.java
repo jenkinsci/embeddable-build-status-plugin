@@ -1,30 +1,21 @@
 package org.jenkinsci.plugins.badge;
 
-import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.util.HttpResponses;
-import hudson.util.IOUtils;
+import hudson.model.Job;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.QueryParameter;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 
 /**
 * @author Kohsuke Kawaguchi
 */
 public class BadgeAction implements Action {
     private final BadgeActionFactory factory;
-    public final AbstractProject project;
 
-    public BadgeAction(BadgeActionFactory factory, AbstractProject project) {
+    public final Job project;
+
+    public BadgeAction(BadgeActionFactory factory, Job project) {
         this.factory = factory;
         this.project = project;
     }
