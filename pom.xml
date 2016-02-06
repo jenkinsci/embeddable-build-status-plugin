@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>embeddable-build-status</artifactId>
-  <version>1.9-SNAPSHOT</version>
+  <version>1.9</version>
   <packaging>hpi</packaging>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin</url>
 
@@ -39,7 +39,7 @@
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/git-plugin</url>
-    <tag>HEAD</tag>
+    <tag>embeddable-build-status-1.9</tag>
   </scm>
     <!-- Workflow plugin imports are used to test compatibility -->
   <dependencies>
