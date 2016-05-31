@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import hudson.model.FreeStyleProject;
+import hudson.model.Run;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
 import hudson.security.SecurityRealm;
 
@@ -36,8 +37,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.PresetData;
+import hudson.tasks.Shell;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.TextPage;
 
 /**
  * @author Dominik Bartholdi (imod)
@@ -160,5 +163,47 @@ public class PublicBadgeActionTest {
         wc.goTo("buildStatus/icon?job=free", "image/svg+xml");
         j.buildAndAssertSuccess(project);
         wc.goTo("buildStatus/icon?job=free&build=1", "image/svg+xml");
+    }
+
+    @Test
+    public void validTextStatusNotBuilt() throws Exception {
+        final FreeStyleProject project = j.createFreeStyleProject("free");
+        JenkinsRule.WebClient wc = j.createWebClient();
+
+        TextPage p = (com.gargoylesoftware.htmlunit.TextPage) wc.goTo("buildStatus/text?job=free", "text/plain");
+        assertEquals(p.getContent(), "Not built");
+    }
+
+    @Test
+    public void validTextStatusDisabled() throws Exception {
+        final FreeStyleProject project = j.createFreeStyleProject("free");
+        JenkinsRule.WebClient wc = j.createWebClient();
+
+        project.makeDisabled(true);
+        TextPage p = (com.gargoylesoftware.htmlunit.TextPage) wc.goTo("buildStatus/text?job=free", "text/plain");
+        assertEquals(p.getContent(), "Disabled");
+    }
+
+    @Test
+    public void validTextStatusSuccess() throws Exception {
+        final FreeStyleProject project = j.createFreeStyleProject("free");
+        JenkinsRule.WebClient wc = j.createWebClient();
+
+        j.buildAndAssertSuccess(project);
+        TextPage p = (com.gargoylesoftware.htmlunit.TextPage) wc.goTo("buildStatus/text?job=free&build=1", "text/plain");
+        assertEquals(p.getContent(), "Success");
+    }
+
+    @Test
+    public void validTextStatusFailed() throws Exception {
+        final FreeStyleProject project = j.createFreeStyleProject("free");
+        JenkinsRule.WebClient wc = j.createWebClient();
+
+        Shell shell = new Shell("exit 1");
+        project.getBuildersList().add(shell);
+
+        Run r = project.scheduleBuild2(0).get();
+        TextPage p = (com.gargoylesoftware.htmlunit.TextPage) wc.goTo("buildStatus/text?job=free&build=1", "text/plain");
+        assertEquals(p.getContent(), "Failed");
     }
 }
