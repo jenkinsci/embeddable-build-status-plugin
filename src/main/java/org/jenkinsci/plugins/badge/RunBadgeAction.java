@@ -36,4 +36,11 @@ public class RunBadgeAction implements Action {
     public HttpResponse doIcon(@QueryParameter String style) {
         return factory.getImage(run.getIconColor(), style);
     }
+
+    /**
+     * Serves text.
+     */
+    public String doText() {
+        return project.getIconColor().getDescription();
+    }
 }

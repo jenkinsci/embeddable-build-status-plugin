@@ -35,7 +35,10 @@ l.layout {
         def jobUrlWithoutView =  "${app.rootUrl}job/${fullJobName}/${my.run.number}/";
         def badgeUrlWithView = jobUrlWithView + "badge/icon"
         def badgeUrlWithoutView = jobUrlWithoutView + "/badge/icon"
+        def textUrlWithView = jobUrlWithView + "badge/text"
+        def textUrlWithoutView = jobUrlWithoutView + "/badge/text"
         def publicBadge = "${app.rootUrl}buildStatus/icon?job=${fullJobName}&build=${my.run.number}";
+        def publicText = "${app.rootUrl}buildStatus/text?job=${fullJobName}&build=${my.run.number}";
 
         h3 {
             text(_("Image"))
@@ -104,5 +107,17 @@ l.layout {
         input(type:"text",value:"[[image:${badgeUrlWithoutView}>>${jobUrlWithoutView}||target='__new']]",class:"select-all")
         b {text(_("unprotected"))}
         input(type:"text",value:"[[image:${publicBadge}>>${jobUrlWithoutView}||target='__new']]",class:"select-all")
+
+
+        h2(_("Embeddable Build Status Text"))
+        p(raw(_("blurb_text")))
+
+        h3(_("Text Only"))
+        b {text(_("protected (with view)"))}
+        input(type:"text",value:textUrlWithView,class:"select-all")
+        b {text(_("protected (without view)"))}
+        input(type:"text",value:textUrlWithoutView,class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:publicText,class:"select-all")
     }
 }

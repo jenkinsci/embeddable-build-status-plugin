@@ -100,6 +100,19 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         }
     }
 
+    /**
+     * Serves text.
+     */
+    public String doText(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+        if(build != null) {
+            Run run = getRun(job, build);
+            return run.getIconColor().getDescription();
+        } else {
+            Job<?, ?> project = getProject(job);
+            return project.getIconColor().getDescription();
+        }
+    }
+
     private Job<?, ?> getProject(String job) {
         Job<?, ?> p;
 
