@@ -91,6 +91,10 @@ public class PublicBadgeAction implements UnprotectedRootAction {
      * Serves the badge image.
      */
     public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build, @QueryParameter String style) {
+        if (job == null) {
+            return HttpResponses.errorWithoutStack(400, "Missing query parameter: job");
+        }
+
         if(build != null) {
             Run run = getRun(job, build);
             return iconResolver.getImage(run.getIconColor(), style);
@@ -104,6 +108,10 @@ public class PublicBadgeAction implements UnprotectedRootAction {
      * Serves text.
      */
     public String doText(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+        if (job == null) {
+            throw HttpResponses.errorWithoutStack(400, "Missing query parameter: job");
+        }
+
         if(build != null) {
             Run run = getRun(job, build);
             return run.getIconColor().getDescription();
