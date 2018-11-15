@@ -38,6 +38,7 @@ public class ImageResolver {
             put( "brightgreen", "passing" );
             put( "yellow", "unstable" );
             put( "aborted", "aborted" );
+            put( "blue", "running" );
         };
     };
 
