@@ -5,17 +5,17 @@ import hudson.model.Job;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
-
+import java.util.List;
 
 /**
 * @author Kohsuke Kawaguchi
 */
-public class BadgeAction implements Action {
-    private final BadgeActionFactory factory;
+public class JobBadgeAction implements Action {
+    private final JobBadgeActionFactory factory;
 
     public final Job project;
 
-    public BadgeAction(BadgeActionFactory factory, Job project) {
+    public JobBadgeAction(JobBadgeActionFactory factory, Job project) {
         this.factory = factory;
         this.project = project;
     }
@@ -25,7 +25,7 @@ public class BadgeAction implements Action {
     }
 
     public String getDisplayName() {
-        return Messages.BadgeAction_DisplayName();
+        return Messages.JobBadgeAction_DisplayName();
     }
 
     public String getUrlName() {
@@ -35,8 +35,15 @@ public class BadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style) {
-        return factory.getImage(project.getIconColor(), style);
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color) {
+        /*
+        List<? extends Action> lst = project.getLastBuild().getAllActions();
+        for (Action action : lst) {
+            status = action.getDisplayName();
+            break;
+        }
+        */
+        return factory.getImage(project.getIconColor(), style, subject, status, color);
     }
 
     /**

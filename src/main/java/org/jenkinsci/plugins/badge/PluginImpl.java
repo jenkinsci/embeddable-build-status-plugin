@@ -32,6 +32,10 @@ import hudson.Plugin;
  * 
  * @author Dominik Bartholdi (imod)
  */
+
+ /** Note:
+  *  Disabled since JENKINS-4172 is fixed.
+  *  Btw. this sometimes lead to NullPointerExeptions on startup?!
 public class PluginImpl extends Plugin {
 
     @Override
@@ -43,3 +47,4 @@ public class PluginImpl extends Plugin {
     }
 
 }
+*/

@@ -35,8 +35,6 @@ import hudson.util.HttpResponses;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-
 import jenkins.model.Jenkins;
 
 import org.acegisecurity.context.SecurityContext;

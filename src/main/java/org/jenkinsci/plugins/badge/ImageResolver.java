@@ -27,63 +27,59 @@ import hudson.model.BallColor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ImageResolver {
 
-    private final HashMap<String, StatusImage[]> styles;
-    private final StatusImage[] defaultStyle;
+    private final Map<String, String> statuses = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put( "red", "failing" );
+            put( "brightgreen", "passing" );
+            put( "yellow", "unstable" );
+            put( "aborted", "aborted" );
+        };
+    };
 
-    public ImageResolver() throws IOException{
-        styles = new HashMap<String, StatusImage[]>();
-        // shields.io "plastic" style (aka the old default)
-        StatusImage[] plasticImages = new StatusImage[] {
-                new StatusImage("build-failing-red.svg"),
-                new StatusImage("build-unstable-yellow.svg"),
-                new StatusImage("build-passing-brightgreen.svg"),
-                new StatusImage("build-running-blue.svg"),
-                new StatusImage("build-aborted-lightgrey.svg"),
-                new StatusImage("build-unknown-lightgrey.svg")
-        };
-        styles.put("plastic", plasticImages);
-        // shields.io "flat" style (new default from Feb 1 2015)
-        StatusImage[] flatImages = new StatusImage[] {
-                new StatusImage("build-failing-red-flat.svg"),
-                new StatusImage("build-unstable-yellow-flat.svg"),
-                new StatusImage("build-passing-brightgreen-flat.svg"),
-                new StatusImage("build-running-blue-flat.svg"),
-                new StatusImage("build-aborted-lightgrey-flat.svg"),
-                new StatusImage("build-unknown-lightgrey-flat.svg")
-        };
-        styles.put("flat", flatImages);
-        // Pick a default style
-        defaultStyle = flatImages;
-        styles.put("default", defaultStyle);
+    public StatusImage getImage(BallColor color)  {
+        return getImage(color, "default", null, null, null);
     }
 
-    public StatusImage getImage(BallColor color) {
-        return getImage(color, "default");
+    public StatusImage getImage(BallColor color, String style)  {
+        return getImage(color, style, null, null, null);
     }
 
-    public StatusImage getImage(BallColor color, String style) {
-        StatusImage[] images = styles.get(style);
-        if (images == null)
-            images = defaultStyle;
+    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName) {
+        String statusColorName = color.noAnime().toString();
+        if (color.isAnimated()) {
+            statusColorName = "blue"; // "running"
+        } else if (color == BallColor.BLUE) {
+            statusColorName = "brightgreen";
+        }
 
-        if (color.isAnimated())
-            return images[3];
+        if (colorName == null) {
+            if (statusColorName.equals("aborted")) {
+                colorName = "lightgrey";
+            } else {
+                colorName = statusColorName;
+            }
+        }
 
-        switch (color) {
-        case RED:
-            return images[0];
-        case YELLOW:
-            return images[1];
-        case BLUE:
-            return images[2];
-        case ABORTED:
-            return images[4];
-        default:
-            return images[5];
+        if (subject == null) {
+            subject = "build";
+        }
+
+        if (status == null) {
+            status = statuses.get(statusColorName);
+            if (status == null) {
+                status = "unknown";
+            }
+        }
+        
+        try {
+            return new StatusImage(subject, status, colorName, style);
+        } catch (IOException ioe) {
+            return new StatusImage();
         }
     }
-
 }

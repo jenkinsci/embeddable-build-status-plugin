@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.badge.BadgeAction
+package org.jenkinsci.plugins.badge.JobBadgeAction
 
 def l = namespace(lib.LayoutTagLib)
 def st = namespace("jelly:stapler")
@@ -40,13 +40,22 @@ l.layout {
         def publicBadge = "${app.rootUrl}buildStatus/icon?job=${fullJobName}";
         def publicText = "${app.rootUrl}buildStatus/text?job=${fullJobName}";
 
-
-        h3 {
-            text(_("Image"))
-            img(id:"badgeUrlWithView",src:badgeUrlWithView)
-            text(_(" or "))
-            img(src:badgeUrlWithView + "?style=plastic")
-        }
+        h3(_("flat"))
+        img(id:"badgeUrlWithView",src:badgeUrlWithView)
+        raw ("<br/>")
+        img(id:"badgeUrlWithView",
+            src:badgeUrlWithView + "?subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
+            title:badgeUrlWithView + "?subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
+        h3(_("flat-square: "))
+        img(src:badgeUrlWithView + "?style=flat-square")
+        raw ("<br/>")
+        img(src:badgeUrlWithView + "?style=flat-square&subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
+            title:badgeUrlWithView + "?style=flat-square&subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
+        h3(_("plastic: "))
+        img(src:badgeUrlWithView + "?style=plastic")
+        raw ("<br/>")
+        img(src:badgeUrlWithView + "?style=plastic&subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
+            title:badgeUrlWithView + "?style=plastic&subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
 
         h3(_("Plain Link (with view)"))
         b {text(_("protected"))}

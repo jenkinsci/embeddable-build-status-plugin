@@ -1,9 +1,7 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
-import hudson.model.Action;
-import hudson.model.BallColor;
-import hudson.model.Job;
+import hudson.model.*;
 import jenkins.model.TransientActionFactory;
 
 import java.io.IOException;
@@ -13,12 +11,13 @@ import java.util.Collections;
 /**
  * @author Kohsuke Kawaguchi
  */
+@SuppressWarnings("rawtypes")
 @Extension
-public class BadgeActionFactory extends TransientActionFactory<Job> {
+public class JobBadgeActionFactory extends TransientActionFactory<Job> {
 
     private final ImageResolver iconResolver;
 
-    public BadgeActionFactory() throws IOException {
+    public JobBadgeActionFactory() throws IOException {
         iconResolver = new ImageResolver();
     }
 
@@ -29,7 +28,7 @@ public class BadgeActionFactory extends TransientActionFactory<Job> {
 
     @Override
     public Collection<? extends Action> createFor(Job target) {
-        return Collections.singleton(new BadgeAction(this,target));
+        return Collections.singleton(new JobBadgeAction(this,target));
     }
 
     public StatusImage getImage(BallColor color) {
@@ -38,6 +37,10 @@ public class BadgeActionFactory extends TransientActionFactory<Job> {
 
     public StatusImage getImage(BallColor color, String style) {
         return iconResolver.getImage(color, style);
+    }
+    
+    public StatusImage getImage(BallColor jobColor, String style, String subject, String status, String color) {
+        return iconResolver.getImage(jobColor, style, subject, status, color);
     }
 
 }
