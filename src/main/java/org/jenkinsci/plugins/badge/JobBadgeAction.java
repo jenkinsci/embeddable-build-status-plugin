@@ -2,7 +2,12 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.model.Action;
 import hudson.model.Job;
+import hudson.model.Run;
+import hudson.model.ParametersAction;
+import hudson.model.ParameterValue;
 import jenkins.model.Jenkins;
+
+import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import java.util.List;
@@ -12,9 +17,8 @@ import java.util.List;
 */
 public class JobBadgeAction implements Action {
     private final JobBadgeActionFactory factory;
-
     public final Job project;
-
+    
     public JobBadgeAction(JobBadgeActionFactory factory, Job project) {
         this.factory = factory;
         this.project = project;
@@ -35,14 +39,18 @@ public class JobBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color) {
-        /*
-        List<? extends Action> lst = project.getLastBuild().getAllActions();
-        for (Action action : lst) {
-            status = action.getDisplayName();
-            break;
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config) {
+        EmbeddableBadgeConfig badgeConfig = factory.resolveConfig(project, config);
+        subject = factory.resolveParameter(project, subject);
+        status = factory.resolveParameter(project, status);
+        color = factory.resolveParameter(project, color);
+
+        if (badgeConfig != null) {
+            if (subject == null) subject = badgeConfig.getSubject();
+            if (status == null) status = badgeConfig.getStatus();
+            if (color == null) color = badgeConfig.getColor();
         }
-        */
+        
         return factory.getImage(project.getIconColor(), style, subject, status, color);
     }
 

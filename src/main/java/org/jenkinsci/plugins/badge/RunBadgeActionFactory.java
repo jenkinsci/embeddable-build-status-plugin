@@ -16,9 +16,11 @@ import java.util.Collections;
 public class RunBadgeActionFactory extends TransientActionFactory<Run> {
 
     private final ImageResolver iconResolver;
+    private final RunParameterResolver runParameterResolver;
 
     public RunBadgeActionFactory() throws IOException {
         iconResolver = new ImageResolver();
+        runParameterResolver = new RunParameterResolver();
     }
 
     @Override
@@ -29,6 +31,14 @@ public class RunBadgeActionFactory extends TransientActionFactory<Run> {
     @Override
     public Collection<? extends Action> createFor(Run target) {
         return Collections.singleton(new RunBadgeAction(this, target));
+    }
+
+    public String resolveParameter(Run run, String parameter) {
+        return runParameterResolver.resolveParameter(run, parameter);
+    }
+
+    public EmbeddableBadgeConfig resolveConfig(Run run, String id) {
+        return runParameterResolver.resolveConfig(run, id);
     }
 
     public StatusImage getImage(BallColor color) {

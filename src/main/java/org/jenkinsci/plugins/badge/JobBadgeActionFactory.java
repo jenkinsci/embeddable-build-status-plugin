@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
+
 /**
  * @author Kohsuke Kawaguchi
  */
@@ -16,9 +18,11 @@ import java.util.Collections;
 public class JobBadgeActionFactory extends TransientActionFactory<Job> {
 
     private final ImageResolver iconResolver;
+    private final RunParameterResolver runParameterResolver;
 
     public JobBadgeActionFactory() throws IOException {
         iconResolver = new ImageResolver();
+        runParameterResolver = new RunParameterResolver();
     }
 
     @Override
@@ -29,6 +33,14 @@ public class JobBadgeActionFactory extends TransientActionFactory<Job> {
     @Override
     public Collection<? extends Action> createFor(Job target) {
         return Collections.singleton(new JobBadgeAction(this,target));
+    }
+
+    public String resolveParameter(Job project, String parameter) {
+        return runParameterResolver.resolveParameter(project, parameter);
+    }
+
+    public EmbeddableBadgeConfig resolveConfig(Job project, String id) {
+        return runParameterResolver.resolveConfig(project, id);
     }
 
     public StatusImage getImage(BallColor color) {

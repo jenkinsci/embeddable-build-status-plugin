@@ -33,7 +33,18 @@ public class RunBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color) {
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config) {
+        EmbeddableBadgeConfig badgeConfig = factory.resolveConfig(run, config);
+        subject = factory.resolveParameter(run, subject);
+        status = factory.resolveParameter(run, status);
+        color = factory.resolveParameter(run, color);
+
+        if (badgeConfig != null) {
+            if (subject == null) subject = badgeConfig.getSubject();
+            if (status == null) status = badgeConfig.getStatus();
+            if (color == null) color = badgeConfig.getColor();
+        }
+        
         return factory.getImage(run.getIconColor(), style, subject, status, color);
     }
 
