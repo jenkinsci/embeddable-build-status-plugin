@@ -6,7 +6,7 @@
     <version>1.580.1</version>
   </parent>
 
-  <name>Embeddable Build Badges Plugin</name>
+  <name>Embeddable Build Status Plugin</name>
   <artifactId>embeddable-build-status</artifactId>
   <version>1.10a-thomas-dee</version>
   <packaging>hpi</packaging>

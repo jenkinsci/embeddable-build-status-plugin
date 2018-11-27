@@ -54,19 +54,19 @@ addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string
 
 #### Example
 ```groovy
-def badgeConfiguration = addBadgeConfiguration(id: "win32build", subject: "Windows Build")
+def win32BuildBadge = addEmbeddableBadgeConfiguration(id: "win32build", subject: "Windows Build")
 
 pipeline {
     agent any
     stages {
         steps {
             script {
-                badgeConfiguration.setStatus('running')
+                win32BuildBadge.setStatus('running')
                 try {
                     RunBuild()
-                    badgeConfiguration.setStatus('passing')
+                    win32BuildBadge.setStatus('passing')
                 } catch (Exception err) {
-                    badgeConfiguration.setStatus('failing')
+                    win32BuildBadge.setStatus('failing')
 
                     /* Note: If you do not set the color
                              the configuration uses the best status-matching color.
@@ -74,7 +74,7 @@ pipeline {
                              failing -> red 
                              ...
                     */
-                    badgeConfiguration.setColor('pink')
+                    win32BuildBadge.setColor('pink')
 
                     error 'Build failed'
                 }
