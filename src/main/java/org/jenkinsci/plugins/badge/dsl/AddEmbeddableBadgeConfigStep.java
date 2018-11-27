@@ -7,6 +7,9 @@ import hudson.model.TaskListener;
 import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
 import org.jenkinsci.plugins.badge.EmbeddableBadgeConfigsAction;
 
+import org.jenkinsci.plugins.badge.annotations.OptionalParam;
+import org.jenkinsci.plugins.badge.annotations.Param;
+
 //import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -30,11 +33,8 @@ public class AddEmbeddableBadgeConfigStep extends Step {
     private final EmbeddableBadgeConfig badgeConfig;
   
     @DataBoundConstructor
-    public AddEmbeddableBadgeConfigStep(String id, String subject, String status, String color) {
+    public AddEmbeddableBadgeConfigStep(@Param(name = "id", description = "The id for the badge configuration") String id) {
       this.badgeConfig = new EmbeddableBadgeConfig(id);
-      this.badgeConfig.setSubject(subject);
-      this.badgeConfig.setStatus(status);
-      this.badgeConfig.setColor(color);
     }
   
     public String getID() {
@@ -46,6 +46,7 @@ public class AddEmbeddableBadgeConfigStep extends Step {
     }
   
     @DataBoundSetter
+    @OptionalParam(description = "The subject used for the badge configuration")
     public void setSubject(String subject) {
       this.badgeConfig.setSubject(subject);
     }
@@ -55,6 +56,7 @@ public class AddEmbeddableBadgeConfigStep extends Step {
     }
   
     @DataBoundSetter
+    @OptionalParam(description = "The status used for the badge configuration")
     public void setStatus(String status) {
       this.badgeConfig.setStatus(status);
     }
@@ -64,6 +66,7 @@ public class AddEmbeddableBadgeConfigStep extends Step {
     }
   
     @DataBoundSetter
+    @OptionalParam(description = "The color used for the badge configuration")
     public void setColor(String color) {
       this.badgeConfig.setColor(color);
     }
