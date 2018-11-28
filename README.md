@@ -27,10 +27,15 @@ The customized examples above uses the following query parameters:
 
 `?subject=Custom Text&status=My passing text&color=pink`
 
+All three query parameters can also access used build parameters:
+
+`?subject=Build ${params.BRANCH_NAME}`
+
 ## `config`
 You can add pre-customized badge configurations via pipeline script.
 
 ### `addEmbeddableBadgeConfiguration`
+This function returns a configuration object.
 
 ```groovy
 /**
