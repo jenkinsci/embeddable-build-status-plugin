@@ -27,7 +27,7 @@ The customized examples above uses the following query parameters:
 
 `?subject=Custom Text&status=My passing text&color=pink`
 
-All three query parameters can also access used build parameters:
+All three query parameters can also access used pipeline build parameters:
 
 `?subject=Build ${params.BRANCH_NAME}`
 
