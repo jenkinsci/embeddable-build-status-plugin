@@ -32,18 +32,18 @@ public class RunParameterResolver {
         if (parameter != null) {
             ParametersAction params = run.getAction(ParametersAction.class);
             if (params != null) {
-                // try to match any ${params.<ParamName> or <DefaultValue>}
+                // try to match any ${params.<ParamName>|<DefaultValue>}
                 Matcher matcher = defaultPattern.matcher(parameter);
                 while (matcher.find()) {
                     // get value for <ParamName>
                     ParameterValue value = params.getParameter(matcher.group(1));
                     if (value != null) {
-                        // replace ${params.<ParamName> or <DefaultValue>} with the value
+                        // replace ${params.<ParamName>|<DefaultValue>} with the value
                         String valueStr = value.getValue().toString();
                         parameter = matcher.replaceAll(valueStr);
                         matcher = defaultPattern.matcher(parameter);
                     } else {
-                        // replace ${params.<ParamName> or <DefaultValue>} with the <DefaultValue>
+                        // replace ${params.<ParamName>|<DefaultValue>} with the <DefaultValue>
                         parameter = matcher.replaceAll("$2");
                         matcher = defaultPattern.matcher(parameter);
                     }

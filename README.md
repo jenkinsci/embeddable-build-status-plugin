@@ -35,8 +35,6 @@ All three query parameters can also access used pipeline build parameters:
 You can add pre-customized badge configurations via pipeline script.
 
 ### `addEmbeddableBadgeConfiguration`
-This function returns a configuration object.
-
 ```groovy
 /**
  * Adds a badge configuration with the given id.
@@ -56,6 +54,8 @@ addEmbeddableBadgeConfiguration(id: <id>)
  */
 addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>)
 ```
+
+This function returns a configuration object.
 
 #### Example
 ```groovy
@@ -89,7 +89,7 @@ pipeline {
 }
 ```
 
-You can the use the `config` query parameter to reference the `win32build` id:
+You can use the `config` query parameter to reference the `win32build` id:
 
 `?config=win32build`
 
