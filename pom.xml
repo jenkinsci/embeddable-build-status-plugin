@@ -8,7 +8,7 @@
 
   <name>Embeddable Build Status Plugin</name>
   <artifactId>embeddable-build-status</artifactId>
-  <version>1.10a-thomas-dee</version>
+  <version>1.10-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin</url>
 
