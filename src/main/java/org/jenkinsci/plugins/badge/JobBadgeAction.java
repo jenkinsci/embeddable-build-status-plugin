@@ -39,19 +39,8 @@ public class JobBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config) {
-        EmbeddableBadgeConfig badgeConfig = factory.resolveConfig(project, config);
-        subject = factory.resolveParameter(project, subject);
-        status = factory.resolveParameter(project, status);
-        color = factory.resolveParameter(project, color);
-
-        if (badgeConfig != null) {
-            if (subject == null) subject = badgeConfig.getSubject();
-            if (status == null) status = badgeConfig.getStatus();
-            if (color == null) color = badgeConfig.getColor();
-        }
-        
-        return factory.getImage(project.getIconColor(), style, subject, status, color);
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedcolor) {
+        return factory.iconRequestHandler().handleIconRequestForJob(project, style, subject, status, color, animatedcolor, config);
     }
 
     /**

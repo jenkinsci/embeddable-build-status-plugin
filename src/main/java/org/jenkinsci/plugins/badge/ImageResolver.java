@@ -42,19 +42,16 @@ public class ImageResolver {
         };
     };
 
-    public StatusImage getImage(BallColor color)  {
-        return getImage(color, "default", null, null, null);
-    }
-
-    public StatusImage getImage(BallColor color, String style)  {
-        return getImage(color, style, null, null, null);
-    }
-
-    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName) {
+    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName, String animatedOverlayColor) {
         String statusColorName = color.noAnime().toString();
-        if (color.isAnimated()) {
-            statusColorName = "blue"; // "running"
-        } else if (color == BallColor.BLUE) {
+        String statusAnimatedOverlayColorName = null;
+
+        if (color.isAnimated() && colorName == null) {
+            // animated means "running"
+            statusAnimatedOverlayColorName = "blue";
+        }
+
+        if (statusColorName == "blue") {
             statusColorName = "brightgreen";
         }
 
@@ -64,6 +61,10 @@ public class ImageResolver {
             } else {
                 colorName = statusColorName;
             }
+
+            if (animatedOverlayColor == null) {
+                animatedOverlayColor = statusAnimatedOverlayColorName;
+            }
         }
 
         if (subject == null) {
@@ -71,14 +72,14 @@ public class ImageResolver {
         }
 
         if (status == null) {
-            status = statuses.get(statusColorName);
+            status = statuses.get(statusAnimatedOverlayColorName != null ? statusAnimatedOverlayColorName : statusColorName);
             if (status == null) {
                 status = "unknown";
             }
         }
         
         try {
-            return new StatusImage(subject, status, colorName, style);
+            return new StatusImage(subject, status, colorName, statusAnimatedOverlayColorName, style);
         } catch (IOException ioe) {
             return new StatusImage();
         }

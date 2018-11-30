@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
+import org.jenkinsci.plugins.badge.IconRequestHandler;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -17,12 +18,10 @@ import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
 @Extension
 public class JobBadgeActionFactory extends TransientActionFactory<Job> {
 
-    private final ImageResolver iconResolver;
-    private final RunParameterResolver runParameterResolver;
+    private final IconRequestHandler iconRequestHandler;
 
     public JobBadgeActionFactory() throws IOException {
-        iconResolver = new ImageResolver();
-        runParameterResolver = new RunParameterResolver();
+        this.iconRequestHandler = new IconRequestHandler();
     }
 
     @Override
@@ -35,24 +34,7 @@ public class JobBadgeActionFactory extends TransientActionFactory<Job> {
         return Collections.singleton(new JobBadgeAction(this,target));
     }
 
-    public String resolveParameter(Job project, String parameter) {
-        return runParameterResolver.resolveParameter(project, parameter);
+    public IconRequestHandler iconRequestHandler() {
+        return iconRequestHandler;
     }
-
-    public EmbeddableBadgeConfig resolveConfig(Job project, String id) {
-        return runParameterResolver.resolveConfig(project, id);
-    }
-
-    public StatusImage getImage(BallColor color) {
-        return iconResolver.getImage(color);
-    }
-
-    public StatusImage getImage(BallColor color, String style) {
-        return iconResolver.getImage(color, style);
-    }
-    
-    public StatusImage getImage(BallColor jobColor, String style, String subject, String status, String color) {
-        return iconResolver.getImage(jobColor, style, subject, status, color);
-    }
-
 }

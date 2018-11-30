@@ -70,6 +70,16 @@ public class AddEmbeddableBadgeConfigStep extends Step {
     public void setColor(String color) {
       this.badgeConfig.setColor(color);
     }
+
+    public String getAnimatedOverlayColor() {
+      return badgeConfig.getAnimatedOverlayColor();
+    }
+  
+    @DataBoundSetter
+    @OptionalParam(description = "The animated overlay color used for the badge configuration")
+    public void setAnimatedOverlayColor(String animatedOverlayColor) {
+      this.badgeConfig.setAnimatedOverlayColor(animatedOverlayColor);
+    }
   
     @Override
     public StepExecution start(StepContext context) {

@@ -27,6 +27,7 @@ import hudson.Extension;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
+import hudson.model.Actionable;
 import hudson.model.UnprotectedRootAction;
 import hudson.security.ACL;
 import hudson.security.Permission;
@@ -66,13 +67,9 @@ import org.kohsuke.stapler.StaplerResponse;
 public class PublicBadgeAction implements UnprotectedRootAction {
 
     public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
-
-    private final ImageResolver iconResolver;
-    private final RunParameterResolver runParameterResolver;
-
+    private IconRequestHandler iconRequestHandler;
     public PublicBadgeAction() throws IOException {
-        iconResolver = new ImageResolver();
-        runParameterResolver = new RunParameterResolver();
+        iconRequestHandler = new IconRequestHandler();
     }
 
     public String getUrlName() {
@@ -87,29 +84,20 @@ public class PublicBadgeAction implements UnprotectedRootAction {
         return null;
     }
 
-    private <T> HttpResponse handleIconRequest(T object, @QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config) {
-        EmbeddableBadgeConfig badgeConfig = factory.resolveConfig(object, config);
-        subject = factory.resolveParameter(object, subject);
-        status = factory.resolveParameter(object, status);
-        color = factory.resolveParameter(object, color);
-        if (badgeConfig != null) {
-            if (subject == null) subject = badgeConfig.getSubject();
-            if (status == null) status = badgeConfig.getStatus();
-            if (color == null) color = badgeConfig.getColor();
-        }
-        return iconResolver.getImage(object.getIconColor(), style, subject, status, color);
-    }
-
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build, @QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config) {
+    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, 
+                                @QueryParameter String build, @QueryParameter String style, 
+                                @QueryParameter String subject, @QueryParameter String status, 
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
+                                @QueryParameter String config) {
         if(build != null) {
             Run run = getRun(job, build);
-            return handleIconRequest(run, style, subject, status, color);
+            return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
         } else {
             Job<?, ?> project = getProject(job);
-            return handleIconRequest(project, style, subject, status, color);
+            return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
         }
     }
 

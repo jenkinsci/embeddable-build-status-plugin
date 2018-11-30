@@ -15,12 +15,10 @@ import java.util.Collections;
 @Extension
 public class RunBadgeActionFactory extends TransientActionFactory<Run> {
 
-    private final ImageResolver iconResolver;
-    private final RunParameterResolver runParameterResolver;
+    private final IconRequestHandler iconRequestHandler;
 
     public RunBadgeActionFactory() throws IOException {
-        iconResolver = new ImageResolver();
-        runParameterResolver = new RunParameterResolver();
+        this.iconRequestHandler = new IconRequestHandler();
     }
 
     @Override
@@ -33,23 +31,7 @@ public class RunBadgeActionFactory extends TransientActionFactory<Run> {
         return Collections.singleton(new RunBadgeAction(this, target));
     }
 
-    public String resolveParameter(Run run, String parameter) {
-        return runParameterResolver.resolveParameter(run, parameter);
-    }
-
-    public EmbeddableBadgeConfig resolveConfig(Run run, String id) {
-        return runParameterResolver.resolveConfig(run, id);
-    }
-
-    public StatusImage getImage(BallColor color) {
-        return iconResolver.getImage(color);
-    }
-
-    public StatusImage getImage(BallColor color, String style) {
-        return iconResolver.getImage(color, style);
-    }
-    
-    public StatusImage getImage(BallColor jobColor, String style, String subject, String status, String color) {
-        return iconResolver.getImage(jobColor, style, subject, status, color);
+    public IconRequestHandler iconRequestHandler() {
+        return iconRequestHandler;
     }
 }

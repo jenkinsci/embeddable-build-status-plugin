@@ -71,26 +71,7 @@ class StatusImage implements HttpResponse {
         payload = new byte[0];
     }
 
-    StatusImage(String fileName) throws IOException {
-        etag = '"' + Jenkins.RESOURCE_PATH + '/' + fileName + '"';
-
-        URL image = new URL(
-            Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
-            "status/"+fileName);
-        InputStream s = image.openStream();
-        try {
-            payload = IOUtils.toByteArray(s);
-        } finally {
-            IOUtils.closeQuietly(s);
-        }
-        length = Integer.toString(payload.length);
-    }
-
-	StatusImage(String subject, String status, String colorName) throws IOException {
-		this(subject, status, colorName, null);
-	}
-
-	StatusImage(String subject, String status, String colorName, String style) throws IOException {
+	StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
 		etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName;
 
 		if (style == null) {
@@ -98,29 +79,65 @@ class StatusImage implements HttpResponse {
 		}
 
 		URL image = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
-				"status/" + style + ".svg");
-		InputStream s = image.openStream();
+                "status/" + style + ".svg");
+                
+        URL animatedSnippet = null;
+        String animatedColor = null;
+        
+        if (animatedColorName != null) {
+            animatedSnippet = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
+                "status/animatedOverlay.svg.snippet");
 
+            animatedColor = colors.get(animatedColorName.toLowerCase());
+            if (animatedColor == null) {
+                if (colorName.matches("-?[0-9a-fA-F]+")) {
+                    animatedColor = "#" + animatedColorName;
+                } else {
+                    animatedColor = animatedColorName;
+                }
+            }
+        }
+
+        InputStream s = image.openStream();
+    
 		double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
 
+        if (animatedColor != null) {
+            widths[1] += 4;
+        }
+        
 		String color = colors.get(colorName.toLowerCase());
-
 		if (color == null) {
             if (colorName.matches("-?[0-9a-fA-F]+")) {
                 color = "#" + colorName;
             } else {
                 color = colorName;
             }
-		}
-
+        }
+        
 		String fullwidth = String.valueOf(widths[0] + widths[1]);
 		String subjectWidth = String.valueOf(widths[0]);
 		String statusWidth = String.valueOf(widths[1]);
 		String subjectPos = String.valueOf((widths[0] / 2) + 1);
 		String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
+        String animatedOverlay = "";
+
+        // first: add animated overlay
+        if (animatedSnippet != null) {
+            String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
+            InputStream animatedOverlayStream = animatedSnippet.openStream();
+            try {
+                animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
+                    .replace("{{reducedStatusWidth}}", reducedStatusWidth)
+                    .replace("{{animatedColor}}", animatedColor);
+            } finally {
+                IOUtils.closeQuietly(animatedOverlayStream);
+            }
+        }
 
 		try {
             payload = IOUtils.toString(s, "utf-8")
+                    .replace("{{animatedOverlayColor}}", animatedOverlay)
                     .replace("{{fullwidth}}", fullwidth)
                     .replace("{{subjectWidth}}", subjectWidth)
                     .replace("{{statusWidth}}", statusWidth)
