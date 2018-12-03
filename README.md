@@ -22,12 +22,12 @@ There three basic types supported:
 
 ![Customized Badge](src/doc/flat-square_configured.svg "Customized Badge") (customized)
 
-## `subject`, `status` and `color`
+## `subject`, `status`, `color` and `animatedOverlayColor`
 The customized examples above uses the following query parameters:
 
 `?subject=Custom Text&status=My passing text&color=pink`
 
-All three query parameters can also access used pipeline build parameters:
+All four query parameters can also access used pipeline build parameters:
 
 `?subject=Build ${params.BRANCH_NAME}`
 

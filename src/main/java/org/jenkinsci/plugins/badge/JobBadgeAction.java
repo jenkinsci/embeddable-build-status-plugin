@@ -39,8 +39,8 @@ public class JobBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedcolor) {
-        return factory.iconRequestHandler().handleIconRequestForJob(project, style, subject, status, color, animatedcolor, config);
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
+        return factory.iconRequestHandler().handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
     }
 
     /**

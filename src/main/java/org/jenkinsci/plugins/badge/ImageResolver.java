@@ -79,7 +79,7 @@ public class ImageResolver {
         }
         
         try {
-            return new StatusImage(subject, status, colorName, statusAnimatedOverlayColorName, style);
+            return new StatusImage(subject, status, colorName, animatedOverlayColor, style);
         } catch (IOException ioe) {
             return new StatusImage();
         }

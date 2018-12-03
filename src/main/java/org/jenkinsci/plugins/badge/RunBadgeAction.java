@@ -33,8 +33,8 @@ public class RunBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedcolor, @QueryParameter String config) {
-        return factory.iconRequestHandler().handleIconRequestForRun(run, style, subject, status, color, animatedcolor, config);
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config) {
+        return factory.iconRequestHandler().handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
     }
 
     /**

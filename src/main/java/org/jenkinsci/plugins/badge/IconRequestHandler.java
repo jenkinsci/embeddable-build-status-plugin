@@ -47,7 +47,7 @@ public class IconRequestHandler {
         subject = runParameterResolver.resolveParameter(job, subject);
         status = runParameterResolver.resolveParameter(job, status);
         color = runParameterResolver.resolveParameter(job, color);
-        animatedOverlayColor = runParameterResolver.resolveParameter(job, color);
+        animatedOverlayColor = runParameterResolver.resolveParameter(job, animatedOverlayColor);
         if (badgeConfig != null) {
             if (subject == null) subject = badgeConfig.getSubject();
             if (status == null) status = badgeConfig.getStatus();
