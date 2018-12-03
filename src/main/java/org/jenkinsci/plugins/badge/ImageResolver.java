@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageResolver {
-
+    
     private final Map<String, String> statuses = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
         {
@@ -51,10 +51,10 @@ public class ImageResolver {
             statusAnimatedOverlayColorName = "blue";
         }
 
-        if (statusColorName == "blue") {
+        if (statusColorName.equals("blue")) {
             statusColorName = "brightgreen";
         }
-
+        
         if (colorName == null) {
             if (statusColorName.equals("aborted")) {
                 colorName = "lightgrey";
