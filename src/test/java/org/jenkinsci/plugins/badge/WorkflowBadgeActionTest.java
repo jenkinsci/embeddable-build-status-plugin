@@ -41,7 +41,7 @@ public class WorkflowBadgeActionTest {
         final SecurityRealm realm = j.createDummySecurityRealm();
         j.jenkins.setSecurityRealm(realm);
         GlobalMatrixAuthorizationStrategy auth = new GlobalMatrixAuthorizationStrategy();
-        auth.add(PublicBadgeAction.VIEW_STATUS, "anonymous");
+        auth.add(PublicBuildStatusAction.VIEW_STATUS, "anonymous");
         j.getInstance().setSecurityRealm(realm);
         j.getInstance().setAuthorizationStrategy(auth);
 

@@ -51,8 +51,9 @@ addEmbeddableBadgeConfiguration(id: <id>)
  * subject: A subject text
  * status: A status text
  * color: A valid color (RGB-HEX: RRGGBB or valid SVG color name)
+ * animatedOverlayColor: A valid color (RGB-HEX: RRGGBB or valid SVG color name)
  */
-addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>)
+addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>, animatedOverlayColor: <string>)
 ```
 
 This function returns a configuration object.

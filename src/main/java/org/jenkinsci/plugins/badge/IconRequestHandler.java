@@ -24,6 +24,7 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
+import hudson.model.BallColor;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
@@ -38,6 +39,13 @@ public class IconRequestHandler {
         this.runParameterResolver = new RunParameterResolver();
     }
 
+    public StatusImage handleIconRequest(String style, 
+                    String subject, String status, 
+                    String color, String animatedOverlayColor, 
+                    String config) {
+        return iconResolver.getImage(BallColor.BLUE, style, subject, status, color, animatedOverlayColor);
+    }
+    
     public StatusImage handleIconRequestForJob(Job job, String style, 
                     String subject, String status, 
                     String color, String animatedOverlayColor, 

@@ -64,7 +64,7 @@ public class EmbeddableBadgeConfig implements Serializable {
 
     public String getAnimatedOverlayColor() {
       if (this.animatedOverlayColor == null && this.color == null) {
-          if (this.status.equals("running")) {
+          if (this.status != null && this.status.equals("running")) {
               return "blue";
           }
       }
