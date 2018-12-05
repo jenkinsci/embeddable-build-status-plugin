@@ -7,11 +7,13 @@ import hudson.model.ParametersAction;
 import hudson.model.ParameterValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
 
 import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
 
 public class RunParameterResolver {
     private static Pattern pattern = Pattern.compile("\\$\\{params\\.([^\\{\\}\\s]+)\\}");
+    private static Pattern custom = Pattern.compile("\\$\\{(buildId|buildNumber|duration|runningTime|displayName)\\}");
     private static Pattern defaultPattern = Pattern.compile("\\$\\{params\\.([^\\{\\}\\s\\|]+)\\|([^\\}\\|]+)\\}");
 
     public EmbeddableBadgeConfig resolveConfig(Run run, String id) {
@@ -65,6 +67,34 @@ public class RunParameterResolver {
                         matcher = pattern.matcher(parameter);
                     }
                 }
+            }
+
+            
+            /* try to match any custom value:
+                 ${buildId}
+                 ${buildNumber}
+                 ${duration}
+                 ${displayName}
+                 ${runningTime}
+            */
+            Matcher matcher = custom.matcher(parameter);
+            while (matcher.find()) {
+                String customKey = matcher.group(1);
+                if (customKey.equals("buildId")) {
+                    parameter = matcher.replaceFirst(run.getId());
+                } else if (customKey.equals("buildNumber")) {
+                    parameter = matcher.replaceFirst(Integer.toString(run.getNumber()));
+                } else if (customKey.equals("duration")) {
+                    parameter = matcher.replaceFirst(run.getDurationString());
+                } else if (customKey.equals("displayName")) {
+                    parameter = matcher.replaceFirst(run.getDisplayName());
+                } else if (customKey.equals("runningTime")) {
+                    parameter = matcher.replaceFirst(run.getTimestampString());
+                } else {
+                    // this actually should NOT happen
+                    parameter = matcher.replaceFirst(customKey);
+                }
+                matcher = custom.matcher(parameter);
             }
         }
         return parameter;

@@ -24,22 +24,10 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
-import hudson.model.Item;
-import hudson.model.Job;
-import hudson.model.Run;
-import hudson.model.Actionable;
 import hudson.model.UnprotectedRootAction;
-import hudson.security.ACL;
-import hudson.security.Permission;
-import hudson.security.PermissionScope;
-import hudson.util.HttpResponses;
 
 import java.io.IOException;
 
-import jenkins.model.Jenkins;
-
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -71,7 +59,7 @@ public class PublicBadgeAction implements UnprotectedRootAction {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp,
+    public HttpResponse doIndex(StaplerRequest req, StaplerResponse rsp,
                                 @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
