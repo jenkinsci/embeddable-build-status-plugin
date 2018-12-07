@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.jenkinsci.plugins.badge.actions.RunBadgeAction;
+
 /**
  * @author Kohsuke Kawaguchi
  */
@@ -15,10 +17,7 @@ import java.util.Collections;
 @Extension
 public class RunBadgeActionFactory extends TransientActionFactory<Run> {
 
-    private final IconRequestHandler iconRequestHandler;
-
     public RunBadgeActionFactory() throws IOException {
-        this.iconRequestHandler = new IconRequestHandler();
     }
 
     @Override
@@ -29,9 +28,5 @@ public class RunBadgeActionFactory extends TransientActionFactory<Run> {
     @Override
     public Collection<? extends Action> createFor(Run target) {
         return Collections.singleton(new RunBadgeAction(this, target));
-    }
-
-    public IconRequestHandler iconRequestHandler() {
-        return iconRequestHandler;
     }
 }

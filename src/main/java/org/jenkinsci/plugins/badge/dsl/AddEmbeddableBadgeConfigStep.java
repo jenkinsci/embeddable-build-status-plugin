@@ -5,7 +5,7 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
-import org.jenkinsci.plugins.badge.EmbeddableBadgeConfigsAction;
+import org.jenkinsci.plugins.badge.actions.EmbeddableBadgeConfigsAction;
 
 import org.jenkinsci.plugins.badge.annotations.OptionalParam;
 import org.jenkinsci.plugins.badge.annotations.Param;
@@ -20,8 +20,6 @@ import org.jenkinsci.plugins.workflow.steps.SynchronousStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
 

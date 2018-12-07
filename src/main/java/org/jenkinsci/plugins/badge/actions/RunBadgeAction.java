@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.badge;
+package org.jenkinsci.plugins.badge.actions;
 
 import hudson.model.Action;
 import hudson.model.Job;
@@ -6,11 +6,12 @@ import hudson.model.Run;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
+import org.jenkinsci.plugins.badge.*;
 
 public class RunBadgeAction implements Action {
     private final RunBadgeActionFactory factory;
-    public final Run run;
-    public final Job project;
+    public final Run<?, ?> run;
+    public final Job<?, ?> project;
 
     public RunBadgeAction(RunBadgeActionFactory factory, Run run) {
         this.factory = factory;
@@ -34,7 +35,7 @@ public class RunBadgeAction implements Action {
      * Serves the badge image.
      */
     public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config) {
-        return factory.iconRequestHandler().handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+        return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
     }
 
     /**

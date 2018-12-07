@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
 import org.jenkinsci.plugins.badge.IconRequestHandler;
+import org.jenkinsci.plugins.badge.actions.JobBadgeAction;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -18,10 +18,7 @@ import org.jenkinsci.plugins.badge.IconRequestHandler;
 @Extension
 public class JobBadgeActionFactory extends TransientActionFactory<Job> {
 
-    private final IconRequestHandler iconRequestHandler;
-
     public JobBadgeActionFactory() throws IOException {
-        this.iconRequestHandler = new IconRequestHandler();
     }
 
     @Override
@@ -32,9 +29,5 @@ public class JobBadgeActionFactory extends TransientActionFactory<Job> {
     @Override
     public Collection<? extends Action> createFor(Job target) {
         return Collections.singleton(new JobBadgeAction(this,target));
-    }
-
-    public IconRequestHandler iconRequestHandler() {
-        return iconRequestHandler;
     }
 }

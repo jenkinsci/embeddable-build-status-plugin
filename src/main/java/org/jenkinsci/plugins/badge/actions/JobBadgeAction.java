@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.badge;
+package org.jenkinsci.plugins.badge.actions;
 
 import hudson.model.Action;
 import hudson.model.Job;
@@ -7,10 +7,10 @@ import hudson.model.ParametersAction;
 import hudson.model.ParameterValue;
 import jenkins.model.Jenkins;
 
-import org.jenkinsci.plugins.badge.EmbeddableBadgeConfig;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import java.util.List;
+import org.jenkinsci.plugins.badge.*;
 
 /**
 * @author Kohsuke Kawaguchi
@@ -40,7 +40,7 @@ public class JobBadgeAction implements Action {
      * Serves the badge image.
      */
     public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
-        return factory.iconRequestHandler().handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
+        return PluginImpl.iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
     }
 
     /**

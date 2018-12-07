@@ -29,14 +29,16 @@ import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 
+import org.jenkinsci.plugins.badge.actions.EmbeddableBadgeConfigsAction;
+
 public class IconRequestHandler {
 
     private final ImageResolver iconResolver;
-    private final RunParameterResolver runParameterResolver;
+    private final ParameterResolver parameterResolver;
 
     public IconRequestHandler() {
         this.iconResolver = new ImageResolver();
-        this.runParameterResolver = new RunParameterResolver();
+        this.parameterResolver = new ParameterResolver();
     }
 
     public StatusImage handleIconRequest(String style, 
@@ -51,11 +53,11 @@ public class IconRequestHandler {
                     String color, String animatedOverlayColor, 
                     String config) {
 
-        EmbeddableBadgeConfig badgeConfig = runParameterResolver.resolveConfig(job, config);
-        subject = runParameterResolver.resolveParameter(job, subject);
-        status = runParameterResolver.resolveParameter(job, status);
-        color = runParameterResolver.resolveParameter(job, color);
-        animatedOverlayColor = runParameterResolver.resolveParameter(job, animatedOverlayColor);
+        EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(job, config);
+        subject = parameterResolver.resolve(job, subject);
+        status = parameterResolver.resolve(job, status);
+        color = parameterResolver.resolve(job, color);
+        animatedOverlayColor = parameterResolver.resolve(job, animatedOverlayColor);
         if (badgeConfig != null) {
             if (subject == null) subject = badgeConfig.getSubject();
             if (status == null) status = badgeConfig.getStatus();
@@ -70,11 +72,11 @@ public class IconRequestHandler {
                     String color, String animatedOverlayColor,
                     String config) {
 
-        EmbeddableBadgeConfig badgeConfig = runParameterResolver.resolveConfig(run, config);
-        subject = runParameterResolver.resolveParameter(run, subject);
-        status = runParameterResolver.resolveParameter(run, status);
-        color = runParameterResolver.resolveParameter(run, color);
-        animatedOverlayColor = runParameterResolver.resolveParameter(run, animatedOverlayColor);
+        EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(run, config);
+        subject = parameterResolver.resolve(run, subject);
+        status = parameterResolver.resolve(run, status);
+        color = parameterResolver.resolve(run, color);
+        animatedOverlayColor = parameterResolver.resolve(run, animatedOverlayColor);
         if (badgeConfig != null) {
             if (subject == null) subject = badgeConfig.getSubject();
             if (status == null) status = badgeConfig.getStatus();

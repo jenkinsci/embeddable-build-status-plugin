@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jenkinsci.plugins.badge;
+package org.jenkinsci.plugins.badge.actions;
 
 import hudson.Extension;
 import hudson.model.UnprotectedRootAction;
+import org.jenkinsci.plugins.badge.*;
 
 import java.io.IOException;
 
@@ -39,9 +40,7 @@ import org.kohsuke.stapler.StaplerResponse;
 @Extension
 public class PublicBadgeAction implements UnprotectedRootAction {
 
-    private IconRequestHandler iconRequestHandler;
     public PublicBadgeAction() throws IOException {
-        iconRequestHandler = new IconRequestHandler();
     }
 
     public String getUrlName() {
@@ -64,6 +63,6 @@ public class PublicBadgeAction implements UnprotectedRootAction {
                                 @QueryParameter String subject, @QueryParameter String status, 
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
                                 @QueryParameter String config) {
-        return iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor, config);
+        return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor, config);
     }
 }

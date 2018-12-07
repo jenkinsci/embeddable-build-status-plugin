@@ -24,19 +24,16 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
+import hudson.ExtensionList;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
-import hudson.model.Actionable;
-import hudson.model.UnprotectedRootAction;
 import hudson.security.ACL;
 import hudson.security.Permission;
 import hudson.security.PermissionScope;
 import hudson.util.HttpResponses;
-import hudson.util.RunList;
 
 import java.io.IOException;
-import java.util.ListIterator;
 import java.lang.NumberFormatException;
 
 import jenkins.model.Jenkins;
@@ -47,6 +44,10 @@ import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import org.jenkinsci.plugins.badge.actions.PublicBadgeAction;
+import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
+import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 
 /**
  * Exposes the build status badge via unprotected URL.
@@ -99,7 +100,7 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
                                 @QueryParameter String config) {
         if(build != null) {
-            Run run = getRun(job, build);
+            Run<?, ?> run = getRun(job, build);
             return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
         } else {
             Job<?, ?> project = getProject(job);
@@ -112,7 +113,7 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
      */
     public String doText(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
         if(build != null) {
-            Run run = getRun(job, build);
+            Run<?, ?> run = getRun(job, build);
             return run.getIconColor().getDescription();
         } else {
             Job<?, ?> project = getProject(job);
@@ -126,8 +127,18 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
             // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
             SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
             try {
-                p = Jenkins.getInstance().getItemByFullName(job, Job.class);
-            } finally {
+                // first try to get Job via JobSelectorExtensionPoints
+                for (JobSelectorExtensionPoint jobSelector : ExtensionList.lookup(JobSelectorExtensionPoint.class)) {
+                    p = jobSelector.select(job);
+                    if (p != null) {
+                        break;
+                    }
+                }
+
+                if (p == null) {
+                    p = Jenkins.getInstance().getItemByFullName(job, Job.class);
+                }
+           } finally {
                 SecurityContextHolder.setContext(orig);
             }
         }
@@ -142,7 +153,7 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
 
     private Run<?, ?> getRun(String job, String build) {
         Run<?, ?> run = null;
-        Job project = getProject(job);
+        Job<?, ?> project = getProject(job);
         Boolean handleBuildId = false;
 
         if (project != null && build != null) {
@@ -156,34 +167,44 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
             // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
             SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
             try {
-                if (buildNr <= 0) {
-                    // find last build using relative build numbers
-                    run = project.getLastBuild();
-                    for (; buildNr < 0 && run != null; buildNr++) {
-                        run = run.getPreviousBuild();
+                // first try to get Run via RunSelectorExtensionPoints
+                for (RunSelectorExtensionPoint runSelector : ExtensionList.lookup(RunSelectorExtensionPoint.class)) {
+                    run = runSelector.select(project, build);
+                    if (run != null) {
+                        break;
                     }
-                } else {
-                    if (!handleBuildId) {
-                        run = project.getBuildByNumber(buildNr);
-                    }
-                    if (run == null) {
-                        if (build.equals("last")) {
-                            run = project.getLastBuild();
-                        } else if (build.equals("lastFailed")) {
-                            run = project.getLastFailedBuild();                           
-                        } else if (build.equals("lastSuccessful")) {
-                            run = project.getLastSuccessfulBuild();                           
-                        } else if (build.equals("lastUnsuccessful")) {
-                            run = project.getLastUnsuccessfulBuild();                           
-                        } else if (build.equals("lastStable")) {
-                            run = project.getLastStableBuild();                           
-                        } else if (build.equals("lastUnstable")) {
-                            run = project.getLastUnstableBuild();                           
-                        } else if (build.equals("lastCompleted")) {
-                            run = project.getLastCompletedBuild();                           
-                        } else {
-                            // try to get build via ID
-                            run = project.getBuild(build);
+                }
+
+                if (run == null) {
+                    if (buildNr <= 0) {
+                        // find last build using relative build numbers
+                        run = project.getLastBuild();
+                        for (; buildNr < 0 && run != null; buildNr++) {
+                            run = run.getPreviousBuild();
+                        }
+                    } else {
+                        if (!handleBuildId) {
+                            run = project.getBuildByNumber(buildNr);
+                        }
+                        if (run == null) {
+                            if (build.equals("last")) {
+                                run = project.getLastBuild();
+                            } else if (build.equals("lastFailed")) {
+                                run = project.getLastFailedBuild();                           
+                            } else if (build.equals("lastSuccessful")) {
+                                run = project.getLastSuccessfulBuild();                           
+                            } else if (build.equals("lastUnsuccessful")) {
+                                run = project.getLastUnsuccessfulBuild();                           
+                            } else if (build.equals("lastStable")) {
+                                run = project.getLastStableBuild();                           
+                            } else if (build.equals("lastUnstable")) {
+                                run = project.getLastUnstableBuild();                           
+                            } else if (build.equals("lastCompleted")) {
+                                run = project.getLastCompletedBuild();                           
+                            } else {
+                                // try to get build via ID
+                                run = project.getBuild(build);
+                            }
                         }
                     }
                 }

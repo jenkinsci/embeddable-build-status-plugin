@@ -33,18 +33,11 @@ import hudson.Plugin;
  * @author Dominik Bartholdi (imod)
  */
 
- /** Note:
-  *  Disabled since JENKINS-4172 is fixed.
-  *  Btw. this sometimes lead to NullPointerExeptions on startup?!
-public class PluginImpl extends Plugin {
+ public class PluginImpl extends Plugin {
+    public static final IconRequestHandler iconRequestHandler = new IconRequestHandler();
 
     @Override
     public void start() throws Exception {
-        //
-        // As a work around, force loading of this permission so that by the time we start loading ACLs,
-        // we have this instance already registered, thereby avoiding a lookup.
-        PublicBadgeAction.VIEW_STATUS.toString();
     }
-
 }
-*/
+
