@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="{{fullwidth}}" height="18">
+    <linearGradient id="a" x2="0" y2="100%">
+        <stop offset="0" stop-color="#fff" stop-opacity=".7" />
+        <stop offset=".1" stop-color="#aaa" stop-opacity=".1" />
+        <stop offset=".9" stop-opacity=".3" />
+        <stop offset="1" stop-opacity=".5" />
+    </linearGradient>
+    <rect rx="4" width="{{fullwidth}}" height="18" fill="#555" />
+    <rect rx="4" x="{{subjectWidth}}" width="{{statusWidth}}" height="18" fill="{{color}}" />
+    <path fill="{{color}}" d="M{{subjectWidth}} 0h4v18h-4z" />
+    {{animatedOverlayColor}}
+    <rect rx="4" width="{{fullwidth}}" height="18" fill="url(#a)" />
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="{{subjectPos}}" y="14" fill="#010101" fill-opacity=".3">{{subject}}</text>
+        <text x="{{subjectPos}}" y="13">{{subject}}</text>
+        <text x="{{statusPos}}" y="14" fill="#010101" fill-opacity=".3">{{status}}</text>
+        <text x="{{statusPos}}" y="13">{{status}}</text>
+    </g>
+</svg>

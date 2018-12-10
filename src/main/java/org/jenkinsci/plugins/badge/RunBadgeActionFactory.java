@@ -2,30 +2,31 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
 import hudson.model.*;
+import jenkins.model.TransientActionFactory;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-@Extension
-public class RunBadgeActionFactory extends TransientBuildActionFactory {
+import org.jenkinsci.plugins.badge.actions.RunBadgeAction;
 
-    private final ImageResolver iconResolver;
+/**
+ * @author Kohsuke Kawaguchi
+ */
+@SuppressWarnings("rawtypes")
+@Extension
+public class RunBadgeActionFactory extends TransientActionFactory<Run> {
 
     public RunBadgeActionFactory() throws IOException {
-        iconResolver = new ImageResolver();
+    }
+
+    @Override
+    public Class<Run> type() {
+        return Run.class;
     }
 
     @Override
     public Collection<? extends Action> createFor(Run target) {
         return Collections.singleton(new RunBadgeAction(this, target));
-    }
-
-    public StatusImage getImage(BallColor color) {
-        return iconResolver.getImage(color);
-    }
-
-    public StatusImage getImage(BallColor color, String style) {
-        return iconResolver.getImage(color, style);
     }
 }

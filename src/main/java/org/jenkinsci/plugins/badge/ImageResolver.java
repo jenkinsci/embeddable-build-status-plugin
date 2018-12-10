@@ -27,63 +27,61 @@ import hudson.model.BallColor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ImageResolver {
-
-    private final HashMap<String, StatusImage[]> styles;
-    private final StatusImage[] defaultStyle;
-
-    public ImageResolver() throws IOException{
-        styles = new HashMap<String, StatusImage[]>();
-        // shields.io "plastic" style (aka the old default)
-        StatusImage[] plasticImages = new StatusImage[] {
-                new StatusImage("build-failing-red.svg"),
-                new StatusImage("build-unstable-yellow.svg"),
-                new StatusImage("build-passing-brightgreen.svg"),
-                new StatusImage("build-running-blue.svg"),
-                new StatusImage("build-aborted-lightgrey.svg"),
-                new StatusImage("build-unknown-lightgrey.svg")
+    
+    private final Map<String, String> statuses = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put( "red", "failing" );
+            put( "brightgreen", "passing" );
+            put( "yellow", "unstable" );
+            put( "aborted", "aborted" );
+            put( "blue", "running" );
         };
-        styles.put("plastic", plasticImages);
-        // shields.io "flat" style (new default from Feb 1 2015)
-        StatusImage[] flatImages = new StatusImage[] {
-                new StatusImage("build-failing-red-flat.svg"),
-                new StatusImage("build-unstable-yellow-flat.svg"),
-                new StatusImage("build-passing-brightgreen-flat.svg"),
-                new StatusImage("build-running-blue-flat.svg"),
-                new StatusImage("build-aborted-lightgrey-flat.svg"),
-                new StatusImage("build-unknown-lightgrey-flat.svg")
-        };
-        styles.put("flat", flatImages);
-        // Pick a default style
-        defaultStyle = flatImages;
-        styles.put("default", defaultStyle);
-    }
+    };
 
-    public StatusImage getImage(BallColor color) {
-        return getImage(color, "default");
-    }
+    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName, String animatedOverlayColor) {
+        String statusColorName = color.noAnime().toString();
+        String statusAnimatedOverlayColorName = null;
 
-    public StatusImage getImage(BallColor color, String style) {
-        StatusImage[] images = styles.get(style);
-        if (images == null)
-            images = defaultStyle;
+        if (color.isAnimated() && colorName == null) {
+            // animated means "running"
+            statusAnimatedOverlayColorName = "blue";
+        }
 
-        if (color.isAnimated())
-            return images[3];
+        if (statusColorName.equals("blue")) {
+            statusColorName = "brightgreen";
+        }
+        
+        if (colorName == null) {
+            if (statusColorName.equals("aborted")) {
+                colorName = "lightgrey";
+            } else {
+                colorName = statusColorName;
+            }
 
-        switch (color) {
-        case RED:
-            return images[0];
-        case YELLOW:
-            return images[1];
-        case BLUE:
-            return images[2];
-        case ABORTED:
-            return images[4];
-        default:
-            return images[5];
+            if (animatedOverlayColor == null) {
+                animatedOverlayColor = statusAnimatedOverlayColorName;
+            }
+        }
+
+        if (subject == null) {
+            subject = "build";
+        }
+
+        if (status == null) {
+            status = statuses.get(statusAnimatedOverlayColorName != null ? statusAnimatedOverlayColorName : statusColorName);
+            if (status == null) {
+                status = "unknown";
+            }
+        }
+        
+        try {
+            return new StatusImage(subject, status, colorName, animatedOverlayColor, style);
+        } catch (IOException ioe) {
+            return new StatusImage();
         }
     }
-
 }
