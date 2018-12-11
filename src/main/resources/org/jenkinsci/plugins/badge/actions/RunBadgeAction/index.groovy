@@ -119,6 +119,41 @@ l.layout {
         b {text(_("unprotected"))}
         input(type:"text",value:"[[image:${publicBadge}>>${jobUrlWithoutView}||target='__new']]",class:"select-all")
 
+        h3(_("RDoc (with view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"{<img src='${badgeUrlWithView}'/>}[${jobUrlWithView}]",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"{<img src='${publicBadge}'/>}[${jobUrlWithView}]",class:"select-all")
+
+        h3(_("RDoc (without view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"{<img src='${badgeUrlWithoutView}'/>}[${jobUrlWithoutView}]",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"{<img src='${publicBadge}'/>}[${jobUrlWithoutView}]",class:"select-all")
+
+        h3(_("Textile (with view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"\"!${badgeUrlWithView}!\":${jobUrlWithView}",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"\"!${publicBadge}!\":${jobUrlWithView}",class:"select-all")
+
+        h3(_("Textile (without view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"\"!${badgeUrlWithoutView}!\":${jobUrlWithoutView}",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"\"!${publicBadge}!\":${jobUrlWithoutView}",class:"select-all")
+
+        h3(_("Bitbucket (with view"))
+        b {text(_("protected"))}
+        input(type:"text",value:"[Build Status](${badgeUrlWithView}) \"${jobUrlWithView}\")",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"[Build Status](${publicBadge} \"${jobUrlWithView}\")",class:"select-all")
+
+        h3(_("Bitbucket (without view"))
+        b {text(_("protected"))}
+        input(type:"text",value:"[Build Status](${badgeUrlWithoutView}) \"${jobUrlWithoutView}\")",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"[Build Status](${publicBadge} \"${jobUrlWithoutView}\")",class:"select-all")
 
         h2(_("Embeddable Build Status Text"))
         p(raw(_("blurb_text")))
