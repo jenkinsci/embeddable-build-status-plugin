@@ -99,6 +99,10 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
                                 @QueryParameter String subject, @QueryParameter String status, 
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
                                 @QueryParameter String config) {
+        if (job == null) {
+            return HttpResponses.errorWithoutStack(400, "Missing query parameter: job");
+        }
+
         if(build != null) {
             Run<?, ?> run = getRun(job, build);
             return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
@@ -112,6 +116,10 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
      * Serves text.
      */
     public String doText(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+        if (job == null) {
+            return "Missing query parameter: job";
+        }
+
         if(build != null) {
             Run<?, ?> run = getRun(job, build);
             return run.getIconColor().getDescription();
