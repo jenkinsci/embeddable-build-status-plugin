@@ -57,7 +57,9 @@ l.layout {
         img(src:badgeUrlWithView + "?style=plastic&subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
             title:badgeUrlWithView + "?style=plastic&subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
 
+        h2(_("Links"))
         h3(_("Plain Link (with view)"))
+
         b {text(_("protected"))}
         input(type:"text",value:badgeUrlWithView,class:"select-all")
         b {text(_("unprotected"))}
@@ -117,6 +119,29 @@ l.layout {
         b {text(_("unprotected"))}
         input(type:"text",value:"[[image:${publicBadge}>>${jobUrlWithoutView}||target='__new']]",class:"select-all")
 
+        h3(_("RDoc (with view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"{<img src='${badgeUrlWithView}'/>}[${jobUrlWithView}]",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"{<img src='${publicBadge}'/>}[${jobUrlWithView}]",class:"select-all")
+
+        h3(_("RDoc (without view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"{<img src='${badgeUrlWithoutView}'/>}[${jobUrlWithoutView}]",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"{<img src='${publicBadge}'/>}[${jobUrlWithoutView}]",class:"select-all")
+
+        h3(_("Textile (with view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"\"!${badgeUrlWithView}!\":${jobUrlWithView}",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"\"!${publicBadge}!\":${jobUrlWithView}",class:"select-all")
+
+        h3(_("Textile (without view)"))
+        b {text(_("protected"))}
+        input(type:"text",value:"\"!${badgeUrlWithoutView}!\":${jobUrlWithoutView}",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"\"!${publicBadge}!\":${jobUrlWithoutView}",class:"select-all")
 
         h2(_("Embeddable Build Status Text"))
         p(raw(_("blurb_text")))
@@ -128,5 +153,6 @@ l.layout {
         input(type:"text",value:textUrlWithoutView,class:"select-all")
         b {text(_("unprotected"))}
         input(type:"text",value:publicText,class:"select-all")
+
     }
 }
