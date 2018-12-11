@@ -5,6 +5,7 @@ This plugin allows to add customizable [shields.io](https://shields.io) like bad
 
 Customization can be done via query parameters.
 
+# Query Parameters
 ## `style`
 There three basic types supported:
 ### *plastic*
@@ -34,7 +35,22 @@ All four query parameters can also access used pipeline build parameters:
 ## `config`
 You can add pre-customized badge configurations via pipeline script.
 
-### `addEmbeddableBadgeConfiguration`
+## `job` and `build`
+
+**Note:** These parameters are only supported for the unprotected URL `http://<jenkinsip>/buildStatus?job=<job>&build=<build>...`.
+
+#### `job`
+The path for the selected job.
+
+#### `build`
+The following values are supported
+
+- Build-ID (`integer`)
+- relative negative Build-Index (`0` = last, `-1` = previous, `-2 ...`)
+- Identier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable`, `lastUnstable` or `lastCompleted`)
+
+# DSL 
+
 ```groovy
 /**
  * Adds a badge configuration with the given id.
