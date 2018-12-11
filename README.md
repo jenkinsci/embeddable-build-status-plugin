@@ -47,7 +47,7 @@ The following values are supported
 
 - Build-ID (`integer`)
 - relative negative Build-Index (`0` = last, `-1` = previous, `-2 ...`)
-- Identier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable`, `lastUnstable` or `lastCompleted`)
+- Identifier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable`, `lastUnstable` or `lastCompleted`)
 
 # DSL 
 
