@@ -143,6 +143,18 @@ l.layout {
         b {text(_("unprotected"))}
         input(type:"text",value:"\"!${publicBadge}!\":${jobUrlWithoutView}",class:"select-all")
 
+        h3(_("Bitbucket (with view"))
+        b {text(_("protected"))}
+        input(type:"text",value:"[Build Status](${badgeUrlWithView}) \"${jobUrlWithView}\")",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"[Build Status](${publicBadge} \"${jobUrlWithView}\")",class:"select-all")
+
+        h3(_("Bitbucket (without view"))
+        b {text(_("protected"))}
+        input(type:"text",value:"[Build Status](${badgeUrlWithoutView}) \"${jobUrlWithoutView}\")",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"[Build Status](${publicBadge} \"${jobUrlWithoutView}\")",class:"select-all")
+
         h2(_("Embeddable Build Status Text"))
         p(raw(_("blurb_text")))
 
