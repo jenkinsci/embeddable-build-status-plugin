@@ -33,7 +33,7 @@ All four query parameters can also access used pipeline build parameters:
 `?subject=Build ${params.BRANCH_NAME}`
 
 ## `config`
-You can add pre-customized badge configurations via pipeline script.
+You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
 
 ## `job` and `build`
 
