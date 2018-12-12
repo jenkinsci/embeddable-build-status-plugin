@@ -27,6 +27,6 @@ public class RunBadgeActionFactory extends TransientActionFactory<Run> {
 
     @Override
     public Collection<? extends Action> createFor(Run target) {
-        return Collections.singleton(new RunBadgeAction(this, target));
+        return Collections.singleton(new RunBadgeAction(target));
     }
 }

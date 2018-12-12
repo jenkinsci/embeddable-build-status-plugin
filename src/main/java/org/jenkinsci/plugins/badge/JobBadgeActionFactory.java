@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.jenkinsci.plugins.badge.IconRequestHandler;
 import org.jenkinsci.plugins.badge.actions.JobBadgeAction;
 
 /**
@@ -28,6 +27,6 @@ public class JobBadgeActionFactory extends TransientActionFactory<Job> {
 
     @Override
     public Collection<? extends Action> createFor(Job target) {
-        return Collections.singleton(new JobBadgeAction(this,target));
+        return Collections.singleton(new JobBadgeAction(target));
     }
 }

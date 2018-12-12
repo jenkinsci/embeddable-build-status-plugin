@@ -12,6 +12,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Thomas D.
+ */
 @ExportedBean(defaultVisibility = 2)
 public class EmbeddableBadgeConfigsAction implements Action, Serializable, BuildBadgeAction {
   private static final long serialVersionUID = 1L;

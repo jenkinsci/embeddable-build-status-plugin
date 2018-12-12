@@ -5,6 +5,9 @@ import hudson.ExtensionList;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
+/**
+ * @author Thomas D.
+ */
 public class ParameterResolver {
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {

@@ -23,6 +23,9 @@ There three basic types supported:
 
 ![Customized Badge](src/doc/flat-square_configured.svg "Customized Badge") (customized)
 
+## `config`
+You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
+
 ## `subject`, `status`, `color` and `animatedOverlayColor`
 The customized examples above uses the following query parameters:
 
@@ -32,22 +35,27 @@ All four query parameters can also access used pipeline build parameters:
 
 `?subject=Build ${params.BRANCH_NAME}`
 
-## `config`
-You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
-
-## `job` and `build`
-
-**Note:** These parameters are only supported for the unprotected URL `http://<jenkinsip>/buildStatus?job=<job>&build=<build>...`.
-
-#### `job`
-The path for the selected job.
-
-#### `build`
+## `build`
 The following values are supported
 
 - Build-ID (`integer`)
 - relative negative Build-Index (`0` = last, `-1` = previous, `-2 ...`)
 - Identifier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable`, `lastUnstable` or `lastCompleted`)
+- Selector via BuildParameter: 
+  - `last:${params.<BuildParamName>=<BuildParamValue>}` (e.g. `last:${params.BRANCH=master}`)
+  - `first:${params.<BuildParamName>=<BuildParamValue>}` (e.g. `first:${params.BRANCH=master}`)
+  
+  Those selectors can be concatendated:
+  - `last:${params.MY_PARAM=123},first:${params.BRANCH=master}`
+
+
+Cou can also use any selector implemented via `RunSelectorExtensionPoint`.
+
+## `job`
+The path for the selected job **or**
+any selector implemented via `JobSelectorExtensionPoint`
+
+**Note:** This parameters is only supported for the unprotected URL `http://<jenkinsip>/buildStatus?job=<job>...`.
 
 # DSL 
 

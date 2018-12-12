@@ -3,15 +3,15 @@ package org.jenkinsci.plugins.badge.extensions;
 import hudson.Extension;
 import hudson.model.Actionable;
 import hudson.model.Run;
-import hudson.model.Job;
-import hudson.model.ParametersAction;
-import hudson.model.ParameterValue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
+/**
+ * @author Thomas D.
+ */
 @Extension
 public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
     private static Pattern custom = Pattern.compile("\\$\\{(buildId|buildNumber|duration|runningTime|displayName)\\}");

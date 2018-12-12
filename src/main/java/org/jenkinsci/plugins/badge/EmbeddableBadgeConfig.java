@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
+/**
+ * @author Thomas D.
+ */
 public class EmbeddableBadgeConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     private final Map<String, String> colors = new HashMap<String, String>() {

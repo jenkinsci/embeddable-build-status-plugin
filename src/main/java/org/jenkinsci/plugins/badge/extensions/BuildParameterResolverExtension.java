@@ -12,6 +12,9 @@ import java.util.regex.Pattern;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
+/**
+ * @author Thomas D.
+ */
 @Extension
 public class BuildParameterResolverExtension implements ParameterResolverExtensionPoint {
     private static Pattern pattern = Pattern.compile("\\$\\{params\\.([^\\{\\}\\s]+)\\}");

@@ -34,9 +34,9 @@ l.layout {
         def jobUrlWithView =  "${app.rootUrl}${my.project.url}";
         def jobUrlWithoutView =  "${app.rootUrl}job/${fullJobName}";
         def badgeUrlWithView = jobUrlWithView + "badge/icon"
-        def badgeUrlWithoutView = jobUrlWithoutView + "/badge/icon"
+        def badgeUrlWithoutView = jobUrlWithoutView + "badge/icon"
         def textUrlWithView = jobUrlWithView + "badge/text"
-        def textUrlWithoutView = jobUrlWithoutView + "/badge/text"
+        def textUrlWithoutView = jobUrlWithoutView + "badge/text"
         def publicBadge = "${app.rootUrl}buildStatus/icon?job=${fullJobName}";
         def publicText = "${app.rootUrl}buildStatus/text?job=${fullJobName}";
 

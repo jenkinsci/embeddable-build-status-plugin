@@ -3,24 +3,20 @@ package org.jenkinsci.plugins.badge.actions;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.Run;
-import hudson.model.ParametersAction;
-import hudson.model.ParameterValue;
 import jenkins.model.Jenkins;
 
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
-import java.util.List;
 import org.jenkinsci.plugins.badge.*;
 
 /**
 * @author Kohsuke Kawaguchi
 */
+@SuppressWarnings("rawtypes")
 public class JobBadgeAction implements Action {
-    private final JobBadgeActionFactory factory;
     public final Job project;
     
-    public JobBadgeAction(JobBadgeActionFactory factory, Job project) {
-        this.factory = factory;
+    public JobBadgeAction(Job project) {
         this.project = project;
     }
 
@@ -39,7 +35,14 @@ public class JobBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String build, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
+        if (build != null) {
+            Run<?, ?> run = PublicBuildStatusAction.getRun(this.project, build);
+            if (run != null) {
+                return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+            }
+        }
+            
         return PluginImpl.iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
     }
 

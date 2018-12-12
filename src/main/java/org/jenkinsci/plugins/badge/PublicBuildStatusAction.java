@@ -103,11 +103,11 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
             return HttpResponses.errorWithoutStack(400, "Missing query parameter: job");
         }
 
+        Job<?, ?> project = getProject(job);
         if(build != null) {
-            Run<?, ?> run = getRun(job, build);
+            Run<?, ?> run = getRun(project, build);
             return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
         } else {
-            Job<?, ?> project = getProject(job);
             return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
         }
     }
@@ -120,16 +120,16 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
             return "Missing query parameter: job";
         }
 
+        Job<?, ?> project = getProject(job);
         if(build != null) {
-            Run<?, ?> run = getRun(job, build);
+            Run<?, ?> run = getRun(project, build);
             return run.getIconColor().getDescription();
         } else {
-            Job<?, ?> project = getProject(job);
             return project.getIconColor().getDescription();
         }
     }
 
-    private Job<?, ?> getProject(String job) {
+    public static Job<?, ?> getProject(String job) {
         Job<?, ?> p = null;
         if (job != null) {
             // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
@@ -159,9 +159,8 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
         return p;
     }
 
-    private Run<?, ?> getRun(String job, String build) {
+    public static Run<?, ?> getRun(Job<?, ?> project, String build) {
         Run<?, ?> run = null;
-        Job<?, ?> project = getProject(job);
         Boolean handleBuildId = false;
 
         if (project != null && build != null) {

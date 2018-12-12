@@ -25,6 +25,7 @@ import java.util.Set;
 
 /**
  * Create an EmbeddableBadgeConfig.
+ * @author Thomas D.
  */
 public class AddEmbeddableBadgeConfigStep extends Step {
 

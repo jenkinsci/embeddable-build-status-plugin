@@ -9,12 +9,10 @@ import org.kohsuke.stapler.QueryParameter;
 import org.jenkinsci.plugins.badge.*;
 
 public class RunBadgeAction implements Action {
-    private final RunBadgeActionFactory factory;
     public final Run<?, ?> run;
     public final Job<?, ?> project;
 
-    public RunBadgeAction(RunBadgeActionFactory factory, Run run) {
-        this.factory = factory;
+    public RunBadgeAction(Run run) {
         this.run = run;
         this.project = run.getParent();
     }

@@ -23,14 +23,15 @@
 */
 package org.jenkinsci.plugins.badge;
 
-import hudson.Extension;
 import hudson.model.BallColor;
-import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 
 import org.jenkinsci.plugins.badge.actions.EmbeddableBadgeConfigsAction;
 
+/**
+ * @author Thomas D.
+ */
 public class IconRequestHandler {
 
     private final ImageResolver iconResolver;
