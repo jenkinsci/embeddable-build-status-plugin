@@ -42,6 +42,8 @@ import hudson.tasks.Shell;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.TextPage;
 
+import org.jenkinsci.plugins.badge.actions.PublicBuildStatusAction;
+
 /**
  * @author Dominik Bartholdi (imod)
  */

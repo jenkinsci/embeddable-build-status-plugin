@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.recipes.PresetData;
 
+import org.jenkinsci.plugins.badge.actions.PublicBuildStatusAction;
 
 /**
  * Just the fun bits: check that actions register correctly
