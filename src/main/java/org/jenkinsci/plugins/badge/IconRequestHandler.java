@@ -32,6 +32,7 @@ import org.jenkinsci.plugins.badge.actions.EmbeddableBadgeConfigsAction;
 /**
  * @author Thomas D.
  */
+@SuppressWarnings("rawtypes")
 public class IconRequestHandler {
 
     private final ImageResolver iconResolver;

@@ -8,8 +8,6 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import javax.servlet.ServletException;
 
-import com.sun.mail.iap.ByteArray;
-
 import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -21,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static javax.servlet.http.HttpServletResponse.*;
-
 /**
  * Status image as an {@link HttpResponse}, with proper cache handling.
  *
@@ -47,7 +44,6 @@ class StatusImage implements HttpResponse {
      * in newer versions of this plugin.
      */
     private final String etag;
-
     private final String length;
 
     private final Map<String, String> colors = new HashMap<String, String>() {
@@ -72,13 +68,13 @@ class StatusImage implements HttpResponse {
     }
 
 	StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
-		etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName;
+        etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
+ 
+        if (style == null) {
+            style = "flat";
+        }
 
-		if (style == null) {
-			style = "flat";
-		}
-
-		URL image = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
+        URL image = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
                 "status/" + style + ".svg");
                 
         URL animatedSnippet = null;
@@ -100,14 +96,14 @@ class StatusImage implements HttpResponse {
 
         InputStream s = image.openStream();
     
-		double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
+        double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
 
         if (animatedColor != null) {
             widths[1] += 4;
         }
         
-		String color = colors.get(colorName.toLowerCase());
-		if (color == null) {
+        String color = colors.get(colorName.toLowerCase());
+        if (color == null) {
             if (colorName.matches("-?[0-9a-fA-F]+")) {
                 color = "#" + colorName;
             } else {
@@ -115,11 +111,11 @@ class StatusImage implements HttpResponse {
             }
         }
         
-		String fullwidth = String.valueOf(widths[0] + widths[1]);
-		String subjectWidth = String.valueOf(widths[0]);
-		String statusWidth = String.valueOf(widths[1]);
-		String subjectPos = String.valueOf((widths[0] / 2) + 1);
-		String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
+        String fullwidth = String.valueOf(widths[0] + widths[1]);
+        String subjectWidth = String.valueOf(widths[0]);
+        String statusWidth = String.valueOf(widths[1]);
+        String subjectPos = String.valueOf((widths[0] / 2) + 1);
+        String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
         String animatedOverlay = "";
 
         // first: add animated overlay
@@ -135,7 +131,7 @@ class StatusImage implements HttpResponse {
             }
         }
 
-		try {
+        try {
             payload = IOUtils.toString(s, "utf-8")
                     .replace("{{animatedOverlayColor}}", animatedOverlay)
                     .replace("{{fullwidth}}", fullwidth)
@@ -145,10 +141,10 @@ class StatusImage implements HttpResponse {
                     .replace("{{statusPos}}", statusPos)
                     .replace("{{subject}}", subject)
                     .replace("{{status}}", status)
-					.replace("{{color}}", color).getBytes();
-		} finally {
-			IOUtils.closeQuietly(s);
-		}
+                    .replace("{{color}}", color).getBytes();
+        } finally {
+            IOUtils.closeQuietly(s);
+        }
 
 		length = Integer.toString(payload.length);
 	}
@@ -178,7 +174,7 @@ class StatusImage implements HttpResponse {
 
         rsp.setHeader("ETag",etag);
         rsp.setHeader("Expires","Fri, 01 Jan 1984 00:00:00 GMT");
-        rsp.setHeader("Cache-Control", "no-cache, private");
+        rsp.setHeader("Cache-Control", "no-cache, no-store, private");
         rsp.setHeader("Content-Type", "image/svg+xml;charset=utf-8");
         rsp.setHeader("Content-Length", length);
         rsp.getOutputStream().write(payload);

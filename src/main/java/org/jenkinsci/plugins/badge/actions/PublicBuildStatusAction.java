@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jenkinsci.plugins.badge;
+package org.jenkinsci.plugins.badge.actions;
 
 import hudson.Extension;
 import hudson.ExtensionList;
@@ -45,6 +45,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import org.jenkinsci.plugins.badge.*;
 import org.jenkinsci.plugins.badge.actions.PublicBadgeAction;
 import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
 import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
