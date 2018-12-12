@@ -1,4 +1,4 @@
-embeddable-build-status-plugin
+embeddable-build-status-plugin <sup><small>v2.0</small></sup>
 ==============================
 
 This plugin allows to add customizable [shields.io](https://shields.io) like badges to any website.
@@ -39,8 +39,8 @@ All four query parameters can also access used pipeline build parameters:
 The following values are supported
 
 - Build-ID (`integer`)
-- relative negative Build-Index (`0` = last, `-1` = previous, `-2 ...`)
-- Identifier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable`, `lastUnstable` or `lastCompleted`)
+- relative negative Build-Index (`0` = last, `-1` = previous, `-2` ...)
+- Identifier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable` or `lastCompleted`)
 - Selector via BuildParameter: 
   - `last:${params.<BuildParamName>=<BuildParamValue>}` (e.g. `last:${params.BRANCH=master}`)
   - `first:${params.<BuildParamName>=<BuildParamValue>}` (e.g. `first:${params.BRANCH=master}`)
