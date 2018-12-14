@@ -8,6 +8,7 @@ import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.jenkinsci.plugins.badge.*;
+import org.kohsuke.stapler.WebMethod;
 
 /**
 * @author Kohsuke Kawaguchi
@@ -35,7 +36,8 @@ public class JobBadgeAction implements Action {
     /**
      * Serves the badge image.
      */
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String build, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
+    @WebMethod(name = "icon")
+    public HttpResponse doIcon(@QueryParameter String build, @QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
         if (build != null) {
             Run<?, ?> run = PublicBuildStatusAction.getRun(this.project, build);
             if (run != null) {
@@ -46,7 +48,15 @@ public class JobBadgeAction implements Action {
         return PluginImpl.iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
     }
 
-    /**
+    @WebMethod(name = "icon.svg")
+    public HttpResponse doIconDotSvg(@QueryParameter String build, @QueryParameter String style, 
+                                @QueryParameter String subject, @QueryParameter String status, 
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
+                                @QueryParameter String config) {
+        return doIcon(build, style, subject, status, color, animatedOverlayColor, config);
+    }
+
+   /**
      * Serves text.
      */
     public String doText() {

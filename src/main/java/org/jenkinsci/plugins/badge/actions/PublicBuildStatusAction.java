@@ -44,6 +44,7 @@ import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.WebMethod;
 
 import org.jenkinsci.plugins.badge.*;
 import org.jenkinsci.plugins.badge.actions.PublicBadgeAction;
@@ -55,12 +56,12 @@ import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
  * 
  * The status of a job can be checked like this:
  * 
- * <li>http://localhost:8080/buildstatus/icon?job=[JOBNAME] <li>e.g. http://localhost:8080/buildstatus/icon?job=free1 <br/>
+ * <li>http://localhost:8080/buildstatus/icon[.svg]?job=[JOBNAME] <li>e.g. http://localhost:8080/buildstatus/icon.svg?job=free1 <br/>
  * <br/>
  *
  * The status of a particular build can be checked like this:
  *
- * <li>http://localhost:8080/buildstatus/icon?job=[JOBNAME]&build=[BUILDNUMBER] <li>e.g. http://localhost:8080/buildstatus/icon?job=free1&build=5<br/>
+ * <li>http://localhost:8080/buildstatus/icon[.svg]?job=[JOBNAME]&build=[BUILDNUMBER] <li>e.g. http://localhost:8080/buildstatus/icon.svg?job=free1&build=5<br/>
  * <br/>
  *
  * Even though the URL is unprotected, the user does still need the 'ViewStatus' permission on the given Job. If you want the status icons to be public readable/accessible, just grant the 'ViewStatus'
@@ -95,6 +96,7 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
     /**
      * Serves the badge image.
      */
+    @WebMethod(name = "icon")
     public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, 
                                 @QueryParameter String build, @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
@@ -111,6 +113,15 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
         } else {
             return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
         }
+    }
+
+    @WebMethod(name = "icon.svg")
+    public HttpResponse doIconDotSvg(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, 
+                                @QueryParameter String build, @QueryParameter String style, 
+                                @QueryParameter String subject, @QueryParameter String status, 
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
+                                @QueryParameter String config) {
+        return doIcon(req, rsp, job, build, style, subject, status, color, animatedOverlayColor, config);
     }
 
     /**

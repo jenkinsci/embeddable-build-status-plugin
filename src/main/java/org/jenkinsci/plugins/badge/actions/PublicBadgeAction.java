@@ -26,6 +26,7 @@ package org.jenkinsci.plugins.badge.actions;
 import hudson.Extension;
 import hudson.model.UnprotectedRootAction;
 import org.jenkinsci.plugins.badge.*;
+import org.kohsuke.stapler.WebMethod;
 
 import java.io.IOException;
 
@@ -64,5 +65,23 @@ public class PublicBadgeAction implements UnprotectedRootAction {
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
                                 @QueryParameter String config) {
         return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor, config);
+    }
+
+    @WebMethod(name = "icon")
+    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp,
+                                @QueryParameter String style, 
+                                @QueryParameter String subject, @QueryParameter String status, 
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
+                                @QueryParameter String config) {
+        return doIndex(req, rsp, style, subject, status, color, animatedOverlayColor, config);
+    }
+
+    @WebMethod(name = "icon.svg")
+    public HttpResponse doIconDotSvg(StaplerRequest req, StaplerResponse rsp,
+                                @QueryParameter String style, 
+                                @QueryParameter String subject, @QueryParameter String status, 
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
+                                @QueryParameter String config) {
+        return doIndex(req, rsp, style, subject, status, color, animatedOverlayColor, config);
     }
 }
