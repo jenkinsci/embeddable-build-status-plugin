@@ -1,4 +1,4 @@
-embeddable-build-status-plugin <sup><small>v2.0 (Unrelease)</small></sup>
+embeddable-build-status-plugin <sup><small>v2.0 (unreleased)</small></sup>
 ==============================
 
 This plugin allows to add customizable [shields.io](https://shields.io) like badges to any website.
