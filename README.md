@@ -1,4 +1,4 @@
-embeddable-build-status-plugin <sup><small>v2.0</small></sup>
+embeddable-build-status-plugin <sup><small>v2.0 (Unrelease)</small></sup>
 ==============================
 
 This plugin allows to add customizable [shields.io](https://shields.io) like badges to any website.
@@ -36,18 +36,36 @@ All four query parameters can also access used pipeline build parameters:
 `?subject=Build ${params.BRANCH_NAME}`
 
 ## `build`
-The following values are supported
+Select the build. 
+
+### Selectors
+Allowed selectors are:
 
 - Build-ID (`integer`)
 - relative negative Build-Index (`0` = last, `-1` = previous, `-2` ...)
-- Identifier (`last`, `lastFailed`, `lastSuccessful`, `lastUnsuccessful`, `lastStable`, `lastUnstable` or `lastCompleted`)
-- Selector via BuildParameter: 
-  - `last:${params.<BuildParamName>=<BuildParamValue>}` (e.g. `last:${params.BRANCH=master}`)
-  - `first:${params.<BuildParamName>=<BuildParamValue>}` (e.g. `first:${params.BRANCH=master}`)
-  
-  Those selectors can be concatendated:
-  - `last:${params.MY_PARAM=123},first:${params.BRANCH=master}`
+- Selector via the following Rule:
 
+  `(last|first)[Failed|Successful|Unsuccessful|Stable|Unstable|Completed][:${params.<BuildParamerName>=<BuildParameterValue>}]`
+
+  - `(...)` is required
+  - `[...]` is optional
+
+  Examples:
+  - `last`
+  - `first`
+  - `lastStable`
+  - `firstCompleted`
+  - `lastSuccessful:${params.BRANCH=master}`
+  
+- any selector implemented via `RunSelectorExtensionPoint`
+
+### Concatenation
+
+All those selectors can be concatendated as comma separated list:
+
+`build=last,-10,firstSuccessful:${params.BRANCH=master}`
+
+This searches in the last `10` runs for the first successful build of the `master` branch (provided the Build Parameter `BRANCH` exists).
 
 Cou can also use any selector implemented via `RunSelectorExtensionPoint`.
 
@@ -55,7 +73,9 @@ Cou can also use any selector implemented via `RunSelectorExtensionPoint`.
 The path for the selected job **or**
 any selector implemented via `JobSelectorExtensionPoint`
 
-**Note:** This parameters is only supported for the unprotected URL `http://<jenkinsip>/buildStatus?job=<job>...`.
+**Note: This parameters is only supported for the unprotected URL!** 
+
+`http://<jenkinsip>/buildStatus?job=<job>...`.
 
 # DSL 
 
