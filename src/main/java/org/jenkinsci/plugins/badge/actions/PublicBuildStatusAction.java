@@ -34,7 +34,6 @@ import hudson.security.PermissionScope;
 import hudson.util.HttpResponses;
 
 import java.io.IOException;
-import java.lang.NumberFormatException;
 
 import jenkins.model.Jenkins;
 
@@ -49,6 +48,7 @@ import org.kohsuke.stapler.WebMethod;
 import org.jenkinsci.plugins.badge.*;
 import org.jenkinsci.plugins.badge.actions.PublicBadgeAction;
 import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
+import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionPoint;
 import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 
 /**
@@ -69,6 +69,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
  * 
  * @author Dominik Bartholdi (imod)
  */
+@SuppressWarnings("rawtypes")
 @Extension
 public class PublicBuildStatusAction extends PublicBadgeAction {
 
@@ -173,56 +174,28 @@ public class PublicBuildStatusAction extends PublicBadgeAction {
 
     public static Run<?, ?> getRun(Job<?, ?> project, String build) {
         Run<?, ?> run = null;
-        Boolean handleBuildId = false;
 
         if (project != null && build != null) {
-            Integer buildNr = 1;
-            try {
-                buildNr = Integer.parseInt(build);
-            } catch (NumberFormatException e) {
-                handleBuildId = true;
-            }
-    
             // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
             SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
             try {
-                // first try to get Run via RunSelectorExtensionPoints
-                for (RunSelectorExtensionPoint runSelector : ExtensionList.lookup(RunSelectorExtensionPoint.class)) {
-                    run = runSelector.select(project, build);
-                    if (run != null) {
-                        break;
+                for (String token : build.split(",")) {
+                    // first: try to get Run via our InternalRunSelectorExtensionPoints
+                    for (InternalRunSelectorExtensionPoint runSelector : ExtensionList.lookup(InternalRunSelectorExtensionPoint.class)) {
+                        Run newRun = runSelector.select(project, token, run);
+                        if (newRun != null) {
+                            run = newRun;
+                            break;
+                        }
                     }
-                }
 
-                if (run == null) {
-                    if (buildNr <= 0) {
-                        // find last build using relative build numbers
-                        run = project.getLastBuild();
-                        for (; buildNr < 0 && run != null; buildNr++) {
-                            run = run.getPreviousBuild();
-                        }
-                    } else {
-                        if (!handleBuildId) {
-                            run = project.getBuildByNumber(buildNr);
-                        }
-                        if (run == null) {
-                            if (build.equals("last")) {
-                                run = project.getLastBuild();
-                            } else if (build.equals("lastFailed")) {
-                                run = project.getLastFailedBuild();                           
-                            } else if (build.equals("lastSuccessful")) {
-                                run = project.getLastSuccessfulBuild();                           
-                            } else if (build.equals("lastUnsuccessful")) {
-                                run = project.getLastUnsuccessfulBuild();                           
-                            } else if (build.equals("lastStable")) {
-                                run = project.getLastStableBuild();                           
-                            } else if (build.equals("lastUnstable")) {
-                                run = project.getLastUnstableBuild();                           
-                            } else if (build.equals("lastCompleted")) {
-                                run = project.getLastCompletedBuild();                           
-                            } else {
-                                // try to get build via ID
-                                run = project.getBuild(build);
+                    if (run == null) {
+                        // second: try to get Run via RunSelectorExtensionPoints
+                        for (RunSelectorExtensionPoint runSelector : ExtensionList.lookup(RunSelectorExtensionPoint.class)) {
+                            Run newRun = runSelector.select(project, token, run);
+                            if (newRun != null) {
+                                run = newRun;
+                                break;
                             }
                         }
                     }

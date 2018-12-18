@@ -17,8 +17,8 @@ import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoi
  */
 @Extension
 public class BuildParameterResolverExtension implements ParameterResolverExtensionPoint {
-    private static Pattern pattern = Pattern.compile("\\$\\{params\\.([^\\{\\}\\s]+)\\}");
-    private static Pattern defaultPattern = Pattern.compile("\\$\\{params\\.([^\\{\\}\\s\\|]+)\\|([^\\}\\|]+)\\}");
+    private static Pattern pattern = Pattern.compile("params\\.([^\\{\\}\\s]+)");
+    private static Pattern defaultPattern = Pattern.compile("params\\.([^\\{\\}\\s\\|]+)\\|([^\\}\\|]+)");
 
     public String resolve(Actionable actionable, String parameter) {
         if (actionable instanceof Run) {

@@ -14,7 +14,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoi
  */
 @Extension
 public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
-    private static Pattern custom = Pattern.compile("\\$\\{(buildId|buildNumber|duration|runningTime|displayName)\\}");
+    private static Pattern custom = Pattern.compile("(buildId|buildNumber|duration|runningTime|displayName)");
 
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null && (actionable instanceof Run<?, ?>)) {

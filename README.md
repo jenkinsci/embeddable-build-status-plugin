@@ -1,5 +1,8 @@
-embeddable-build-status-plugin <sup><small>v2.0 (unreleased)</small></sup>
+embeddable-build-status-plugin
 ==============================
+Version: **v2.0**<sup><small> (unreleased)</small></sup>
+
+---
 
 This plugin allows to add customizable [shields.io](https://shields.io) like badges to any website.
 
@@ -26,19 +29,36 @@ There three basic types supported:
 ## `config`
 You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
 
-## `subject`, `status`, `color` and `animatedOverlayColor`
+## `subject` and `status`
 The customized examples above uses the following query parameters:
 
-`?subject=Custom Text&status=My passing text&color=pink`
+`?subject=Custom Text&status=My passing text`
 
-All four query parameters can also access used pipeline build parameters:
+All four query parameters can also use variables like `?subject=Build ${variable}`
 
-`?subject=Build ${params.BRANCH_NAME}`
+Available builtin variables are:
+ - `buildId`, `buildNumber`, `displayName`, `duration`, and `runningTime`
+ - `params.<BuildParameterName>` where `<BuildParameterName>` matches any Parameter used for running the job.
+
+   **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:
+   `params.<BuildParameterName>|<FallbackValue>`
+ 
+Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
+
+##### *ExtensionPoint*
+This plugin provides a `ParameterResolverExtensionPoint` which allow for custom `${<Parameter>}` resolver implementations.
+
+## `color` and `animatedOverlayColor`
+
+You can override the color using the following valid color values:
+- one of the values: `red`, `brightgreen`, `green`, `yellowgreen`, `yellow`, `orange`, `lightgrey`, `blue`
+- a valid hexadecimal HTML RGB color <b>without</b> the hashtag (e.g. `FFAABB`).
+- any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
 ## `build`
 Select the build. 
 
-### Selectors
+### *Selectors*
 Allowed selectors are:
 
 - Build-ID (`integer`)
@@ -57,9 +77,10 @@ Allowed selectors are:
   - `firstCompleted`
   - `lastSuccessful:${params.BRANCH=master}`
   
-- any selector implemented via `RunSelectorExtensionPoint`
+##### *ExtensionPoint*
+This plugin provides a `RunSelectorExtensionPoint` which allow for custom run selector implementations.
 
-### Concatenation
+### *Concatenation*
 
 All those selectors can be concatendated as comma separated list:
 
@@ -67,14 +88,14 @@ All those selectors can be concatendated as comma separated list:
 
 This searches in the last `10` runs for the first successful build of the `master` branch (provided the Build Parameter `BRANCH` exists).
 
-Cou can also use any selector implemented via `RunSelectorExtensionPoint`.
-
 ## `job`
+**Note: This parameters is only supported for the unprotected URL!** 
+
 The path for the selected job **or**
 any selector implemented via `JobSelectorExtensionPoint`
 
-**Note: This parameters is only supported for the unprotected URL!** 
-
+##### *ExtensionPoint* 
+This plugin provides a `JobSelectorExtensionPoint` which allow for custom job selector implementations.
 `http://<jenkinsip>/buildStatus?job=<job>...`.
 
 # DSL 
