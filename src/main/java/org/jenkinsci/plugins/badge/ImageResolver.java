@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageResolver {
-    
     private final Map<String, String> statuses = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
         {
@@ -40,7 +39,7 @@ public class ImageResolver {
             put( "aborted", "aborted" );
             put( "blue", "running" );
             put( "disabled", "disabled");
-            put( "nobuilt", "not run");
+            put( "notbuilt", "not run");
         };
     };
 
@@ -58,7 +57,7 @@ public class ImageResolver {
         }
         
         if (colorName == null) {
-            if (statusColorName.equals("aborted") || statusColorName.equals("disabled") || statusColorName.equals("nobuild")) {
+            if (statusColorName.equals("aborted") || statusColorName.equals("disabled") || statusColorName.equals("notbuilt")) {
                 colorName = "lightgrey";
             } else {
                 colorName = statusColorName;

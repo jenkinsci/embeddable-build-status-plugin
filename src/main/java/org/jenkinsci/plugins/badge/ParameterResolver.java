@@ -5,7 +5,6 @@ import hudson.ExtensionList;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.logging.Logger;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
@@ -14,11 +13,9 @@ import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoi
  */
 public class ParameterResolver {
     private static Pattern parameterPattern = Pattern.compile("\\$\\{([^\\{\\}\\s]+)\\}");
-    private static Logger LOG = Logger.getLogger("org.jenkinsci.plugins.badge.ParameterResolver");
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
             Matcher matcher = parameterPattern.matcher(parameter);
-            LOG.info(parameter);
             while (matcher.find()) {
                 String resolvedMatch = null;
                 for (ParameterResolverExtensionPoint resolver : ExtensionList.lookup(ParameterResolverExtensionPoint.class)) {
@@ -33,7 +30,6 @@ public class ParameterResolver {
                 } else {
                     parameter = matcher.replaceFirst("$1");
                 }
-                LOG.info(parameter + "(" + resolvedMatch + ")");
                 matcher = parameterPattern.matcher(parameter);
             }
         }
