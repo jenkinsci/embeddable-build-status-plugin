@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.badge;
 
-import hudson.util.IOUtils;
+import org.apache.commons.io.IOUtils;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;

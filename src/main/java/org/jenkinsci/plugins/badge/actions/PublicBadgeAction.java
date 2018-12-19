@@ -27,6 +27,7 @@ import hudson.Extension;
 import hudson.model.UnprotectedRootAction;
 import org.jenkinsci.plugins.badge.*;
 import org.kohsuke.stapler.WebMethod;
+import jenkins.model.Jenkins;
 
 import java.io.IOException;
 
@@ -49,39 +50,26 @@ public class PublicBadgeAction implements UnprotectedRootAction {
     }
 
     public String getIconFileName() {
-        return null;
+        return Jenkins.RESOURCE_PATH+"/plugin/embeddable-build-status/images/24x24/shield.png";
     }
 
     public String getDisplayName() {
-        return null;
-    }
-
-    /**
-     * Serves the badge image.
-     */
-    public HttpResponse doIndex(StaplerRequest req, StaplerResponse rsp,
-                                @QueryParameter String style, 
-                                @QueryParameter String subject, @QueryParameter String status, 
-                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config) {
-        return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor, config);
+        return Messages.PublicBadgeAction_DisplayName();
     }
 
     @WebMethod(name = "icon")
     public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp,
                                 @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
-                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config) {
-        return doIndex(req, rsp, style, subject, status, color, animatedOverlayColor, config);
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor) {
+        return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor);
     }
 
     @WebMethod(name = "icon.svg")
     public HttpResponse doIconDotSvg(StaplerRequest req, StaplerResponse rsp,
                                 @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
-                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config) {
-        return doIndex(req, rsp, style, subject, status, color, animatedOverlayColor, config);
+                                @QueryParameter String color, @QueryParameter String animatedOverlayColor) {
+        return doIcon(req, rsp, style, subject, status, color, animatedOverlayColor);
     }
 }

@@ -13,7 +13,7 @@ public class RunBadgeAction implements Action {
     public final Run<?, ?> run;
     public final Job<?, ?> project;
 
-    public RunBadgeAction(Run run) {
+    public RunBadgeAction(Run<?, ?> run) {
         this.run = run;
         this.project = run.getParent();
     }
@@ -30,9 +30,6 @@ public class RunBadgeAction implements Action {
         return "badge";
     }
 
-    /**
-     * Serves the badge image.
-     */
     @WebMethod(name = "icon")
     public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config) {
         return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
@@ -43,9 +40,6 @@ public class RunBadgeAction implements Action {
         return doIcon(style, subject, status, color, animatedOverlayColor, config);
     }
 
-    /**
-     * Serves text.
-     */
     public String doText() {
         return run.getIconColor().getDescription();
     }

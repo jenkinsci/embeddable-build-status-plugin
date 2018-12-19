@@ -33,16 +33,11 @@ public class JobBadgeAction implements Action {
         return "badge";
     }
 
-    /**
-     * Serves the badge image.
-     */
     @WebMethod(name = "icon")
     public HttpResponse doIcon(@QueryParameter String build, @QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
         if (build != null) {
-            Run<?, ?> run = PublicBuildStatusAction.getRun(this.project, build);
-            if (run != null) {
-                return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
-            }
+            Run<?, ?> run = PublicBuildStatusAction.getRun(this.project, build, false);
+            return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
         }
             
         return PluginImpl.iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
@@ -56,9 +51,6 @@ public class JobBadgeAction implements Action {
         return doIcon(build, style, subject, status, color, animatedOverlayColor, config);
     }
 
-   /**
-     * Serves text.
-     */
     public String doText() {
         return project.getIconColor().getDescription();
     }

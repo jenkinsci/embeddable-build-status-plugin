@@ -39,6 +39,8 @@ public class ImageResolver {
             put( "yellow", "unstable" );
             put( "aborted", "aborted" );
             put( "blue", "running" );
+            put( "disabled", "disabled");
+            put( "nobuilt", "not run");
         };
     };
 
@@ -56,7 +58,7 @@ public class ImageResolver {
         }
         
         if (colorName == null) {
-            if (statusColorName.equals("aborted")) {
+            if (statusColorName.equals("aborted") || statusColorName.equals("disabled") || statusColorName.equals("nobuild")) {
                 colorName = "lightgrey";
             } else {
                 colorName = statusColorName;

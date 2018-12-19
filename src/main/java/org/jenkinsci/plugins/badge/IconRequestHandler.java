@@ -45,8 +45,7 @@ public class IconRequestHandler {
 
     public StatusImage handleIconRequest(String style, 
                     String subject, String status, 
-                    String color, String animatedOverlayColor, 
-                    String config) {
+                    String color, String animatedOverlayColor) {
         return iconResolver.getImage(BallColor.BLUE, style, subject, status, color, animatedOverlayColor);
     }
     
@@ -55,18 +54,29 @@ public class IconRequestHandler {
                     String color, String animatedOverlayColor, 
                     String config) {
 
-        EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(job, config);
-        subject = parameterResolver.resolve(job, subject);
-        status = parameterResolver.resolve(job, status);
-        color = parameterResolver.resolve(job, color);
-        animatedOverlayColor = parameterResolver.resolve(job, animatedOverlayColor);
-        if (badgeConfig != null) {
-            if (subject == null) subject = badgeConfig.getSubject();
-            if (status == null) status = badgeConfig.getStatus();
-            if (color == null) color = badgeConfig.getColor();
-            if (animatedOverlayColor == null) animatedOverlayColor = badgeConfig.getAnimatedOverlayColor();
+        if (job != null) {
+            subject = parameterResolver.resolve(job, subject);
+            status = parameterResolver.resolve(job, status);
+            color = parameterResolver.resolve(job, color);
+            animatedOverlayColor = parameterResolver.resolve(job, animatedOverlayColor);
+
+            if (config != null && (subject == null || status == null || color == null || animatedOverlayColor == null)) {
+                EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(job, config);
+                if (badgeConfig != null) {
+                    if (subject == null) subject = badgeConfig.getSubject();
+                    if (status == null) status = badgeConfig.getStatus();
+                    if (color == null) color = badgeConfig.getColor();
+                    if (animatedOverlayColor == null) animatedOverlayColor = badgeConfig.getAnimatedOverlayColor();
+                } else {
+                    // fallback to unknown badge
+                    if (status == null) status = "not run";
+                    if (color == null) color = "lightgrey";
+                }
+            }
+            return iconResolver.getImage(job.getIconColor(), style, subject, status, color, animatedOverlayColor);
+        } else {
+            return iconResolver.getImage(BallColor.NOTBUILT, style, subject, null, null, null);
         }
-        return iconResolver.getImage(job.getIconColor(), style, subject, status, color, animatedOverlayColor);
     }
     
     public StatusImage handleIconRequestForRun(Run run, String style, 
@@ -74,18 +84,28 @@ public class IconRequestHandler {
                     String color, String animatedOverlayColor,
                     String config) {
 
-        EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(run, config);
-        subject = parameterResolver.resolve(run, subject);
-        status = parameterResolver.resolve(run, status);
-        color = parameterResolver.resolve(run, color);
-        animatedOverlayColor = parameterResolver.resolve(run, animatedOverlayColor);
-        if (badgeConfig != null) {
-            if (subject == null) subject = badgeConfig.getSubject();
-            if (status == null) status = badgeConfig.getStatus();
-            if (color == null) color = badgeConfig.getColor();
-            if (animatedOverlayColor == null) animatedOverlayColor = badgeConfig.getAnimatedOverlayColor();
+        if (run != null) {
+            subject = parameterResolver.resolve(run, subject);
+            status = parameterResolver.resolve(run, status);
+            color = parameterResolver.resolve(run, color);
+            animatedOverlayColor = parameterResolver.resolve(run, animatedOverlayColor);
+            if (config != null && (subject == null || status == null || color == null || animatedOverlayColor == null)) {
+                EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(run, config);
+                if (badgeConfig != null) {
+                    if (subject == null) subject = badgeConfig.getSubject();
+                    if (status == null) status = badgeConfig.getStatus();
+                    if (color == null) color = badgeConfig.getColor();
+                    if (animatedOverlayColor == null) animatedOverlayColor = badgeConfig.getAnimatedOverlayColor();
+                } else {
+                    // fallback to disabled badge
+                    if (status == null) status = "not run";
+                    if (color == null) color = "lightgrey";
+                }
+            }    
+            return iconResolver.getImage(run.getIconColor(), style, subject, status, color, animatedOverlayColor);
+        } else {
+            return iconResolver.getImage(BallColor.NOTBUILT, style, subject, null, null, null);
         }
-        return iconResolver.getImage(run.getIconColor(), style, subject, status, color, animatedOverlayColor);
     }
 
 }
