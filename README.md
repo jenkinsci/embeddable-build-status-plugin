@@ -10,7 +10,7 @@ For each variant there are two URLs available for inclusion:
 - **protected** exposes the badge to users having at least `Read` permission on the job:
 
   Example: \
-  `http://<jenkinsroot>/path/to/job/badge/icon?...` <small>(for jobs)</small> \ 
+  `http://<jenkinsroot>/path/to/job/badge/icon?...` <small>(for jobs)</small> \
   `http://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?...` <small></small>(for builds)
 
   If you omit any query parameter the default badge for the job/build will be returned:
@@ -86,7 +86,7 @@ The job selector string **must** be URL escaped. \
 If you are using <b>Multibranch Pipelines</b> the <b>branch</b> within the selector needs to be URL encoded <b style="color: red">twice</b>.
 
 *Example* \
-<code>?job=<span style="color: blue">path/to/job</span>/branch/path</code> <b style="color: red">&#10008;</b> \
+<code>?job=<span style="color: blue">path/to/job</span>/branch/path</code> <b style="color: red">&#10060;</b> \
 would become\
 <code>?job=<span style="color: blue">path%2Fto%2Fjob</span>%2Fbranch<b style="color: red">%252F</b>path</code> <b style="color: green">&#10004;</b>
 
