@@ -62,7 +62,6 @@ import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 @SuppressWarnings("rawtypes")
 @Extension
 public class PublicBuildStatusAction implements UnprotectedRootAction {
-
     public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
     private IconRequestHandler iconRequestHandler;
     public PublicBuildStatusAction() throws IOException {
@@ -91,15 +90,15 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
                                 @QueryParameter String config) {
         if (job == null) {
-            return HttpResponses.errorWithoutStack(400, "Missing query parameter: job");
-        }
-
-        Job<?, ?> project = getProject(job, false);
-        if(build != null && project != null) {
-            Run<?, ?> run = getRun(project, build, false);
-            return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+            return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor);
         } else {
-            return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
+            Job<?, ?> project = getProject(job, false);
+            if(build != null && project != null) {
+                Run<?, ?> run = getRun(project, build, false);
+                return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+            } else {
+                return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
+            }
         }
     }
 
@@ -126,11 +125,12 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
         }
     }
 
-    public static Job<?, ?> getProject(String job, Boolean throwErrorWhenNotFound) {
+    private static Job<?, ?> getProject(String job, Boolean throwErrorWhenNotFound) {
         Job<?, ?> p = null;
         if (job != null) {
             // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
             SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
+
             try {
                 // first try to get Job via JobSelectorExtensionPoints
                 for (JobSelectorExtensionPoint jobSelector : ExtensionList.lookup(JobSelectorExtensionPoint.class)) {

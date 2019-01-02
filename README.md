@@ -6,6 +6,23 @@ Version: **v2.0**<sup><small> (unreleased)</small></sup>
 
 This plugin allows to add customizable [shields.io](https://shields.io) like badges to any website.
 
+For each variant there are two URLs available for inclusion:
+- **protected** exposes the badge to users having at least `Read` permission on the job:
+
+  Example: \
+  `http://<jenkinsroot>/path/to/job/badge/icon?...` <small>(for jobs)</small> \ 
+  `http://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?...` <small></small>(for builds)
+
+  If you omit any query parameter the default badge for the job/build will be returned:
+
+  ![Badge](src/doc/flat_unconfigured.svg "Badge")
+  
+- **unprotected**  exposes the badge to users having at least `ViewStatus` permission on the job
+
+  Example: `http://<jenkinsroot>/buildStatus?...`
+
+  To select a specific job and build use the query parameters [job](#job) and [build](#build)
+
 Customization can be done via query parameters.
 
 # Query Parameters
@@ -55,8 +72,34 @@ You can override the color using the following valid color values:
 - a valid hexadecimal HTML RGB color <b>without</b> the hashtag (e.g. `FFAABB`).
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
+## `job`
+**Note: This parameters is only supported for the unprotected URL!** 
+
+The path for the selected job **or**
+any selector implemented via `JobSelectorExtensionPoint`
+
+If you omit this parameter you can customize any "untethered" badge you like.
+
+**Important**
+
+The job selector string **must** be URL escaped. \
+If you are using <b>Multibranch Pipelines</b> the <b>branch</b> within the selector needs to be URL encoded <b style="color: red">twice</b>.
+
+*Example* \
+<code>?job=<span style="color: blue">path/to/job</span>/branch/path</code> <b style="color: red">&#10008;</b> \
+would become\
+<code>?job=<span style="color: blue">path%2Fto%2Fjob</span>%2Fbranch<b style="color: red">%252F</b>path</code> <b style="color: green">&#10004;</b>
+
+##### *ExtensionPoint* 
+This plugin provides a `JobSelectorExtensionPoint` which allow for custom job selector implementations.
+
 ## `build`
 Select the build. 
+
+### *Notes*
+- This parameter is supported for the protected **and** unprotected URL! 
+- For the unprotected URL use the [job](#job) parameter is also required!
+
 
 ### *Selectors*
 Allowed selectors are:
@@ -88,16 +131,7 @@ All those selectors can be concatendated as comma separated list:
 
 This searches in the last `10` runs for the first successful build of the `master` branch (provided the Build Parameter `BRANCH` exists).
 
-## `job`
-**Note: This parameters is only supported for the unprotected URL!** 
-
-The path for the selected job **or**
-any selector implemented via `JobSelectorExtensionPoint`
-
-##### *ExtensionPoint* 
-This plugin provides a `JobSelectorExtensionPoint` which allow for custom job selector implementations.
-`http://<jenkinsip>/buildStatus?job=<job>...`.
-
+**Note:** If you are using <b>Multibranch Pipelines</b> the <b>branch name</b> within the selector needs to be URL encoded <b style="color: red">twice</b> (see [job](#job) for further information).
 # DSL 
 
 ```groovy
