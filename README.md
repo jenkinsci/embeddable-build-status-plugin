@@ -1,6 +1,6 @@
 embeddable-build-status-plugin
 ==============================
-Version: **v2.0**<sup><small> (unreleased)</small></sup>
+Version: **v2.0**<sup><small> (beta1)</small></sup>
 
 ---
 
