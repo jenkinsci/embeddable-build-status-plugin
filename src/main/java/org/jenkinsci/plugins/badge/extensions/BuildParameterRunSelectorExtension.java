@@ -81,20 +81,21 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                     Boolean doBreak = (specific == null);
                     if (!doBreak) {
                         Result result = run.getResult();
-    
-                        Boolean isCompleted     = result.isCompleteBuild();
-                        Boolean isSuccessful    = result == Result.SUCCESS;
-                        Boolean isFailed        = result == Result.FAILURE;
-                        Boolean isUnstable      = result == Result.UNSTABLE;
-                        Boolean isUnsuccessful  = !isSuccessful;
-                        Boolean isStable        = isSuccessful;
-        
-                        doBreak =   (specific.equals("Completed")   && isCompleted) ||
-                                    (specific.equals("Successful")  && isCompleted && isSuccessful) ||
-                                    (specific.equals("Failed")      && isCompleted && isFailed) ||
-                                    (specific.equals("Unstable")    && isCompleted && isUnstable) ||
-                                    (specific.equals("Unsuccessful") && isCompleted && isUnsuccessful) ||
-                                    (specific.equals("isStable")    && isCompleted && isStable);    
+                        if (result != null) {
+                            Boolean isCompleted     = result.isCompleteBuild();
+                            Boolean isSuccessful    = result == Result.SUCCESS;
+                            Boolean isFailed        = result == Result.FAILURE;
+                            Boolean isUnstable      = result == Result.UNSTABLE;
+                            Boolean isUnsuccessful  = !isSuccessful;
+                            Boolean isStable        = isSuccessful;
+            
+                            doBreak =   (specific.equals("Completed")   && isCompleted) ||
+                                        (specific.equals("Successful")  && isCompleted && isSuccessful) ||
+                                        (specific.equals("Failed")      && isCompleted && isFailed) ||
+                                        (specific.equals("Unstable")    && isCompleted && isUnstable) ||
+                                        (specific.equals("Unsuccessful") && isCompleted && isUnsuccessful) ||
+                                        (specific.equals("isStable")    && isCompleted && isStable);    
+                        }
                     }
 
                     if (doBreak) {
@@ -114,7 +115,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
             String rule = matcher.group(4);
 
             if (run == null) {
-                run = findSpecific(job, run, what, specific);
+                run = findSpecific(job, null, what, specific);
             }
 
             // iterate over all Runs forward

@@ -51,6 +51,8 @@ import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
 import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionPoint;
 import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Exposes the build status badge via unprotected URL.
  *
@@ -63,6 +65,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 @Extension
 public class PublicBuildStatusAction implements UnprotectedRootAction {
     public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
+    private static final Jenkins jInstance = Jenkins.getInstance();
     private IconRequestHandler iconRequestHandler;
     public PublicBuildStatusAction() throws IOException {
         iconRequestHandler = new IconRequestHandler();
@@ -140,8 +143,8 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                     }
                 }
 
-                if (p == null) {
-                    p = Jenkins.getInstance().getItemByFullName(job, Job.class);
+                if (p == null && jInstance != null) {
+                    p = jInstance.getItemByFullName(job, Job.class);
                 }
            } finally {
                 SecurityContextHolder.setContext(orig);
@@ -156,6 +159,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
         return p;
     }
 
+    @SuppressFBWarnings(value = "NP_LOAD_OF_KNOWN_NULL_VALUE", justification = "'run' is only null for the first enclosing for(token) run")
     public static Run<?, ?> getRun(Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
         Run<?, ?> run = null;
 
@@ -164,24 +168,29 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
             SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
             try {
                 for (String token : build.split(",")) {
+                    Run newRun = null;
                     // first: try to get Run via our InternalRunSelectorExtensionPoints
                     for (InternalRunSelectorExtensionPoint runSelector : ExtensionList.lookup(InternalRunSelectorExtensionPoint.class)) {
-                        Run newRun = runSelector.select(project, token, run);
+                        newRun = runSelector.select(project, token, run);
                         if (newRun != null) {
-                            run = newRun;
                             break;
                         }
                     }
 
-                    if (run == null) {
+                    if (newRun == null) {
                         // second: try to get Run via RunSelectorExtensionPoints
                         for (RunSelectorExtensionPoint runSelector : ExtensionList.lookup(RunSelectorExtensionPoint.class)) {
-                            Run newRun = runSelector.select(project, token, run);
+                            newRun = runSelector.select(project, token, run);
                             if (newRun != null) {
-                                run = newRun;
                                 break;
                             }
                         }
+                    }
+
+                    if (newRun != null) {
+                        run = newRun;
+                    } else {
+                        break;
                     }
                 }
             } finally {

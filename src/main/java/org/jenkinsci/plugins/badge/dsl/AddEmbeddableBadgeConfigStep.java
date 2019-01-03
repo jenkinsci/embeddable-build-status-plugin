@@ -10,7 +10,7 @@ import org.jenkinsci.plugins.badge.actions.EmbeddableBadgeConfigsAction;
 import org.jenkinsci.plugins.badge.annotations.OptionalParam;
 import org.jenkinsci.plugins.badge.annotations.Param;
 
-//import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
@@ -108,7 +108,7 @@ public class AddEmbeddableBadgeConfigStep extends Step {
   
     public static class Execution extends SynchronousStepExecution<EmbeddableBadgeConfig> {
   
-      //@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
+      @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
       private transient final EmbeddableBadgeConfig badgeConfig;
   
       Execution(EmbeddableBadgeConfig badgeConfig, StepContext context) {

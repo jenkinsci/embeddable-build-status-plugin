@@ -6,6 +6,8 @@ import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import hudson.PluginWrapper;
+
 import javax.servlet.ServletException;
 
 import java.awt.Canvas;
@@ -15,6 +17,7 @@ import java.awt.FontMetrics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +39,10 @@ import static javax.servlet.http.HttpServletResponse.*;
 class StatusImage implements HttpResponse {
     private final byte[] payload;
     private static final String PLGIN_NAME = "embeddable-build-status";
+
+    private static final Jenkins jInstance = Jenkins.getInstance();
+    private static final PluginWrapper plugin = (jInstance != null ? jInstance.pluginManager.getPlugin(PLGIN_NAME) : null);
+    private static final URL baseUrl = (plugin != null ? plugin.baseResourceURL : null);
 
     /**
      * To improve the caching, compute unique ETag.
@@ -68,101 +75,107 @@ class StatusImage implements HttpResponse {
     }
 
 	StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
-        etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
- 
-        if (style == null) {
-            style = "flat";
-        }
+        if (baseUrl != null) {
+            etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
+    
+            if (style == null) {
+                style = "flat";
+            }
 
-        URL image = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
-                "status/" + style + ".svg");
-                
-        URL animatedSnippet = null;
-        String animatedColor = null;
-        
-        if (animatedColorName != null) {
-            animatedSnippet = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
-                "status/animatedOverlay.svg.snippet");
-
-            animatedColor = colors.get(animatedColorName.toLowerCase());
-            if (animatedColor == null) {
-                if (colorName.matches("-?[0-9a-fA-F]+")) {
-                    animatedColor = "#" + animatedColorName;
-                } else {
-                    animatedColor = animatedColorName;
+            URL image = new URL(baseUrl, "status/" + style + ".svg");
+                    
+            URL animatedSnippet = null;
+            String animatedColor = null;
+            
+            if (animatedColorName != null) {
+                animatedSnippet = new URL(baseUrl, "status/animatedOverlay.svg.snippet");
+                animatedColor = colors.get(animatedColorName.toLowerCase());
+                if (animatedColor == null) {
+                    if (colorName.matches("-?[0-9a-fA-F]+")) {
+                        animatedColor = "#" + animatedColorName;
+                    } else {
+                        animatedColor = animatedColorName;
+                    }
                 }
             }
-        }
 
-        InputStream s = image.openStream();
-    
-        double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
-
-        if (animatedColor != null) {
-            widths[1] += 4;
-        }
+            InputStream s = image.openStream();
         
-        String color = colors.get(colorName.toLowerCase());
-        if (color == null) {
-            if (colorName.matches("-?[0-9a-fA-F]+")) {
-                color = "#" + colorName;
-            } else {
-                color = colorName;
+            double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
+
+            if (animatedColor != null) {
+                widths[1] += 4;
             }
-        }
-        
-        String fullwidth = String.valueOf(widths[0] + widths[1]);
-        String subjectWidth = String.valueOf(widths[0]);
-        String statusWidth = String.valueOf(widths[1]);
-        String subjectPos = String.valueOf((widths[0] / 2) + 1);
-        String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
-        String animatedOverlay = "";
+            
+            String color = colors.get(colorName.toLowerCase());
+            if (color == null) {
+                if (colorName.matches("-?[0-9a-fA-F]+")) {
+                    color = "#" + colorName;
+                } else {
+                    color = colorName;
+                }
+            }
+            
+            String fullwidth = String.valueOf(widths[0] + widths[1]);
+            String subjectWidth = String.valueOf(widths[0]);
+            String statusWidth = String.valueOf(widths[1]);
+            String subjectPos = String.valueOf((widths[0] / 2) + 1);
+            String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
+            String animatedOverlay = "";
 
-        // first: add animated overlay
-        if (animatedSnippet != null) {
-            String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
-            InputStream animatedOverlayStream = animatedSnippet.openStream();
+            // first: add animated overlay
+            if (animatedSnippet != null) {
+                String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
+                InputStream animatedOverlayStream = animatedSnippet.openStream();
+                try {
+                    animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
+                        .replace("{{reducedStatusWidth}}", reducedStatusWidth)
+                        .replace("{{animatedColor}}", animatedColor);
+                } finally {
+                    IOUtils.closeQuietly(animatedOverlayStream);
+                }
+            }
+
             try {
-                animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
-                    .replace("{{reducedStatusWidth}}", reducedStatusWidth)
-                    .replace("{{animatedColor}}", animatedColor);
+                payload = IOUtils.toString(s, "utf-8")
+                        .replace("{{animatedOverlayColor}}", animatedOverlay)
+                        .replace("{{fullwidth}}", fullwidth)
+                        .replace("{{subjectWidth}}", subjectWidth)
+                        .replace("{{statusWidth}}", statusWidth)
+                        .replace("{{subjectPos}}", subjectPos)
+                        .replace("{{statusPos}}", statusPos)
+                        .replace("{{subject}}", subject)
+                        .replace("{{status}}", status)
+                        .replace("{{color}}", color).getBytes(Charset.forName("UTF-8"));
             } finally {
-                IOUtils.closeQuietly(animatedOverlayStream);
+                IOUtils.closeQuietly(s);
             }
-        }
 
-        try {
-            payload = IOUtils.toString(s, "utf-8")
-                    .replace("{{animatedOverlayColor}}", animatedOverlay)
-                    .replace("{{fullwidth}}", fullwidth)
-                    .replace("{{subjectWidth}}", subjectWidth)
-                    .replace("{{statusWidth}}", statusWidth)
-                    .replace("{{subjectPos}}", subjectPos)
-                    .replace("{{statusPos}}", statusPos)
-                    .replace("{{subject}}", subject)
-                    .replace("{{status}}", status)
-                    .replace("{{color}}", color).getBytes();
-        } finally {
-            IOUtils.closeQuietly(s);
-        }
+            length = Integer.toString(payload.length);
 
-		length = Integer.toString(payload.length);
+        } else {
+            etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
+            length = Integer.toString(0);
+            payload = new byte[0];    
+        }
 	}
 
 	public int measureText(String text) throws IOException {
-		URL fontURL = new URL(Jenkins.getInstance().pluginManager.getPlugin(PLGIN_NAME).baseResourceURL,
-				"fonts/verdana.ttf");
-		InputStream fontStream = fontURL.openStream();
-		Font defaultFont = null;
-		try {
-			defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-		} catch (FontFormatException e) {
-			throw new IOException(e.getMessage());
-		}
-		defaultFont = defaultFont.deriveFont(11f);
-		Canvas canvas = new Canvas();
-		FontMetrics fontMetrics = canvas.getFontMetrics(defaultFont);
-		return fontMetrics.stringWidth(text);
+        if (baseUrl != null) {
+            URL fontURL = new URL(baseUrl, "fonts/verdana.ttf");
+            InputStream fontStream = fontURL.openStream();
+            Font defaultFont = null;
+            try {
+                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+            } catch (FontFormatException e) {
+                throw new IOException(e.getMessage());
+            }
+            defaultFont = defaultFont.deriveFont(11f);
+            Canvas canvas = new Canvas();
+            FontMetrics fontMetrics = canvas.getFontMetrics(defaultFont);
+            return fontMetrics.stringWidth(text);
+        }
+        return 0;
 	}
 
     public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
