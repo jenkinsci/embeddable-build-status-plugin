@@ -48,24 +48,37 @@ l.layout {
 
         h2(_("Examples"))
         small(_("examples_note"))
-
+        
         h3(_("flat"))
-        img(id:"badgeUrl",src:badgeUrl)
+        img(id:"badgeUrl",
+            src: badgeUrl,
+            title: badgeUrl)
         raw ("<br/>")
         img(id:"badgeUrl",
             src:badgeUrl + "?subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
             title:badgeUrl + "?subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
+
         h3(_("flat-square: "))
-        img(src:badgeUrl + "?style=flat-square")
+        img(src:badgeUrl + "?style=flat-square", 
+            title: badgeUrl + "?style=flat-square")
         raw ("<br/>")
         img(src:badgeUrl + "?style=flat-square&subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
             title:badgeUrl + "?style=flat-square&subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
+
         h3(_("plastic: "))
-        img(src:badgeUrl + "?style=plastic")
+        img(src:badgeUrl + "?style=plastic", 
+        title: badgeUrl + "?style=plastic")
         raw ("<br/>")
         img(src:badgeUrl + "?style=plastic&subject=Custom%20Subject&status=Any%20State&color=darkturquoise",
             title:badgeUrl + "?style=plastic&subject=Custom%20Subject&status=Any%20State&color=darkturquoise")
 
+        h3(_("ball-<size>: "))
+        img(src:badgeUrl + "?style=ball-16x16", 
+            title: badgeUrl + "?style=ball-16x16")
+        raw ("<br/>")
+        img(src:badgeUrl + "?style=ball-32x32", 
+            title: badgeUrl + "?style=ball-32x32")
+        
         h2(_("Links"))
 
         h3(_("Plain Link"))

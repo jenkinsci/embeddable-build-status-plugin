@@ -47,6 +47,25 @@ public class ImageResolver {
         String statusColorName = color.noAnime().toString();
         String statusAnimatedOverlayColorName = null;
 
+        // check if "ball" is requested
+        if (style != null) {
+            String[] styleParts = style.split("-");
+            if (styleParts.length == 2 && styleParts[0].equals("ball")) {
+                String url = color.getImageOf(styleParts[1]);
+                if (url == null) {
+                    url = color.getImageOf("32x32");
+                }
+
+                if (url != null) {
+                    try {
+                        return new StatusImage(url);
+                    } catch (IOException ioe) {
+                        return new StatusImage();
+                    }
+                }
+            }
+        }
+
         if (color.isAnimated() && colorName == null) {
             // animated means "running"
             statusAnimatedOverlayColorName = "blue";

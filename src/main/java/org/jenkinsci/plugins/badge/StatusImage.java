@@ -52,10 +52,10 @@ class StatusImage implements HttpResponse {
      */
     private final String etag;
     private final String length;
+    private String contentType = null;
 
     private final Map<String, String> colors = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
-
         {
             put( "red", "#e05d44" );
             put( "brightgreen", "#44cc11" );
@@ -72,6 +72,20 @@ class StatusImage implements HttpResponse {
         etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
         length = Integer.toString(0);
         payload = new byte[0];
+    }
+
+    StatusImage(String fileName) throws IOException {
+        URL rootUrl = new URL(jInstance != null ? jInstance.getRootUrl() : "");
+        etag = '"' + fileName + '"';
+
+        URL image = new URL(rootUrl, fileName);
+        InputStream s = image.openStream();
+        try {
+            payload = IOUtils.toByteArray(s);
+        } finally {
+            IOUtils.closeQuietly(s);
+        }
+        length = Integer.toString(payload.length);
     }
 
 	StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
@@ -152,7 +166,7 @@ class StatusImage implements HttpResponse {
             }
 
             length = Integer.toString(payload.length);
-
+            contentType = "image/svg+xml;charset=utf-8";
         } else {
             etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
             length = Integer.toString(0);
@@ -188,7 +202,9 @@ class StatusImage implements HttpResponse {
         rsp.setHeader("ETag",etag);
         rsp.setHeader("Expires","Fri, 01 Jan 1984 00:00:00 GMT");
         rsp.setHeader("Cache-Control", "no-cache, no-store, private");
-        rsp.setHeader("Content-Type", "image/svg+xml;charset=utf-8");
+        if (contentType != null) {
+            rsp.setHeader("Content-Type", contentType);
+        }
         rsp.setHeader("Content-Length", length);
         rsp.getOutputStream().write(payload);
     }

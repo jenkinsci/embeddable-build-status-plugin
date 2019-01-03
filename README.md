@@ -27,7 +27,7 @@ Customization can be done via query parameters.
 
 # Query Parameters
 ## `style`
-There three basic types supported:
+Four basic types are supported:
 ### *plastic*
 ![Badge](src/doc/plastic_unconfigured.svg "Badge") (default)
 
@@ -42,6 +42,15 @@ There three basic types supported:
 ![Badge](src/doc/flat-square_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/flat-square_configured.svg "Customized Badge") (customized)
+
+### *ball-&lt;size&gt;*
+This style returns the standard Jenkins "balls".
+
+Supported sizes are: `16x16`, `24x24`, `32x32` and `48x48` (and probably more... just try).
+
+*Examples:* `ball-16x16` or `ball-32x32`
+
+**Note:** If you are using this style **all other query parameters** will have **no effect**.
 
 ## `config`
 You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
