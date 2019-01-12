@@ -134,7 +134,7 @@ This plugin provides a `RunSelectorExtensionPoint` which allow for custom run se
 
 ### *Concatenation*
 
-All those selectors can be concatendated as comma separated list:
+All those selectors can be concatenated as comma separated list:
 
 `build=last,-10,firstSuccessful:${params.BRANCH=master}`
 
