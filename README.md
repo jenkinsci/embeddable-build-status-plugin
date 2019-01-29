@@ -200,7 +200,7 @@ pipeline {
 
 You can use the `config` query parameter to reference the `win32build` id:
 
-`?config=win32build`
+`http://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?config=win32build`
 
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
