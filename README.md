@@ -134,7 +134,7 @@ This plugin provides a `RunSelectorExtensionPoint` which allow for custom run se
 
 ### *Concatenation*
 
-All those selectors can be concatendated as comma separated list:
+All those selectors can be concatenated as comma separated list:
 
 `build=last,-10,firstSuccessful:${params.BRANCH=master}`
 
@@ -200,7 +200,9 @@ pipeline {
 
 You can use the `config` query parameter to reference the `win32build` id:
 
-`?config=win32build`
+`http://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?config=win32build`
+
+`http://<jenkinsroot>/buildStatus/icon?job=...&build=...&config=win32build`
 
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
