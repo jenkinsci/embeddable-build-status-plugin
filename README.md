@@ -63,7 +63,7 @@ The customized examples above uses the following query parameters:
 All four query parameters can also use variables like `?subject=Build ${variable}`
 
 Available builtin variables are:
- - `buildId`, `buildNumber`, `displayName`, `duration`, and `runningTime`
+ - `buildId`, `buildNumber`, `displayName`, `duration`, and `startTime`
  - `params.<BuildParameterName>` where `<BuildParameterName>` matches any Parameter used for running the job.
 
    **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:

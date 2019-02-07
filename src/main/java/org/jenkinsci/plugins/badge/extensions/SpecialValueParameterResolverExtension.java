@@ -15,7 +15,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoi
  */
 @Extension
 public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
-    private static Pattern custom = Pattern.compile("(buildId|buildNumber|duration|runningTime|displayName)");
+    private static Pattern custom = Pattern.compile("(buildId|buildNumber|duration|startTime|displayName)");
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
             if (actionable instanceof Run<?, ?>) {
@@ -25,7 +25,7 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                     ${buildNumber}
                     ${duration}
                     ${displayName}
-                    ${runningTime}
+                    ${startTime}
                 */
                 Matcher matcher = custom.matcher(parameter);
                 while (matcher.find()) {
@@ -38,7 +38,7 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                         parameter = matcher.replaceFirst(run.getDurationString());
                     } else if (customKey.equals("displayName")) {
                         parameter = matcher.replaceFirst(run.getDisplayName());
-                    } else if (customKey.equals("runningTime")) {
+                    } else if (customKey.equals("startTime")) {
                         parameter = matcher.replaceFirst(run.getTimestampString());
                     } else {
                         // this actually should NOT happen
