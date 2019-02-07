@@ -1,5 +1,5 @@
 /**
- * @author Thomas Döring (thomas-dee)
+ * @author Thomas Doering (thomas-dee)
  * Licensed under the MIT License. See License.txt in the project root for
  * license information.
  */
