@@ -16,6 +16,13 @@
   <packaging>hpi</packaging>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin</url>
 
+  <licenses>
+    <license>
+        <name>MIT License</name>
+        <url>http://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>

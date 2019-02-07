@@ -1,3 +1,9 @@
+/**
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
 package org.jenkinsci.plugins.badge.dsl;
 
 import hudson.Extension;
@@ -23,10 +29,6 @@ import org.kohsuke.stapler.DataBoundSetter;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Create an EmbeddableBadgeConfig.
- * @author Thomas D.
- */
 public class AddEmbeddableBadgeConfigStep extends Step {
 
     private final EmbeddableBadgeConfig badgeConfig;

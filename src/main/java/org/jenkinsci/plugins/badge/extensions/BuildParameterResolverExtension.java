@@ -1,3 +1,9 @@
+/**
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
 package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.Extension;
@@ -12,9 +18,6 @@ import java.util.regex.Pattern;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
-/**
- * @author Thomas D.
- */
 @Extension
 public class BuildParameterResolverExtension implements ParameterResolverExtensionPoint {
     private static Pattern pattern = Pattern.compile("params\\.([^\\{\\}\\s]+)");

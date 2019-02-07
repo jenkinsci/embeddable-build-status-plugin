@@ -1,4 +1,10 @@
-package org.jenkinsci.plugins.badge.extensions;
+/**
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
+ package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.Extension;
 import hudson.model.Run;
@@ -6,9 +12,6 @@ import hudson.model.Job;
 
 import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionPoint;
 
-/**
- * @author Thomas D.
- */
 @SuppressWarnings("rawtypes")
 @Extension
 public class BuildIdRunSelectorExtension implements InternalRunSelectorExtensionPoint {

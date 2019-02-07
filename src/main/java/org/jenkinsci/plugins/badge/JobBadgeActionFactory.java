@@ -1,3 +1,10 @@
+/**
+ * @author Kohsuke Kawaguchi
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
@@ -10,9 +17,6 @@ import java.util.Collections;
 
 import org.jenkinsci.plugins.badge.actions.JobBadgeAction;
 
-/**
- * @author Kohsuke Kawaguchi
- */
 @SuppressWarnings("rawtypes")
 @Extension
 public class JobBadgeActionFactory extends TransientActionFactory<Job> {

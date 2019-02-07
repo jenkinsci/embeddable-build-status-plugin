@@ -1,4 +1,10 @@
-package org.jenkinsci.plugins.badge.extensions;
+/**
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
+ package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.Extension;
 import hudson.model.Actionable;
@@ -10,9 +16,6 @@ import java.util.regex.Pattern;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
-/**
- * @author Thomas D.
- */
 @Extension
 public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
     private static Pattern custom = Pattern.compile("(buildId|buildNumber|duration|startTime|displayName)");

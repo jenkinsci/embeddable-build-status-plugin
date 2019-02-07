@@ -1,13 +1,16 @@
-package org.jenkinsci.plugins.badge;
+/**
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
+ package org.jenkinsci.plugins.badge;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
-/**
- * @author Thomas D.
- */
 public class EmbeddableBadgeConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     private final Map<String, String> colors = new HashMap<String, String>() {

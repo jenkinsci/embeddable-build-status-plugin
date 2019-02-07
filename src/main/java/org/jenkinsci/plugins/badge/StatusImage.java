@@ -1,3 +1,10 @@
+/**
+ * @author Kohsuke Kawaguchi
+ * @author Thomas Döring (thomas-dee)
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
 package org.jenkinsci.plugins.badge;
 
 import org.apache.commons.io.IOUtils;
@@ -33,8 +40,6 @@ import static javax.servlet.http.HttpServletResponse.*;
  * <p>
  * So this version directly serves the image at the status URL. Since the status
  * can change any time, we use ETag to skip the actual data transfer if possible.
- *
- * @author Kohsuke Kawaguchi
  */
 class StatusImage implements HttpResponse {
     private final byte[] payload;

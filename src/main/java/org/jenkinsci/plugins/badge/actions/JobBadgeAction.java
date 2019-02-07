@@ -1,3 +1,10 @@
+/**
+ * @author Kohsuke Kawaguchi
+ * @author Thomas Döring
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+ */
+
 package org.jenkinsci.plugins.badge.actions;
 
 import hudson.model.Action;
