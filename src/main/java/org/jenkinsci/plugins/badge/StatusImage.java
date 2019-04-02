@@ -188,7 +188,9 @@ class StatusImage implements HttpResponse {
                 defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
             } catch (FontFormatException e) {
                 throw new IOException(e.getMessage());
-            }
+            } finally {
+		fontStream.close()
+	    }
             defaultFont = defaultFont.deriveFont(11f);
             Canvas canvas = new Canvas();
             FontMetrics fontMetrics = canvas.getFontMetrics(defaultFont);
