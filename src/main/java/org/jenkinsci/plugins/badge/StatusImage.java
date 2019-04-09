@@ -189,7 +189,7 @@ class StatusImage implements HttpResponse {
             } catch (FontFormatException e) {
                 throw new IOException(e.getMessage());
             } finally {
-                fontStream.close();
+                IOUtils.closeQuietly(fontStream);
             }
 
             defaultFont = defaultFont.deriveFont(11f);
