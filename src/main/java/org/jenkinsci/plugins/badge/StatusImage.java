@@ -93,7 +93,7 @@ class StatusImage implements HttpResponse {
         length = Integer.toString(payload.length);
     }
 
-	StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
+    StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
         if (baseUrl != null) {
             etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
     
@@ -177,9 +177,9 @@ class StatusImage implements HttpResponse {
             length = Integer.toString(0);
             payload = new byte[0];    
         }
-	}
+    }
 
-	public int measureText(String text) throws IOException {
+    public int measureText(String text) throws IOException {
         if (baseUrl != null) {
             URL fontURL = new URL(baseUrl, "fonts/verdana.ttf");
             InputStream fontStream = fontURL.openStream();
@@ -189,15 +189,16 @@ class StatusImage implements HttpResponse {
             } catch (FontFormatException e) {
                 throw new IOException(e.getMessage());
             } finally {
-		fontStream.close();
-	    }
+                fontStream.close();
+            }
+
             defaultFont = defaultFont.deriveFont(11f);
             Canvas canvas = new Canvas();
             FontMetrics fontMetrics = canvas.getFontMetrics(defaultFont);
             return fontMetrics.stringWidth(text);
         }
         return 0;
-	}
+    }
 
     public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
         String v = req.getHeader("If-None-Match");
