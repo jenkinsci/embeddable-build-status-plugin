@@ -28,6 +28,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import static javax.servlet.http.HttpServletResponse.*;
 /**
  * Status image as an {@link HttpResponse}, with proper cache handling.
@@ -94,6 +96,13 @@ class StatusImage implements HttpResponse {
     }
 
     StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
+        // escape URL parameters
+        if (subject != null) subject = StringEscapeUtils.escapeHtml(subject);
+        if (status != null) status = StringEscapeUtils.escapeHtml(status);
+        if (animatedColorName != null) animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
+        if (colorName != null) colorName = StringEscapeUtils.escapeHtml(colorName);
+        if (style != null) style = StringEscapeUtils.escapeHtml(style);
+
         if (baseUrl != null) {
             etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
     
