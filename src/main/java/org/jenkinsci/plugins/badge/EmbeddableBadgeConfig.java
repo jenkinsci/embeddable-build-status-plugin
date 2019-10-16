@@ -14,14 +14,14 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 public class EmbeddableBadgeConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     private final Map<String, String> colors = new HashMap<String, String>() {
-      private static final long serialVersionUID = 1L;
-      {
-          put( "failing", "red" );
-          put( "passing", "brightgreen" );
-          put( "unstable", "yellow" );
-          put( "aborted", "aborted" );
-          put( "running", "blue" );
-      };
+        private static final long serialVersionUID = 1L;
+        {
+            put( "failing", "red" );
+            put( "passing", "brightgreen" );
+            put( "unstable", "yellow" );
+            put( "aborted", "aborted" );
+            put( "running", "blue" );
+        };
     };
 
     private final String id;
@@ -31,55 +31,54 @@ public class EmbeddableBadgeConfig implements Serializable {
     private String animatedOverlayColor = null;
   
     public EmbeddableBadgeConfig(String id) {
-      this.id = id;
+        this.id = id;
     }
 
     public String getID() {
-      return id;
+        return id;
     }
 
     public String getSubject() {
-      return subject;
+        return subject;
     }
 
     @Whitelisted
     public void setSubject(String subject) {
-      this.subject = subject;
+        this.subject = subject;
     }
 
     public String getStatus() {
-      return status;
+        return status;
     }
 
     @Whitelisted
     public void setStatus(String status) {
-      this.status = status;
+        this.status = status;
     }
 
     public String getColor() {
-      if (color == null) {
-          return colors.get(status);
-      }
-      return color;
+        if (color == null) {
+            return colors.get(status);
+        }
+        return color;
     }
 
     @Whitelisted
     public void setColor(String color) {
-      this.color = color;
+        this.color = color;
     }
 
     public String getAnimatedOverlayColor() {
-      if (this.animatedOverlayColor == null && this.color == null) {
-          if (this.status != null && this.status.equals("running")) {
-              return "blue";
-          }
-      }
-      return this.animatedOverlayColor;
+        if (this.animatedOverlayColor == null && this.color == null) {
+            if (this.status != null && this.status.equals("running")) {
+                return "blue";
+            }
+        }
+        return this.animatedOverlayColor;
     }
 
     @Whitelisted
     public void setAnimatedOverlayColor(String animatedOverlayColor) {
-      this.animatedOverlayColor = animatedOverlayColor;
+        this.animatedOverlayColor = animatedOverlayColor;
     }
-  }
-
+}

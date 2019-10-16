@@ -35,103 +35,101 @@ public class AddEmbeddableBadgeConfigStep extends Step {
   
     @DataBoundConstructor
     public AddEmbeddableBadgeConfigStep(@Param(name = "id", description = "The id for the badge configuration") String id) {
-      this.badgeConfig = new EmbeddableBadgeConfig(id);
+        this.badgeConfig = new EmbeddableBadgeConfig(id);
     }
   
     public String getID() {
-      return badgeConfig.getID();
+        return badgeConfig.getID();
     }
   
     public String getSubject() {
-      return badgeConfig.getSubject();
+        return badgeConfig.getSubject();
     }
   
     @DataBoundSetter
     @OptionalParam(description = "The subject used for the badge configuration")
     public void setSubject(String subject) {
-      this.badgeConfig.setSubject(subject);
+        this.badgeConfig.setSubject(subject);
     }
   
     public String getStatus() {
-      return badgeConfig.getStatus();
+        return badgeConfig.getStatus();
     }
   
     @DataBoundSetter
     @OptionalParam(description = "The status used for the badge configuration")
     public void setStatus(String status) {
-      this.badgeConfig.setStatus(status);
+        this.badgeConfig.setStatus(status);
     }
   
     public String getColor() {
-      return badgeConfig.getColor();
+        return badgeConfig.getColor();
     }
   
     @DataBoundSetter
     @OptionalParam(description = "The color used for the badge configuration")
     public void setColor(String color) {
-      this.badgeConfig.setColor(color);
+        this.badgeConfig.setColor(color);
     }
 
     public String getAnimatedOverlayColor() {
-      return badgeConfig.getAnimatedOverlayColor();
+        return badgeConfig.getAnimatedOverlayColor();
     }
   
     @DataBoundSetter
     @OptionalParam(description = "The animated overlay color used for the badge configuration")
     public void setAnimatedOverlayColor(String animatedOverlayColor) {
-      this.badgeConfig.setAnimatedOverlayColor(animatedOverlayColor);
+        this.badgeConfig.setAnimatedOverlayColor(animatedOverlayColor);
     }
   
     @Override
     public StepExecution start(StepContext context) {
-      return new Execution(badgeConfig, context);
+        return new Execution(badgeConfig, context);
     }
   
     @Extension
     public static class DescriptorImpl extends StepDescriptor {
   
-      @Override
-      public String getFunctionName() {
-        return "addEmbeddableBadgeConfiguration";
-      }
-  
-      @Override
-      public String getDisplayName() {
-        return "Add an Embeddable Badge Configuration";
-      }
+        @Override
+        public String getFunctionName() {
+            return "addEmbeddableBadgeConfiguration";
+        }
+    
+        @Override
+        public String getDisplayName() {
+            return "Add an Embeddable Badge Configuration";
+        }
 
-      @Override
-      public Set<Class<?>> getRequiredContext() {
-        Set<Class<?>> set = new HashSet<Class<?>>();
-        set.add(TaskListener.class);
-        return set;
-      }
+        @Override
+        public Set<Class<?>> getRequiredContext() {
+            Set<Class<?>> set = new HashSet<Class<?>>();
+            set.add(TaskListener.class);
+            return set;
+        }
     }
   
     public static class Execution extends SynchronousStepExecution<EmbeddableBadgeConfig> {
   
-      @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
-      private transient final EmbeddableBadgeConfig badgeConfig;
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
+        private transient final EmbeddableBadgeConfig badgeConfig;
   
-      Execution(EmbeddableBadgeConfig badgeConfig, StepContext context) {
-        super(context);
-        this.badgeConfig = badgeConfig;
-      }
-  
-      @Override
-      protected EmbeddableBadgeConfig run() throws Exception {
-        EmbeddableBadgeConfigsAction cfgsAction = getContext().get(Run.class).getAction(EmbeddableBadgeConfigsAction.class);
-        if (cfgsAction == null) {
-          cfgsAction = new EmbeddableBadgeConfigsAction();
-          getContext().get(Run.class).addAction(cfgsAction);
+        Execution(EmbeddableBadgeConfig badgeConfig, StepContext context) {
+            super(context);
+            this.badgeConfig = badgeConfig;
         }
+  
+        @Override
+        protected EmbeddableBadgeConfig run() throws Exception {
+            EmbeddableBadgeConfigsAction cfgsAction = getContext().get(Run.class).getAction(EmbeddableBadgeConfigsAction.class);
+            if (cfgsAction == null) {
+                cfgsAction = new EmbeddableBadgeConfigsAction();
+                getContext().get(Run.class).addAction(cfgsAction);
+            }
 
-        cfgsAction.addConfig(badgeConfig);
-        return badgeConfig;
-      }
-  
-      private static final long serialVersionUID = 1L;
-  
+            cfgsAction.addConfig(badgeConfig);
+            return badgeConfig;
+        }
+    
+        private static final long serialVersionUID = 1L;
     }
-  
-  }
+}
