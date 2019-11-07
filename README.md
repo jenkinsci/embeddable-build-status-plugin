@@ -60,20 +60,6 @@ The customized examples above uses the following query parameters:
 
 `?subject=Custom Text&status=My passing text`
 
-All four query parameters can also use variables like `?subject=Build ${variable}`
-
-Available builtin variables are:
- - `buildId`, `buildNumber`, `displayName`, `duration`, and `startTime`
- - `params.<BuildParameterName>` where `<BuildParameterName>` matches any Parameter used for running the job.
-
-   **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:
-   `params.<BuildParameterName>|<FallbackValue>`
- 
-Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
-
-##### *ExtensionPoint*
-This plugin provides a `ParameterResolverExtensionPoint` which allow for custom `${<Parameter>}` resolver implementations.
-
 ## `color` and `animatedOverlayColor`
 
 You can override the color using the following valid color values:
@@ -109,7 +95,6 @@ Select the build.
 - This parameter is supported for the protected **and** unprotected URL! 
 - For the unprotected URL use the [job](#job) parameter is also required!
 
-
 ### *Selectors*
 Allowed selectors are:
 
@@ -141,6 +126,24 @@ All those selectors can be concatenated as comma separated list:
 This searches in the last `10` runs for the first successful build of the `master` branch (provided the Build Parameter `BRANCH` exists).
 
 **Note:** If you are using <b>Multibranch Pipelines</b> the <b>branch name</b> within the selector needs to be URL encoded <b style="color: red">twice</b> (see [job](#job) for further information).
+
+## `link`
+Provide a link to be opened on clicking on the badge.
+
+# Parameter Resolver
+The query parameters `subject`, `status`, `color`, `animatedOverlayColor` and `link` support the usage of variables like `?subject=Build ${variable}`
+
+Available builtin variables are:
+ - `buildId`, `buildNumber`, `displayName`, `duration`, and `startTime`
+ - `params.<BuildParameterName>` where `<BuildParameterName>` matches any Parameter used for running the job.
+
+   **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:
+   `params.<BuildParameterName>|<FallbackValue>`
+ 
+Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
+
+##### *ExtensionPoint*
+This plugin provides a `ParameterResolverExtensionPoint` which allow for custom `${<Parameter>}` resolver implementations.
 # DSL 
 
 ```groovy
@@ -160,8 +163,9 @@ addEmbeddableBadgeConfiguration(id: <id>)
  * status: A status text
  * color: A valid color (RGB-HEX: RRGGBB or valid SVG color name)
  * animatedOverlayColor: A valid color (RGB-HEX: RRGGBB or valid SVG color name)
+ * link: The link to be opened upon clicking.
  */
-addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>, animatedOverlayColor: <string>)
+addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>, animatedOverlayColor: <string>, link: <string>)
 ```
 
 This function returns a configuration object.
