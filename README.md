@@ -207,6 +207,3 @@ You can use the `config` query parameter to reference the `win32build` id:
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
 
-
-See https://wiki.jenkins-ci.org/display/JENKINS/Embeddable+Build+Status+Plugin
-

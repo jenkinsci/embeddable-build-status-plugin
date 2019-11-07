@@ -41,21 +41,24 @@ public class JobBadgeAction implements Action {
     }
 
     @WebMethod(name = "icon")
-    public HttpResponse doIcon(@QueryParameter String build, @QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String config, @QueryParameter String animatedOverlayColor) {
+    public HttpResponse doIcon(@QueryParameter String build, @QueryParameter String style, 
+                            @QueryParameter String subject, @QueryParameter String status, 
+                            @QueryParameter String color, @QueryParameter String config, 
+                            @QueryParameter String animatedOverlayColor, @QueryParameter String link) {
         if (build != null) {
             Run<?, ?> run = PublicBuildStatusAction.getRun(this.project, build, false);
-            return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+            return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config, link);
         }
             
-        return PluginImpl.iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
+        return PluginImpl.iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config, link);
     }
 
     @WebMethod(name = "icon.svg")
     public HttpResponse doIconDotSvg(@QueryParameter String build, @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config) {
-        return doIcon(build, style, subject, status, color, animatedOverlayColor, config);
+                                @QueryParameter String config, @QueryParameter String link) {
+        return doIcon(build, style, subject, status, color, animatedOverlayColor, config, link);
     }
 
     public String doText() {

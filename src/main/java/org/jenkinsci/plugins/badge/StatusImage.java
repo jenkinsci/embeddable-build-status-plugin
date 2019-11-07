@@ -95,14 +95,15 @@ class StatusImage implements HttpResponse {
         length = Integer.toString(payload.length);
     }
 
-    StatusImage(String subject, String status, String colorName, String animatedColorName, String style) throws IOException {
+    StatusImage(String subject, String status, String colorName, String animatedColorName, String style, String link) throws IOException {
         // escape URL parameters
         if (subject != null) subject = StringEscapeUtils.escapeHtml(subject);
         if (status != null) status = StringEscapeUtils.escapeHtml(status);
         if (animatedColorName != null) animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
         if (colorName != null) colorName = StringEscapeUtils.escapeHtml(colorName);
         if (style != null) style = StringEscapeUtils.escapeHtml(style);
-
+        if (link != null) link = StringEscapeUtils.escapeHtml(link);
+        
         if (baseUrl != null) {
             etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
     
@@ -150,6 +151,7 @@ class StatusImage implements HttpResponse {
             String subjectPos = String.valueOf((widths[0] / 2) + 1);
             String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
             String animatedOverlay = "";
+            String linkCode = "<svg xmlns";
 
             // first: add animated overlay
             if (animatedSnippet != null) {
@@ -164,6 +166,10 @@ class StatusImage implements HttpResponse {
                 }
             }
 
+            if (link != null) {
+                linkCode = "<svg onclick=\"window.open('" + link + "');\" style=\"cursor: pointer;\" xmlns";
+            }
+
             try {
                 payload = IOUtils.toString(s, "utf-8")
                         .replace("{{animatedOverlayColor}}", animatedOverlay)
@@ -174,7 +180,8 @@ class StatusImage implements HttpResponse {
                         .replace("{{statusPos}}", statusPos)
                         .replace("{{subject}}", subject)
                         .replace("{{status}}", status)
-                        .replace("{{color}}", color).getBytes(Charset.forName("UTF-8"));
+                        .replace("{{color}}", color)
+                        .replace("<svg xmlns", linkCode).getBytes(Charset.forName("UTF-8"));
             } finally {
                 IOUtils.closeQuietly(s);
             }

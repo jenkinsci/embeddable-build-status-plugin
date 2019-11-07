@@ -37,13 +37,13 @@ public class RunBadgeAction implements Action {
     }
 
     @WebMethod(name = "icon")
-    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config) {
-        return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+    public HttpResponse doIcon(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config, @QueryParameter String link) {
+        return PluginImpl.iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config, link);
     }
 
     @WebMethod(name = "icon.svg")
-    public HttpResponse doIconDotSvg(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config) {
-        return doIcon(style, subject, status, color, animatedOverlayColor, config);
+    public HttpResponse doIconDotSvg(@QueryParameter String style, @QueryParameter String subject, @QueryParameter String status, @QueryParameter String color, @QueryParameter String animatedOverlayColor, @QueryParameter String config, @QueryParameter String link) {
+        return doIcon(style, subject, status, color, animatedOverlayColor, config, link);
     }
 
     public String doText() {
