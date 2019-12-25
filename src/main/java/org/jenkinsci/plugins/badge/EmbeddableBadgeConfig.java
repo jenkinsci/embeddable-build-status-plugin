@@ -29,6 +29,7 @@ public class EmbeddableBadgeConfig implements Serializable {
     private String status = null;
     private String color = null;
     private String animatedOverlayColor = null;
+    private String link = null;
   
     public EmbeddableBadgeConfig(String id) {
         this.id = id;
@@ -80,5 +81,14 @@ public class EmbeddableBadgeConfig implements Serializable {
     @Whitelisted
     public void setAnimatedOverlayColor(String animatedOverlayColor) {
         this.animatedOverlayColor = animatedOverlayColor;
+    }
+
+    public String getLink() {
+      return link;
+    }
+
+    @Whitelisted
+    public void setLink(String link) {
+      this.link = link;
     }
 }

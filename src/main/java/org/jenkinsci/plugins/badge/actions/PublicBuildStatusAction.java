@@ -73,16 +73,16 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                                 @QueryParameter String build, @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config) {
+                                @QueryParameter String config, @QueryParameter String link) {
         if (job == null) {
-            return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor);
+            return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor, link);
         } else {
             Job<?, ?> project = getProject(job, false);
             if(build != null && project != null) {
                 Run<?, ?> run = getRun(project, build, false);
-                return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config);
+                return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config, link);
             } else {
-                return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config);
+                return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config, link);
             }
         }
     }
@@ -92,8 +92,8 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                                 @QueryParameter String build, @QueryParameter String style, 
                                 @QueryParameter String subject, @QueryParameter String status, 
                                 @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config) {
-        return doIcon(req, rsp, job, build, style, subject, status, color, animatedOverlayColor, config);
+                                @QueryParameter String config, @QueryParameter String link) {
+        return doIcon(req, rsp, job, build, style, subject, status, color, animatedOverlayColor, config, link);
     }
 
     public String doText(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {

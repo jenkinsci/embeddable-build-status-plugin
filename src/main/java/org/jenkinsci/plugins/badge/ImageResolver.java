@@ -43,7 +43,7 @@ public class ImageResolver {
         };
     };
 
-    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName, String animatedOverlayColor) {
+    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName, String animatedOverlayColor, String link) {
         String statusColorName = color.noAnime().toString();
         String statusAnimatedOverlayColorName = null;
 
@@ -99,7 +99,7 @@ public class ImageResolver {
         }
         
         try {
-            return new StatusImage(subject, status, colorName, animatedOverlayColor, style);
+            return new StatusImage(subject, status, colorName, animatedOverlayColor, style, link);
         } catch (IOException ioe) {
             return new StatusImage();
         }

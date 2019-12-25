@@ -81,6 +81,16 @@ public class AddEmbeddableBadgeConfigStep extends Step {
     public void setAnimatedOverlayColor(String animatedOverlayColor) {
         this.badgeConfig.setAnimatedOverlayColor(animatedOverlayColor);
     }
+
+    public String getLink() {
+      return badgeConfig.getLink();
+    }
+  
+    @DataBoundSetter
+    @OptionalParam(description = "The link the will be followed when clicking on the svg")
+    public void setLink(String link) {
+      this.badgeConfig.setLink(link);
+    }
   
     @Override
     public StepExecution start(StepContext context) {
