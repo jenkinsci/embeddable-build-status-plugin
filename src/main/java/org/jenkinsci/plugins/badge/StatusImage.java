@@ -48,7 +48,7 @@ class StatusImage implements HttpResponse {
     private static final String PLGIN_NAME = "embeddable-build-status";
 
     private static final Jenkins jInstance = Jenkins.getInstance();
-    private static final PluginWrapper plugin = (jInstance != null ? jInstance.pluginManager.getPlugin(PLGIN_NAME) : null);
+    private static final PluginWrapper plugin = jInstance.pluginManager.getPlugin(PLGIN_NAME);
     private static final URL baseUrl = (plugin != null ? plugin.baseResourceURL : null);
 
     /**
