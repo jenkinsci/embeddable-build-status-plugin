@@ -38,7 +38,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
             ParametersAction params = run.getAction(ParametersAction.class);
             if (params != null) {
                 ParameterValue value = params.getParameter(paramName);
-                if (value != null && value.getValue().toString().equals(paramValue)) {
+                if (value != null && value.getValue() != null && value.getValue().toString().equals(paramValue)) {
                     return true;
                 }
             }
