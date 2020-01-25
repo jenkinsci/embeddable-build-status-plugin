@@ -7,13 +7,15 @@
     <relativePath />
   </parent>
   <properties>
+    <revision>2.0.4</revision>
+    <changelist>-SNAPSHOT</changelist>
     <jenkins.version>2.60.1</jenkins.version>
     <java.level>8</java.level>
   </properties>
 
   <name>Embeddable Build Status Plugin</name>
   <artifactId>embeddable-build-status</artifactId>
-  <version>2.0.4-SNAPSHOT</version>
+  <version>${revision}${changelist}</version>
   <packaging>hpi</packaging>
   <url>https://github.com/jenkinsci/embeddable-build-status-plugin</url>
 
@@ -42,7 +44,7 @@
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>HEAD</tag>
+    <tag>${scmTag}</tag>
   </scm>
   <dependencies>
     <dependency>
