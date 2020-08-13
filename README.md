@@ -134,7 +134,7 @@ Provide a link to be opened on clicking on the badge.
 The query parameters `subject`, `status`, `color`, `animatedOverlayColor` and `link` support the usage of variables like `?subject=Build ${variable}`
 
 Available builtin variables are:
- - `buildId`, `buildNumber`, `displayName`, `duration`, and `startTime`
+ - `buildId`, `buildNumber`, `displayName`, `description`, `duration`, and `startTime`
  - `params.<BuildParameterName>` where `<BuildParameterName>` matches any Parameter used for running the job.
 
    **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:
