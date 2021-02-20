@@ -1,4 +1,3 @@
-<?jelly escape-by-default='true'?>
 <div>
   This plugin adds the embeddable build status badge to Jenkins so that you can easily hyperlink/show your build status
   from elsewhere.
