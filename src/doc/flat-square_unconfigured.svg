@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="110.0" height="20">
+    <linearGradient id="a" x2="0" y2="100%">
+        <stop offset="0" stop-color="#fff" stop-opacity=".1" />
+        <stop offset=".1" stop-color="#fff" stop-opacity=".1" />
+        <stop offset=".9" stop-color="#fff" stop-opacity=".1" />
+        <stop offset="1" stop-color="#fff" stop-opacity=".1" />
+    </linearGradient>
+    <path fill="#555" d="M0 0h110.0v20h-110.0z" />
+    <path fill="#44cc11" d="M47.0 0h63.0v20h-63.0zM47.0 0h4v20h-4z" />
+    <path fill="url(#a)" d="M0 0h110.0v20h-110.0z" />
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="24.5" y="14">build</text>
+        <text x="77.5" y="14">passing</text>
+    </g>
+</svg>

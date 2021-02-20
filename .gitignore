@@ -1,2 +1,10 @@
 target
 work
+.idea/
+*.iml
+.eclipse
+*.prefs
+.classpath
+.factorypath
+.project
+.vscode/

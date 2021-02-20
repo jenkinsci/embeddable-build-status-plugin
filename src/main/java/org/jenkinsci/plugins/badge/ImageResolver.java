@@ -27,60 +27,81 @@ import hudson.model.BallColor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ImageResolver {
-
-    private final HashMap<String, StatusImage[]> styles;
-    private final StatusImage[] defaultStyle;
-
-    public ImageResolver() throws IOException{
-        styles = new HashMap<String, StatusImage[]>();
-        // shields.io "plastic" style (aka the old default)
-        StatusImage[] plasticImages = new StatusImage[] {
-                new StatusImage("build-failing-red.svg"),
-                new StatusImage("build-unstable-yellow.svg"),
-                new StatusImage("build-passing-brightgreen.svg"),
-                new StatusImage("build-running-blue.svg"),
-                new StatusImage("build-unknown-lightgrey.svg")
+    private final Map<String, String> statuses = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put( "red", "failing" );
+            put( "brightgreen", "passing" );
+            put( "yellow", "unstable" );
+            put( "aborted", "aborted" );
+            put( "blue", "running" );
+            put( "disabled", "disabled");
+            put( "notbuilt", "not run");
         };
-        styles.put("plastic", plasticImages);
-        // shields.io "flat" style (new default from Feb 1 2015)
-        StatusImage[] flatImages = new StatusImage[] {
-                new StatusImage("build-failing-red-flat.svg"),
-                new StatusImage("build-unstable-yellow-flat.svg"),
-                new StatusImage("build-passing-brightgreen-flat.svg"),
-                new StatusImage("build-running-blue-flat.svg"),
-                new StatusImage("build-unknown-lightgrey-flat.svg")
-        };
-        styles.put("flat", flatImages);
-        // Pick a default style
-        defaultStyle = flatImages;
-        styles.put("default", defaultStyle);
-    }
+    };
 
-    public StatusImage getImage(BallColor color) {
-        return getImage(color, "default");
-    }
+    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName, String animatedOverlayColor, String link) {
+        String statusColorName = color.noAnime().toString();
+        String statusAnimatedOverlayColorName = null;
 
-    public StatusImage getImage(BallColor color, String style) {
-        StatusImage[] images = styles.get(style);
-        if (images == null)
-            images = defaultStyle;
+        // check if "ball" is requested
+        if (style != null) {
+            String[] styleParts = style.split("-");
+            if (styleParts.length == 2 && styleParts[0].equals("ball")) {
+                String url = color.getImageOf(styleParts[1]);
+                if (url == null) {
+                    url = color.getImageOf("32x32");
+                }
 
-        if (color.isAnimated())
-            return images[3];
+                if (url != null) {
+                    try {
+                        return new StatusImage(url);
+                    } catch (IOException ioe) {
+                        return new StatusImage();
+                    }
+                }
+            }
+        }
 
-        switch (color) {
-        case RED:
-        case ABORTED:
-            return images[0];
-        case YELLOW:
-            return images[1];
-        case BLUE:
-            return images[2];
-        default:
-            return images[4];
+        if (color.isAnimated() && colorName == null) {
+            // animated means "running"
+            statusAnimatedOverlayColorName = "blue";
+        }
+
+        if (statusColorName.equals("blue")) {
+            statusColorName = "brightgreen";
+        }
+        
+        if (colorName == null) {
+            if (statusColorName.equals("aborted") || statusColorName.equals("disabled") || statusColorName.equals("notbuilt")) {
+                colorName = "lightgrey";
+            } else {
+                colorName = statusColorName;
+            }
+
+            if (animatedOverlayColor == null) {
+                animatedOverlayColor = statusAnimatedOverlayColorName;
+            }
+        }
+
+        if (subject == null) {
+            subject = "build";
+        }
+
+        if (status == null) {
+            status = statuses.get(statusAnimatedOverlayColorName != null ? statusAnimatedOverlayColorName : statusColorName);
+            if (status == null) {
+                status = "unknown";
+            }
+        }
+        
+        try {
+            return new StatusImage(subject, status, colorName, animatedOverlayColor, style, link);
+        } catch (IOException ioe) {
+            return new StatusImage();
         }
     }
-
 }
