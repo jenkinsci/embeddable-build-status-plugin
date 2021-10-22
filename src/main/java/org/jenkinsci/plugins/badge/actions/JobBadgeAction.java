@@ -29,7 +29,7 @@ public class JobBadgeAction implements Action {
     }
 
     public String getIconFileName() {
-        return Jenkins.RESOURCE_PATH+"/plugin/embeddable-build-status/images/24x24/shield.png";
+        return Jenkins.RESOURCE_PATH+"/plugin/embeddable-build-status/images/shield.svg";
     }
 
     public String getDisplayName() {
