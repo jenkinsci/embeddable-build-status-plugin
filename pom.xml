@@ -3,12 +3,12 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>3.50</version>
+    <version>4.37</version>
     <relativePath />
   </parent>
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
-    <jenkins.version>2.60.1</jenkins.version>
+    <jenkins.version>2.319.3</jenkins.version>
     <java.level>8</java.level>
   </properties>
 
@@ -45,16 +45,28 @@
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
     <tag>${scmTag}</tag>
   </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>script-security</artifactId>
-      <version>1.49</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-step-api</artifactId>
-      <version>2.14</version>
+      <version>622.vb_8e7c15b_c95a_</version>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-2.319.x</artifactId>
+        <version>1181.v04b_21d4b_0d6c</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

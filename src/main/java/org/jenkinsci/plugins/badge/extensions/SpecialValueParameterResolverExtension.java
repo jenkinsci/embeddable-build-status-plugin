@@ -6,11 +6,13 @@
 
  package org.jenkinsci.plugins.badge.extensions;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.model.Actionable;
 import hudson.model.Run;
 import hudson.model.Job;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +21,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoi
 @Extension
 public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
     private static Pattern custom = Pattern.compile("(buildId|buildNumber|duration|description|displayName|startTime)");
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
             if (actionable instanceof Run<?, ?>) {
