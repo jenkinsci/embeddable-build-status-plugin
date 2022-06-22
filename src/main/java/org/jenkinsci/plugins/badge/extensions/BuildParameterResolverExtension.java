@@ -34,10 +34,11 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                 while (matcher.find()) {
                     // get value for <ParamName>
                     ParameterValue value = params.getParameter(matcher.group(1));
-                    if (value != null) {
+                    Object val = value != null ? value.getValue() : null;
+                    if (val != null) {
                         // replace ${params.<ParamName>|<DefaultValue>} with the value
-                        String valueStr = value.getValue().toString();
-                        parameter = matcher.replaceAll(valueStr);
+                        String valueStr = val.toString();
+                        parameter = matcher.replaceAll(valueStr.replace("\\", "\\\\").replace("$", "\\$").replace("{", "\\{").replace("}", "\\}"));
                         matcher = defaultPattern.matcher(parameter);
                     } else {
                         // replace ${params.<ParamName>|<DefaultValue>} with the <DefaultValue>
@@ -51,10 +52,11 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                 while (matcher.find()) {
                     // get value for <ParamName>
                     ParameterValue value = params.getParameter(matcher.group(1));
-                    if (value != null) {
+                    Object val = value != null ? value.getValue() : null;
+                    if (val != null) {
                         // replace ${params.<ParamName>} with the value
-                        String valueStr = value.getValue().toString();
-                        parameter = matcher.replaceFirst(valueStr);
+                        String valueStr = val.toString();
+                        parameter = matcher.replaceFirst(valueStr.replace("\\", "\\\\").replace("$", "\\$").replace("{", "\\{").replace("}", "\\}"));
                         matcher = pattern.matcher(parameter);
                     } else {
                         // replace ${params.<ParamName>} with empty string
