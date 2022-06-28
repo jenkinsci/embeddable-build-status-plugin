@@ -7,6 +7,10 @@
 
 package org.jenkinsci.plugins.badge;
 
+import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.HttpResponse;
@@ -44,6 +48,7 @@ import static javax.servlet.http.HttpServletResponse.*;
  * can change any time, we use ETag to skip the actual data transfer if possible.
  */
 class StatusImage implements HttpResponse {
+    public static final Logger LOGGER = Logger.getLogger(StatusImage.class.getName());
     private final byte[] payload;
     private static final String PLGIN_NAME = "embeddable-build-status";
 
@@ -101,13 +106,12 @@ class StatusImage implements HttpResponse {
         if (status != null) status = StringEscapeUtils.escapeHtml(status);
         if (animatedColorName != null) animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
         if (colorName != null) colorName = StringEscapeUtils.escapeHtml(colorName);
-        if (style != null) style = StringEscapeUtils.escapeHtml(style);
-        if (link != null) link = StringEscapeUtils.escapeHtml(link);
+        if (link != null) link = StringEscapeUtils.escapeHtml(StringEscapeUtils.escapeHtml(link)); // double-escape because concatenating into an attribute effectively removes one level of quoting
         
         if (baseUrl != null) {
             etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
     
-            if (style == null) {
+            if (style == null || !Arrays.asList("flat-square", "plastic").contains(style)) { // explicitly list allowed values for SECURITY-2792
                 style = "flat";
             }
 
@@ -167,7 +171,17 @@ class StatusImage implements HttpResponse {
             }
 
             if (link != null) {
-                linkCode = "<svg onclick=\"window.open('" + link + "');\" style=\"cursor: pointer;\" xmlns";
+                try {
+                    URL url = new URL(link);
+                    final String protocol = url.getProtocol();
+                    if (protocol.equals("http") || protocol.equals("https")) {
+                        linkCode = "<svg onclick=\"window.open(&quot;" + link + "&quot;);\" style=\"cursor: pointer;\" xmlns";
+                    } else {
+                        LOGGER.log(Level.FINE, "Invalid link protocol: " + protocol);
+                    }
+                } catch (MalformedURLException ex) {
+                    LOGGER.log(Level.FINE, "Invalid link URL: " + link, ex);
+                }
             }
 
             try {
