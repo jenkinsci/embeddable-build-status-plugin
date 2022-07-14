@@ -1,0 +1,2 @@
+_extends: .github
+tag-template: embeddable-build-status-$NEXT_PATCH_VERSION
