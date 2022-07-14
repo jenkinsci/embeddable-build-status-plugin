@@ -41,14 +41,16 @@ public class StatusImageTest {
     @Test
     public void testMeasureText() throws Exception {
         StatusImage statusImage = new StatusImage();
-        assertThat(statusImage.measureText("W"), is(11));
+        assertThat(statusImage.measureText("W"), is(9)); // 11 in Verdana
         assertThat(statusImage.measureText("M"), is(9));
-        assertThat(statusImage.measureText("X"), is(8));
+        assertThat(statusImage.measureText("X"), is(7)); // 8 in Verdana
         assertThat(statusImage.measureText("T"), is(7));
-        assertThat(statusImage.measureText("|"), is(5));
-        assertThat(statusImage.measureText(":"), is(5));
-        assertThat(statusImage.measureText(";"), is(5));
+        assertThat(statusImage.measureText("|"), is(4)); // 5 in Verdana
+        assertThat(statusImage.measureText(":"), is(4)); // 5 in Verdana
+        assertThat(statusImage.measureText(";"), is(4)); // 5 in Verdana
         assertThat(statusImage.measureText("t"), is(4));
         assertThat(statusImage.measureText(","), is(4));
+        assertThat(statusImage.measureText("WWWWWWWWWW"), is(90)); // 110 in Verdana
+        assertThat(statusImage.measureText("When in the course of human events it becomes necessary"), is(330)); // 338 in Verdana
     }
 }
