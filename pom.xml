@@ -3,13 +3,15 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.37</version>
+    <version>4.43.1</version>
     <relativePath />
   </parent>
   <properties>
+    <revision>2.0.5</revision>
     <changelist>999999-SNAPSHOT</changelist>
-    <jenkins.version>2.319.3</jenkins.version>
-    <java.level>8</java.level>
+    <jenkins.version>2.332.4</jenkins.version>
+    <spotbugs.effort>Max</spotbugs.effort>
+    <spotbugs.failOnError>true</spotbugs.failOnError>
   </properties>
 
   <name>Embeddable Build Status Plugin</name>
@@ -40,7 +42,7 @@
   </pluginRepositories>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+    <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
     <tag>${scmTag}</tag>
@@ -54,19 +56,19 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-step-api</artifactId>
-      <version>622.vb_8e7c15b_c95a_</version>
     </dependency>
   </dependencies>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.319.x</artifactId>
-        <version>1181.v04b_21d4b_0d6c</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
+        <dependency>
+            <groupId>io.jenkins.tools.bom</groupId>
+            <artifactId>bom-2.332.x</artifactId>
+            <version>1478.v81d3dc4f9a_43</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
     </dependencies>
   </dependencyManagement>
+
 </project>

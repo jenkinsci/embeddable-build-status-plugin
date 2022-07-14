@@ -134,8 +134,11 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
         }
 
         // check if user has permission to view the status
-        if(throwErrorWhenNotFound && (p == null || !p.hasPermission(VIEW_STATUS))){
-            throw HttpResponses.notFound();            
+        if (p == null || !p.hasPermission(VIEW_STATUS)) {
+            if (throwErrorWhenNotFound) {
+                throw HttpResponses.notFound();
+            }
+            return null;
         }
         
         return p;
@@ -180,8 +183,11 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
             }    
         }
         // check if user has permission to view the status
-        if(throwErrorWhenNotFound && (run == null || !run.hasPermission(VIEW_STATUS))){
-            throw HttpResponses.notFound();
+        if (run == null || !run.hasPermission(VIEW_STATUS)) {
+            if (throwErrorWhenNotFound) {
+                throw HttpResponses.notFound();
+            }
+            return null;
         }
 
         return run;

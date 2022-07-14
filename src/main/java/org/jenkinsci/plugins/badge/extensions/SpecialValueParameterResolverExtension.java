@@ -44,7 +44,11 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                     } else if (customKey.equals("duration")) {
                         parameter = matcher.replaceFirst(run.getDurationString());
                     } else if (customKey.equals("description")) {
-                        parameter = matcher.replaceFirst(run.getDescription());
+                        String description = run.getDescription();
+                        if (description == null) {
+                            description = "";
+                        }
+                        parameter = matcher.replaceFirst(description);
                     } else if (customKey.equals("displayName")) {
                         parameter = matcher.replaceFirst(run.getDisplayName());
                     } else if (customKey.equals("startTime")) {
