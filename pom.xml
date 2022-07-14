@@ -7,7 +7,6 @@
     <relativePath />
   </parent>
   <properties>
-    <revision>2.0.5</revision>
     <changelist>999999-SNAPSHOT</changelist>
     <jenkins.version>2.332.4</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
