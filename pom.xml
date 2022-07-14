@@ -10,6 +10,8 @@
     <revision>2.0.5</revision>
     <changelist>-SNAPSHOT</changelist>
     <jenkins.version>2.332.4</jenkins.version>
+    <spotbugs.effort>Max</spotbugs.effort>
+    <spotbugs.failOnError>true</spotbugs.failOnError>
   </properties>
 
   <name>Embeddable Build Status Plugin</name>
