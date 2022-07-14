@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  target-branch: master
+  reviewers:
+  - MarkEWaite
+  labels:
+  - skip-changelog
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: weekly
