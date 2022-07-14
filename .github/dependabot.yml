@@ -1,9 +1,9 @@
 version: 2
 updates:
 - package-ecosystem: maven
-  directory: "/"
+  directory: /
   schedule:
-    interval: daily
+    interval: weekly
   open-pull-requests-limit: 10
   target-branch: master
   reviewers:
