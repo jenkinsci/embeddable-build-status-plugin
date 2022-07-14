@@ -3,14 +3,13 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>3.50</version>
+    <version>4.41</version>
     <relativePath />
   </parent>
   <properties>
     <revision>2.0.5</revision>
     <changelist>-SNAPSHOT</changelist>
-    <jenkins.version>2.60.1</jenkins.version>
-    <java.level>8</java.level>
+    <jenkins.version>2.332.4</jenkins.version>
   </properties>
 
   <name>Embeddable Build Status Plugin</name>
@@ -50,12 +49,12 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>script-security</artifactId>
-      <version>1.49</version>
+      <version>1175.v4b_d517d6db_f0</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-step-api</artifactId>
-      <version>2.14</version>
+      <version>625.vd896b_f445a_f8</version>
     </dependency>
   </dependencies>
 </project>
