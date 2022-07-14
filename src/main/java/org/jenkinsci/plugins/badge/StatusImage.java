@@ -211,7 +211,7 @@ class StatusImage implements HttpResponse {
 
     public int measureText(String text) throws IOException {
         if (baseUrl != null) {
-            URL fontURL = new URL(baseUrl, "fonts/verdana.ttf");
+            URL fontURL = new URL(baseUrl, "fonts/Bitstream-Vera-Sans-Roman.ttf");
             InputStream fontStream = fontURL.openStream();
             Font defaultFont = null;
             try {
