@@ -15,7 +15,7 @@
 
   <name>Embeddable Build Status Plugin</name>
   <artifactId>embeddable-build-status</artifactId>
-  <version>${revision}${changelist}</version>
+  <version>${changelist}</version>
   <packaging>hpi</packaging>
   <url>https://github.com/jenkinsci/embeddable-build-status-plugin</url>
 
