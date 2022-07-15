@@ -10,12 +10,13 @@ import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.Run;
 import jenkins.model.Jenkins;
+import org.jenkins.ui.icon.IconSpec;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.jenkinsci.plugins.badge.*;
 import org.kohsuke.stapler.WebMethod;
 
-public class RunBadgeAction implements Action {
+public class RunBadgeAction implements Action, IconSpec {
     public final Run<?, ?> run;
     public final Job<?, ?> project;
 
@@ -24,8 +25,14 @@ public class RunBadgeAction implements Action {
         this.project = run.getParent();
     }
 
+    @Override
     public String getIconFileName() {
-        return Jenkins.RESOURCE_PATH+"/plugin/embeddable-build-status/images/shield.svg";
+        return null;
+    }
+
+    @Override
+    public String getIconClassName() {
+        return "icon-shield";
     }
 
     public String getDisplayName() {

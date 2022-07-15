@@ -12,6 +12,7 @@ import hudson.model.Job;
 import hudson.model.Run;
 import jenkins.model.Jenkins;
 
+import org.jenkins.ui.icon.IconSpec;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.jenkinsci.plugins.badge.*;
@@ -21,15 +22,21 @@ import org.kohsuke.stapler.WebMethod;
 * @author Kohsuke Kawaguchi
 */
 @SuppressWarnings("rawtypes")
-public class JobBadgeAction implements Action {
+public class JobBadgeAction implements Action, IconSpec {
     public final Job project;
     
     public JobBadgeAction(Job project) {
         this.project = project;
     }
 
+    @Override
     public String getIconFileName() {
-        return Jenkins.RESOURCE_PATH+"/plugin/embeddable-build-status/images/shield.svg";
+        return null;
+    }
+
+    @Override
+    public String getIconClassName() {
+        return "icon-shield";
     }
 
     public String getDisplayName() {
