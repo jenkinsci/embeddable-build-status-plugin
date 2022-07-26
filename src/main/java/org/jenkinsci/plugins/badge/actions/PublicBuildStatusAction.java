@@ -13,6 +13,7 @@ import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 import hudson.security.ACL;
+import hudson.security.ACLContext;
 import hudson.security.Permission;
 import hudson.security.PermissionScope;
 import hudson.util.HttpResponses;
@@ -21,8 +22,6 @@ import java.io.IOException;
 
 import jenkins.model.Jenkins;
 
-import org.acegisecurity.context.SecurityContext;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -47,7 +46,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @Extension
 public class PublicBuildStatusAction implements UnprotectedRootAction {
     public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
-    private static final Jenkins jInstance = Jenkins.getInstance();
+    private static final Jenkins jInstance = Jenkins.get();
     private IconRequestHandler iconRequestHandler;
     public PublicBuildStatusAction() throws IOException {
         iconRequestHandler = new IconRequestHandler();
@@ -113,10 +112,9 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
     private static Job<?, ?> getProject(String job, Boolean throwErrorWhenNotFound) {
         Job<?, ?> p = null;
         if (job != null) {
-            // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
-            SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
+            // as the user might have ViewStatus permission only (e.g. as anonymous) we get the project impersonate and check for permission after getting the project
 
-            try {
+            try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 // first try to get Job via JobSelectorExtensionPoints
                 for (JobSelectorExtensionPoint jobSelector : ExtensionList.lookup(JobSelectorExtensionPoint.class)) {
                     p = jobSelector.select(job);
@@ -125,11 +123,9 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                     }
                 }
 
-                if (p == null && jInstance != null) {
+                if (p == null) {
                     p = jInstance.getItemByFullName(job, Job.class);
                 }
-           } finally {
-                SecurityContextHolder.setContext(orig);
             }
         }
 
@@ -150,8 +146,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
 
         if (project != null && build != null) {
             // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
-            SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
-            try {
+            try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 for (String token : build.split(",")) {
                     Run newRun = null;
                     // first: try to get Run via our InternalRunSelectorExtensionPoints
@@ -178,9 +173,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                         break;
                     }
                 }
-            } finally {
-                SecurityContextHolder.setContext(orig);
-            }    
+            }
         }
         // check if user has permission to view the status
         if (run == null || !run.hasPermission(VIEW_STATUS)) {
