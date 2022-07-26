@@ -47,7 +47,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @Extension
 public class PublicBuildStatusAction implements UnprotectedRootAction {
     public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
-    private static final Jenkins jInstance = Jenkins.getInstance();
+    private static final Jenkins jInstance = Jenkins.get();
     private IconRequestHandler iconRequestHandler;
     public PublicBuildStatusAction() throws IOException {
         iconRequestHandler = new IconRequestHandler();
@@ -125,7 +125,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
                     }
                 }
 
-                if (p == null && jInstance != null) {
+                if (p == null) {
                     p = jInstance.getItemByFullName(job, Job.class);
                 }
            } finally {

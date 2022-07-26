@@ -52,7 +52,7 @@ class StatusImage implements HttpResponse {
     private final byte[] payload;
     private static final String PLGIN_NAME = "embeddable-build-status";
 
-    private static final Jenkins jInstance = Jenkins.getInstance();
+    private static final Jenkins jInstance = Jenkins.get();
     private static final PluginWrapper plugin = jInstance.pluginManager.getPlugin(PLGIN_NAME);
     private static final URL baseUrl = (plugin != null ? plugin.baseResourceURL : null);
 
@@ -87,7 +87,7 @@ class StatusImage implements HttpResponse {
     }
 
     StatusImage(String fileName) throws IOException {
-        URL rootUrl = new URL(jInstance != null ? jInstance.getRootUrl() : "");
+        URL rootUrl = new URL(jInstance.getRootUrl());
         etag = '"' + fileName + '"';
 
         URL image = new URL(rootUrl, fileName);
