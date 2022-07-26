@@ -6,6 +6,7 @@
 
 package org.jenkinsci.plugins.badge.dsl;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -104,7 +105,8 @@ public class AddEmbeddableBadgeConfigStep extends Step {
         public String getFunctionName() {
             return "addEmbeddableBadgeConfiguration";
         }
-    
+
+        @NonNull
         @Override
         public String getDisplayName() {
             return "Add an Embeddable Badge Configuration";

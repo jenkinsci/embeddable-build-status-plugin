@@ -7,6 +7,7 @@
 
 package org.jenkinsci.plugins.badge;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.*;
 import jenkins.model.TransientActionFactory;
@@ -29,8 +30,9 @@ public class JobBadgeActionFactory extends TransientActionFactory<Job> {
         return Job.class;
     }
 
+    @NonNull
     @Override
-    public Collection<? extends Action> createFor(Job target) {
+    public Collection<? extends Action> createFor(@NonNull Job target) {
         return Collections.singleton(new JobBadgeAction(target));
     }
 }
