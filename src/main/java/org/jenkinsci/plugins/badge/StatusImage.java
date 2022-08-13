@@ -91,11 +91,8 @@ class StatusImage implements HttpResponse {
         etag = '"' + fileName + '"';
 
         URL image = new URL(rootUrl, fileName);
-        InputStream s = image.openStream();
-        try {
+        try (InputStream s = image.openStream()) {
             payload = IOUtils.toByteArray(s);
-        } finally {
-            IOUtils.closeQuietly(s);
         }
         length = Integer.toString(payload.length);
     }
@@ -132,8 +129,6 @@ class StatusImage implements HttpResponse {
                 }
             }
 
-            InputStream s = image.openStream();
-        
             double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
 
             if (animatedColor != null) {
@@ -160,13 +155,10 @@ class StatusImage implements HttpResponse {
             // first: add animated overlay
             if (animatedSnippet != null) {
                 String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
-                InputStream animatedOverlayStream = animatedSnippet.openStream();
-                try {
+                try (InputStream animatedOverlayStream = animatedSnippet.openStream()) {
                     animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
                         .replace("{{reducedStatusWidth}}", reducedStatusWidth)
                         .replace("{{animatedColor}}", animatedColor);
-                } finally {
-                    IOUtils.closeQuietly(animatedOverlayStream);
                 }
             }
 
@@ -184,7 +176,7 @@ class StatusImage implements HttpResponse {
                 }
             }
 
-            try {
+            try (InputStream s = image.openStream()) {
                 payload = IOUtils.toString(s, "utf-8")
                         .replace("{{animatedOverlayColor}}", animatedOverlay)
                         .replace("{{fullwidth}}", fullwidth)
@@ -196,8 +188,6 @@ class StatusImage implements HttpResponse {
                         .replace("{{status}}", status)
                         .replace("{{color}}", color)
                         .replace("<svg xmlns", linkCode).getBytes(Charset.forName("UTF-8"));
-            } finally {
-                IOUtils.closeQuietly(s);
             }
 
             length = Integer.toString(payload.length);
