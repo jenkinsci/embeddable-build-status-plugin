@@ -209,25 +209,30 @@ class StatusImage implements HttpResponse {
         }
     }
 
-    public int measureText(String text) throws IOException {
-        if (baseUrl != null) {
-            URL fontURL = new URL(baseUrl, "fonts/Bitstream-Vera-Sans-Roman.ttf");
-            InputStream fontStream = fontURL.openStream();
-            Font defaultFont = null;
-            try {
-                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-            } catch (FontFormatException e) {
-                throw new IOException(e.getMessage());
-            } finally {
-                IOUtils.closeQuietly(fontStream);
-            }
+    private final static FontMetrics DEFAULT_FONT_METRICS;
 
-            defaultFont = defaultFont.deriveFont(11f);
-            Canvas canvas = new Canvas();
-            FontMetrics fontMetrics = canvas.getFontMetrics(defaultFont);
-            return fontMetrics.stringWidth(text);
+    static {
+        Font defaultFont = null;
+        final String FONT_NAME = "fonts/Bitstream-Vera-Sans-Roman.ttf";
+        try {
+            URL fontURL = new URL(baseUrl, FONT_NAME);
+            try (InputStream fontStream = fontURL.openStream()) {
+                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+                defaultFont = defaultFont.deriveFont(11f);
+            } catch (FontFormatException ex) {
+                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
         }
-        return 0;
+        Canvas canvas = new Canvas();
+        DEFAULT_FONT_METRICS = canvas.getFontMetrics(defaultFont);
+    }
+
+    public int measureText(String text) throws IOException {
+        return baseUrl != null ? DEFAULT_FONT_METRICS.stringWidth(text) : 0;
     }
 
     public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
