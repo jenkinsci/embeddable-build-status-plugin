@@ -177,7 +177,7 @@ class StatusImage implements HttpResponse {
                     if (protocol.equals("http") || protocol.equals("https")) {
                         linkCode = "<svg onclick=\"window.open(&quot;" + link + "&quot;);\" style=\"cursor: pointer;\" xmlns";
                     } else {
-                        LOGGER.log(Level.FINE, "Invalid link protocol: " + protocol);
+                        LOGGER.log(Level.FINE, "Invalid link protocol: {0}", protocol);
                     }
                 } catch (MalformedURLException ex) {
                     LOGGER.log(Level.FINE, "Invalid link URL: " + link, ex);
