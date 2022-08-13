@@ -202,15 +202,4 @@ public class StatusImageTest {
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
         assertThat(statusImage.getLength(), is("656"));
     }
-
-    // @Test
-    public void testGenerateResponse() throws Exception {
-        System.out.println("generateResponse");
-        StaplerRequest req = null;
-        StaplerResponse rsp = null;
-        Object node = null;
-        StatusImage instance = new StatusImage();
-        instance.generateResponse(req, rsp, node);
-        // TODO review the generated test code and remove the default call to fail.
-    }
 }
