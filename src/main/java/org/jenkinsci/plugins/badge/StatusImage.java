@@ -246,4 +246,19 @@ class StatusImage implements HttpResponse {
         rsp.setHeader("Content-Length", length);
         rsp.getOutputStream().write(payload);
     }
+
+    /* Package protected getters for tests */
+    String getEtag() {
+        return etag;
+    }
+
+    /* Package protected getters for tests */
+    String getLength() {
+        return length;
+    }
+
+    /* Package protected getters for tests */
+    String getContentType() {
+        return contentType;
+    }
 }

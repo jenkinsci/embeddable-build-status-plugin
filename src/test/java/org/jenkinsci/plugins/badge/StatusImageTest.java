@@ -25,7 +25,11 @@ package org.jenkinsci.plugins.badge;
 
 import org.junit.ClassRule;
 import org.junit.Test;
+
 import org.jvnet.hudson.test.JenkinsRule;
+
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -52,5 +56,161 @@ public class StatusImageTest {
         assertThat(statusImage.measureText(","), is(4));
         assertThat(statusImage.measureText("WWWWWWWWWW"), is(90)); // 110 in Verdana
         assertThat(statusImage.measureText("When in the course of human events it becomes necessary"), is(330)); // 338 in Verdana
+    }
+
+    private static final String PNG_CONTENT_TYPE = "image/png";
+    private static final String SVG_CONTENT_TYPE = "image/svg+xml;charset=utf-8";
+
+    @Test
+    public void testConstructorExamplePage() throws Exception {
+        String subject = "Custom Subject";
+        String status = "Any State";
+        String colorName = "darkturquoise";
+        String animatedColorName = null;
+        String style = null;
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("940"));
+    }
+
+    @Test
+    public void testConstructorFailingBuildPlasticStyle() throws Exception {
+        String subject = "build";
+        String status = "failing";
+        String colorName = "red";
+        String animatedColorName = null;
+        String style = "plastic";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("1003"));
+    }
+
+    @Test
+    public void testConstructorFailingBuildPlasticStyleNumericColor() throws Exception {
+        String subject = "build";
+        String status = "failing";
+        String colorName = "ff0000";
+        String animatedColorName = null;
+        String style = "plastic";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("1003"));
+    }
+
+    @Test
+    public void testConstructorPassingBuildPlasticStyle() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "plastic";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("1003"));
+    }
+
+    @Test
+    public void testConstructorFailingBuildFlatSquareStyle() throws Exception {
+        String subject = "build";
+        String status = "failing";
+        String colorName = "red";
+        String animatedColorName = null;
+        String style = "flat-square";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("525"));
+    }
+
+    @Test
+    public void testConstructorPassingBuildFlatSquareStyle() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "flat-square";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("525"));
+    }
+
+    @Test
+    public void testConstructor() throws Exception {
+        String subject = "build";
+        String status = "not run";
+        String colorName = "lightgrey";
+        String animatedColorName = null;
+        String style = null;
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString("null"));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("902"));
+    }
+
+    @Test
+    public void testConstructorPassingBuild32x32BallStyle() throws Exception {
+        String fileName = "/jenkins/static/3fcf04bd/images/32x32/blue.png";
+        StatusImage statusImage = new StatusImage(fileName);
+        assertThat(statusImage.getEtag(), containsString(fileName));
+        // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("1656"));
+    }
+
+    @Test
+    public void testConstructorPassingBuild16x16BallStyle() throws Exception {
+        String fileName = "/jenkins/static/3fcf04bd/images/16x16/blue.png";
+        StatusImage statusImage = new StatusImage(fileName);
+        assertThat(statusImage.getEtag(), containsString(fileName));
+        // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
+        assertThat(statusImage.getLength(), is("656"));
+    }
+
+    // @Test
+    public void testGenerateResponse() throws Exception {
+        System.out.println("generateResponse");
+        StaplerRequest req = null;
+        StaplerResponse rsp = null;
+        Object node = null;
+        StatusImage instance = new StatusImage();
+        instance.generateResponse(req, rsp, node);
+        // TODO review the generated test code and remove the default call to fail.
     }
 }
