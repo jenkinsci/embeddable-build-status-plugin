@@ -187,7 +187,7 @@ public class StatusImageTest {
 
     @Test
     public void testConstructorPassingBuild32x32BallStyle() throws Exception {
-        String fileName = "/jenkins/static/3fcf04bd/images/32x32/blue.png";
+        String fileName = "images/32x32/blue.png";
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
@@ -196,7 +196,7 @@ public class StatusImageTest {
 
     @Test
     public void testConstructorPassingBuild16x16BallStyle() throws Exception {
-        String fileName = "/jenkins/static/3fcf04bd/images/16x16/blue.png";
+        String fileName = "images/16x16/blue.png";
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
