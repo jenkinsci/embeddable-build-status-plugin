@@ -55,7 +55,6 @@ public class StatusImageTest {
         assertThat(statusImage.measureText("When in the course of human events it becomes necessary"), is(330)); // 338 in Verdana
     }
 
-    private static final String PNG_CONTENT_TYPE = "image/png";
     private static final String SVG_CONTENT_TYPE = "image/svg+xml;charset=utf-8";
 
     @Test
@@ -181,6 +180,8 @@ public class StatusImageTest {
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
         assertThat(statusImage.getLength(), is("902"));
     }
+
+    // private static final String PNG_CONTENT_TYPE = "image/png";
 
     @Test
     public void testConstructorPassingBuild32x32BallStyle() throws Exception {
