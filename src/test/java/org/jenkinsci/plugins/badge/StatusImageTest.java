@@ -28,9 +28,6 @@ import org.junit.Test;
 
 import org.jvnet.hudson.test.JenkinsRule;
 
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
