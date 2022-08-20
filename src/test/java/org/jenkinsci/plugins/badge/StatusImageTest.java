@@ -30,6 +30,8 @@ import org.jvnet.hudson.test.JenkinsRule;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 
 public class StatusImageTest {
 
@@ -71,7 +73,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("940"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
     }
 
     @Test
@@ -89,7 +91,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("1003"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -107,7 +109,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("1003"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -125,7 +127,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("1003"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -143,7 +145,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("525"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -161,7 +163,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("525"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -178,7 +180,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("902"));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
     }
 
     // private static final String PNG_CONTENT_TYPE = "image/png";
