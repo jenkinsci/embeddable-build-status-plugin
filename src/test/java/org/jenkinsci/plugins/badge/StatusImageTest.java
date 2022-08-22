@@ -95,6 +95,63 @@ public class StatusImageTest {
     }
 
     @Test
+    public void testConstructorFailingBuildPlasticStyleAnimatedNumericColor() throws Exception {
+        String subject = "build";
+        String status = "failing";
+        String colorName = "red";
+        String animatedColorName = "fe7d37";
+        String style = "plastic";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString(animatedColorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+    }
+
+    @Test
+    public void testConstructorFailingBuildPlasticStyleNumericColorAnimatedNumericColor() throws Exception {
+        String subject = "build";
+        String status = "failing";
+        String colorName = "ff0000";
+        String animatedColorName = "fe7d37";
+        String style = "plastic";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString(animatedColorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+    }
+
+    @Test
+    public void testConstructorFailingBuildPlasticStyleAnimatedColor() throws Exception {
+        String subject = "build";
+        String status = "failing";
+        String colorName = "red";
+        String animatedColorName = "yellow";
+        String style = "plastic";
+        String link = null;
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        assertThat(statusImage.getEtag(), containsString(subject));
+        assertThat(statusImage.getEtag(), containsString(status));
+        assertThat(statusImage.getEtag(), containsString(colorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getEtag(), containsString(animatedColorName));
+        assertThat(statusImage.getEtag(), containsString(style));
+        assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+    }
+
+    @Test
     public void testConstructorFailingBuildPlasticStyleNumericColor() throws Exception {
         String subject = "build";
         String status = "failing";
