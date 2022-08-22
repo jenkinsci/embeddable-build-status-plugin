@@ -225,6 +225,7 @@ class StatusImage implements HttpResponse {
         return baseUrl != null ? DEFAULT_FONT_METRICS.stringWidth(text) : 0;
     }
 
+    @Override
     public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
         String v = req.getHeader("If-None-Match");
         if (etag.equals(v)) {
