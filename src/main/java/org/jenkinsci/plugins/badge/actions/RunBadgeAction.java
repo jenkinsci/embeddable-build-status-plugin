@@ -32,7 +32,7 @@ public class RunBadgeAction implements Action, IconSpec {
 
     @Override
     public String getIconClassName() {
-        return "icon-shield";
+        return "symbol-shield-outline plugin-ionicons-api";
     }
 
     public String getDisplayName() {
