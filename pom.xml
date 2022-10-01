@@ -8,7 +8,7 @@
   </parent>
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
-    <jenkins.version>2.346.1</jenkins.version>
+    <jenkins.version>2.346.3</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.failOnError>true</spotbugs.failOnError>
   </properties>
