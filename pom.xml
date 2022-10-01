@@ -8,7 +8,7 @@
   </parent>
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
-    <jenkins.version>2.332.4</jenkins.version>
+    <jenkins.version>2.346.1</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.failOnError>true</spotbugs.failOnError>
   </properties>
@@ -56,13 +56,18 @@
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-step-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>ionicons-api</artifactId>
+      <version>28.va_f3a_84439e5f</version>
+    </dependency>
   </dependencies>
 
   <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>io.jenkins.tools.bom</groupId>
-            <artifactId>bom-2.332.x</artifactId>
+            <artifactId>bom-2.346.x</artifactId>
             <version>1607.va_c1576527071</version>
             <scope>import</scope>
             <type>pom</type>
