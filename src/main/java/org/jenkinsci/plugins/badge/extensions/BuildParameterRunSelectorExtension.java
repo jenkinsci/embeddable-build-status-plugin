@@ -97,7 +97,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                                         (specific.equals("Failed")      && isCompleted && isFailed) ||
                                         (specific.equals("Unstable")    && isCompleted && isUnstable) ||
                                         (specific.equals("Unsuccessful") && isCompleted && isUnsuccessful) ||
-                                        (specific.equals("isStable")    && isCompleted && isStable);    
+                                        (specific.equals("Stable")    && isCompleted && isStable);
                         }
                     }
 
