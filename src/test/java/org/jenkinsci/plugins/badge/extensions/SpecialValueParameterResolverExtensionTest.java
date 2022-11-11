@@ -2,7 +2,6 @@ package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.model.Job;
 import hudson.model.Run;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,47 +18,52 @@ class SpecialValueParameterResolverExtensionTest {
 
     @BeforeEach
     void setUp() {
-
         extension = new SpecialValueParameterResolverExtension();
         mockProject = Mockito.mock(Job.class);
+        
         mockRun = Mockito.mock(Run.class);
+        
+        when(mockRun.getId()).thenReturn("1234");
+        when(mockRun.getNumber()).thenReturn(1234);
+        when(mockRun.getDurationString()).thenReturn("23:35");
+        when(mockRun.getTimestampString()).thenReturn("23:35");
+        when(mockRun.getDisplayName()).thenReturn("display name");
+        when(mockRun.getDescription()).thenReturn("run description");        
     }
-//    (buildId|buildNumber|duration|description|displayName|startTime)
 
     @Test
-    void shouldResolveBuildId() {
-        when(mockRun.getId()).thenReturn("1234");
+    void shouldResolveBuildId() {        
         String actualParameter = extension.resolve(mockRun, "buildId");
         assertThat(actualParameter, is("1234"));
     }
     @Test
-    void shouldResolveBuildNumber() {
-        when(mockRun.getNumber()).thenReturn(1234);
+    void shouldResolveBuildNumber() {        
         String actualParameter = extension.resolve(mockRun, "buildNumber");
         assertThat(actualParameter, is("1234"));
     }
     @Test
-    void shouldResolveDuration() {
-        when(mockRun.getDurationString()).thenReturn("23:35");
+    void shouldResolveDuration() {        
         String actualParameter = extension.resolve(mockRun, "duration");
         assertThat(actualParameter, is("23:35"));
     }
     @Test
     void shouldResolveStartTime() {
-        when(mockRun.getTimestampString()).thenReturn("23:35");
         String actualParameter = extension.resolve(mockRun, "startTime");
         assertThat(actualParameter, is("23:35"));
     }
     @Test
-    void shouldResolveDisplayName() {
-        when(mockRun.getDisplayName()).thenReturn("display name");
+    void shouldResolveDisplayName() {        
         String actualParameter = extension.resolve(mockRun, "displayName");
         assertThat(actualParameter, is("display name"));
     }
-    @Ignore("Runs into an infinite loop. Needs debugging.")
-    void shouldResolveDescription() {
-        when(mockRun.getDescription()).thenReturn("run description");
+    @Test
+    void shouldResolveDescription() {       
         String actualParameter = extension.resolve(mockRun, "description");
         assertThat(actualParameter, is("run description"));
+    }
+    @Test
+    void testMultipleParameters() {
+        String actualParameter = extension.resolve(mockRun, "buildId buildNumber duration startTime displayName description");
+        assertThat(actualParameter, is("1234 1234 23:35 23:35 display name run description"));
     }
 }
