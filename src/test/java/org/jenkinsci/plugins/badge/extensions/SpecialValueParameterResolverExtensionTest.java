@@ -2,7 +2,6 @@ package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.model.Job;
 import hudson.model.Run;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -61,5 +60,10 @@ class SpecialValueParameterResolverExtensionTest {
     void shouldResolveDescription() {       
         String actualParameter = extension.resolve(mockRun, "description");
         assertThat(actualParameter, is("run description"));
+    }
+    @Test
+    void testMultipleParameters() {
+        String actualParameter = extension.resolve(mockRun, "buildId buildNumber duration startTime displayName description");
+        assertThat(actualParameter, is("1234 1234 23:35 23:35 display name run description"));
     }
 }
