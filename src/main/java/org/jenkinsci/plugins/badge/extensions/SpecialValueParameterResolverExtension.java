@@ -11,14 +11,13 @@ import hudson.model.Actionable;
 import hudson.model.Run;
 import hudson.model.Job;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
 @Extension
-public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
-    private static Pattern custom = Pattern.compile("(buildId|buildNumber|duration|description|displayName|startTime)");
+public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {    
+    
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
             if (actionable instanceof Run<?, ?>) {
@@ -31,31 +30,14 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                     ${displayName}
                     ${startTime}
                 */
-                Matcher matcher = custom.matcher(parameter);
-                while (matcher.find()) {
-                    String customKey = matcher.group(1);
-                    if (customKey.equals("buildId")) {
-                        parameter = matcher.replaceFirst(run.getId());
-                    } else if (customKey.equals("buildNumber")) {
-                        parameter = matcher.replaceFirst(Integer.toString(run.getNumber()));
-                    } else if (customKey.equals("duration")) {
-                        parameter = matcher.replaceFirst(run.getDurationString());
-                    } else if (customKey.equals("description")) {
-                        String description = run.getDescription();
-                        if (description == null) {
-                            description = "";
-                        }
-                        parameter = matcher.replaceFirst(description);
-                    } else if (customKey.equals("displayName")) {
-                        parameter = matcher.replaceFirst(run.getDisplayName());
-                    } else if (customKey.equals("startTime")) {
-                        parameter = matcher.replaceFirst(run.getTimestampString());
-                    } else {
-                        // this actually should NOT happen
-                        parameter = matcher.replaceFirst(customKey);
-                    }
-                    matcher = custom.matcher(parameter);
-                }
+                
+                parameter = parameter.replace("buildId", run.getId())
+                         .replace("buildNumber", Integer.toString(run.getNumber()))
+                         .replace("duration", run.getDurationString())
+                         .replace("description", Objects.toString(run.getDescription(), ""))
+                         .replace("displayName", run.getDisplayName())
+                         .replace("startTime", run.getTimestampString());
+                         
             } else if (actionable instanceof Job<?, ?>) {
                 parameter = resolve(((Job<?, ?>)actionable).getLastBuild(), parameter);
             }
