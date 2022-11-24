@@ -20,8 +20,8 @@ public class ImageResolverTest {
         String style="ball-32x32";
         String status = "passing";
         String subject = "build";
-       
-        ImageTester.getImage(BallColor.BLUE,style,status,subject, null, null, null);
+        String colorName=null;
+        ImageTester.getImage(BallColor.BLUE,style,status,subject, colorName, null, null);
 
     }
 
