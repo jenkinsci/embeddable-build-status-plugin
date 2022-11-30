@@ -1,7 +1,8 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.model.BallColor;
-
+import hudson.model.Messages;
+import hudson.util.ColorPalette;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +25,12 @@ public class ImageResolverTest {
         String status = "passing";
         String subject = "build";
         String colorName=null;
-        String fileName=  BallColor.getImageOf("32x32");
         //StatusImage statusImage = new StatusImage(fileName);
-        BallColor.values();
-        BallColor ball = new BallColor();
+       
         BallColor ball = mock(BallColor.class);
-        ImageTester.getImage(BallColor.ABORTED_ANIME,style,status,subject, colorName, null, null);
+        Mockito.when(ball.getImageOf("32x32")).thenReturn("hello");
+        
+
 
     }
 
