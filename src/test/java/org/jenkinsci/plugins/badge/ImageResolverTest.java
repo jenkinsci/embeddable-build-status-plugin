@@ -1,12 +1,14 @@
 package org.jenkinsci.plugins.badge;
 
+
+
+import org.junit.ClassRule;
 import hudson.model.BallColor;
-import hudson.model.Messages;
-import hudson.util.ColorPalette;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
+
+
+import org.jvnet.hudson.test.JenkinsRule;
 
 import org.mockito.Mockito;
 import org.mockito.Spy;
@@ -14,30 +16,35 @@ import org.mockito.Spy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
+
+import java.io.IOException;
+
 public class ImageResolverTest {
-    ImageResolver ImageTester;
-    
+    @ClassRule
+    public static JenkinsRule jenkinsRule = new JenkinsRule();
+
     @Test
-    void BallShouldBeDefault(){
-        ImageTester = new ImageResolver();
-        String s = "Hello";
-        String style="ball-32x32";
-        String status = "passing";
-        String subject = "build";
+    public void TestGetDefault32x32Ball() throws Exception {
+        ImageResolver ImageTester = new ImageResolver();
+        String style="ball-Error"; // should give default due to url being null
+        String status = null;
+        String subject = null;
         String colorName=null;
-        //StatusImage statusImage = new StatusImage(fileName);
-       
+        String fileName = "images/32x32/blue.png";
         BallColor ball = mock(BallColor.class);
-        Mockito.when(ball.getImageOf("32x32")).thenReturn("hello");
-        
+        //default
+        Mockito.when(ball.getImageOf("Error")).thenReturn(null);
+        Mockito.when(ball.getImageOf("32x32")).thenReturn(fileName);
+        Mockito.when(ball.noAnime()).thenCallRealMethod();
+        StatusImage TestImage = ImageTester.getImage(ball, style,subject,status, colorName, null, null);
+        assertThat(TestImage.getEtag(), containsString(fileName));
 
-
+     
     }
-
-    @Test
-    void testName() {
-        
-    }
-
-
 }
+
+
