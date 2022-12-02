@@ -114,6 +114,16 @@ public class ImageResolverTest {
         return "status-is-" + testName.getMethodName();
     }
 
+    private BallColor[] jobStatusColors = {
+        BallColor.ABORTED_ANIME,
+        BallColor.DISABLED_ANIME,
+        BallColor.NOTBUILT_ANIME,
+    };
+
+    private BallColor getJobStatusColor() {
+        return jobStatusColors[random.nextInt(jobStatusColors.length)]; // An animated color
+    }
+
     private BallColor[] animatedColors = {
         BallColor.ABORTED_ANIME,
         BallColor.DISABLED_ANIME,
@@ -162,15 +172,15 @@ public class ImageResolverTest {
     }
 
     @Test
-    public void testGetImageAnimatedColor() throws IOException {
+    public void testGetImageAnimatedJobStatusColor() throws IOException {
         // Same result expected whether invalid style or a null style
         String style = getInvalidStyle();
         BallColor color = getAnimatedColor();
         String subject = getSubject();
         String status = getStatus();
-        String colorName = null; // BallColor.YELLOW.toString();
-        String animatedOverlayColor = BallColor.YELLOW_ANIME.toString();
-        String link = null; // "https://www.example.com/my-link";
+        String colorName = null;
+        String animatedOverlayColor = getJobStatusColor().toString();
+        String link = null;
         ImageResolver imageResolver = new ImageResolver();
         StatusImage image = imageResolver.getImage(color, style, subject, status, colorName, animatedOverlayColor, link);
         assertThat(image.getEtag(), containsString(subject));
