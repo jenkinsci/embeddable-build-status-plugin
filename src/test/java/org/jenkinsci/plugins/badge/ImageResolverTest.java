@@ -154,7 +154,6 @@ public class ImageResolverTest {
 
     @Test
     public void testGetImage() throws IOException { // Without a style
-        // Same result expected whether invalid style or a null style
         String style = getInvalidStyle();
         BallColor color = BallColor.BLUE; // Not an animated color
         String subject = getSubject();
@@ -173,7 +172,6 @@ public class ImageResolverTest {
 
     @Test
     public void testGetImageAnimatedJobStatusColor() throws IOException {
-        // Same result expected whether invalid style or a null style
         String style = getInvalidStyle();
         BallColor color = getAnimatedColor();
         String subject = getSubject();
@@ -193,7 +191,6 @@ public class ImageResolverTest {
 
     @Test
     public void testGetImageLightGrey() throws IOException {
-        // Same result expected whether invalid style or a null style
         String style = getInvalidStyle();
         BallColor color = getLightGreyBallColor();
         String subject = getSubject();
