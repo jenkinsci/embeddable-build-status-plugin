@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
 import org.mockito.Mockito;
-import org.mockito.Spy;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
