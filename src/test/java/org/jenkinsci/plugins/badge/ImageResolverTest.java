@@ -121,7 +121,7 @@ public class ImageResolverTest {
     };
 
     private BallColor getJobStatusColor() {
-        return jobStatusColors[random.nextInt(jobStatusColors.length)]; // An animated color
+        return jobStatusColors[0]; // random.nextInt(jobStatusColors.length)]; // A job status animated color
     }
 
     private BallColor[] animatedColors = {
@@ -135,7 +135,7 @@ public class ImageResolverTest {
     };
 
     private BallColor getAnimatedColor() {
-        return animatedColors[random.nextInt(animatedColors.length)]; // An animated color
+        return animatedColors[0]; // random.nextInt(animatedColors.length)]; // An animated color
     }
 
     /* Any one of these colors will result in a lightgrey colored image */
@@ -149,7 +149,7 @@ public class ImageResolverTest {
     };
 
     private BallColor getLightGreyBallColor() {
-        return lightGreyEquivalents[random.nextInt(lightGreyEquivalents.length)]; // A light grey equivalent ball color
+        return lightGreyEquivalents[0]; // random.nextInt(lightGreyEquivalents.length)]; // A light grey equivalent ball color
     }
 
     @Test
