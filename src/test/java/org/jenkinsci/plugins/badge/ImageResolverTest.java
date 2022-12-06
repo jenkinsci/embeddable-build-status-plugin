@@ -8,6 +8,11 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
 import org.mockito.Mockito;
+<<<<<<< HEAD
+=======
+
+import static org.hamcrest.MatcherAssert.assertThat;
+>>>>>>> 9483900f4867983ecdda36804c4700a97ff89f0a
 import static org.mockito.Mockito.mock;
 
 import static org.hamcrest.CoreMatchers.*;
