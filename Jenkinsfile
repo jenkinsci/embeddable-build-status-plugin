@@ -9,10 +9,9 @@ buildPlugin(
   // Opt-in to the Artifact Caching Proxy, to be removed when it will be opt-out.
   // See https://github.com/jenkins-infra/helpdesk/issues/2752 for more details and updates.
   artifactCachingProxyEnabled: true,
-  // Test Java 11 with a recent LTS, Java 17 even more recent
+  // Test Java 11 with minimum Jenkins version, Java 17 with a more recent version
   configurations: [
-    [platform: 'linux',   jdk: '17', jenkins: '2.380'],
-    [platform: 'linux',   jdk: '11', jenkins: '2.375.1'],
-    [platform: 'windows', jdk: '11']
+    [platform: 'windows', jdk: '17', jenkins: '2.381'],
+    [platform: 'linux',   jdk: '11'],
   ]
 )
