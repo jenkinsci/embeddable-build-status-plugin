@@ -30,7 +30,6 @@ class ImageResolverBallDummy extends ImageResolver{
     @Override
     public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName,
             String animatedOverlayColor, String link) {
-        // TODO Auto-generated method stub
 
         if (style != null) {
             String[] styleParts = style.split("-");
@@ -63,23 +62,6 @@ public class ImageResolverTest {
 
     @Rule
     public TestName testName = new TestName();
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-  
 
     @Test
     public void TestGetDefault32x32Ball() throws Exception {
