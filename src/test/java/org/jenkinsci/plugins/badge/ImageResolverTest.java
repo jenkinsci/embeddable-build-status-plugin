@@ -8,14 +8,9 @@ import java.util.Random;
 
 import org.junit.Test;
 
-
 import org.jvnet.hudson.test.JenkinsRule;
 
-
-
-
 import static org.hamcrest.MatcherAssert.assertThat;
-
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -54,8 +49,6 @@ class ImageResolverBallDummy extends ImageResolver{
 
 }
 public class ImageResolverTest {
-
- 
 
     @ClassRule
     public static JenkinsRule jenkinsRule = new JenkinsRule();
@@ -118,7 +111,6 @@ public class ImageResolverTest {
     private String getStatus() {
         return "status-is-" + testName.getMethodName();
     }
-
 
     private BallColor[] jobStatusColors = {
         BallColor.ABORTED_ANIME,
@@ -213,6 +205,5 @@ public class ImageResolverTest {
         assertThat(image.getContentType(), is("image/svg+xml;charset=utf-8"));
         assertThat(image.measureText("W"), is(9));
     }
-   
-}
 
+}
