@@ -1,53 +1,20 @@
 package org.jenkinsci.plugins.badge;
 
-import org.junit.ClassRule;
 import hudson.model.BallColor;
 
 import java.io.IOException;
 import java.util.Random;
 
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 import org.jvnet.hudson.test.JenkinsRule;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import static org.hamcrest.CoreMatchers.*;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.TestName;
-
-class ImageResolverBallDummy extends ImageResolver{
-    @Override
-    public StatusImage getImage(BallColor color, String style, String subject, String status, String colorName,
-            String animatedOverlayColor, String link) {
-
-        if (style != null) {
-            String[] styleParts = style.split("-");
-            if (styleParts.length == 2 && styleParts[0].equals("ball")) {
-                String url =  "images/" + styleParts[1] + '/' + color.getImage();
-                if (url.contains("null")) {
-                    url =   "images/" + "32x32" + '/' + color.getImage();
-                }
-
-                if (url != null) {
-                    try {
-                        return new StatusImage(url);
-                    } catch (IOException ioe) {
-                        return new StatusImage();
-                    }
-                }
-            }
-        }
-        style = null;
-        return super.getImage(color, style, subject, status, colorName, animatedOverlayColor, link);
-    }
-
-}
 public class ImageResolverTest {
 
     @ClassRule
@@ -58,44 +25,54 @@ public class ImageResolverTest {
 
     @Test
     public void TestGetDefault32x32Ball() throws Exception {
-        ImageResolverBallDummy ImageTester = new ImageResolverBallDummy();
-        String style = "ball-null"; // should give default due to url being null
-        String status = null;
-        String subject = null;
+        JenkinsRule.WebClient wc = jenkinsRule.createWebClient();
+        String style = "ball"; // should give default due to invalid size in the style
+        String subject = getSubject();
+        String status = getStatus();
         String colorName = null;
-        String fileName = "images/32x32/blue.png";
         BallColor ball=BallColor.BLUE;
-        StatusImage TestImage = ImageTester.getImage(ball, style, subject, status, colorName, null, null);
-        assertThat(TestImage.getEtag(), containsString(fileName));
-
+        StatusImage image = wc.executeOnServer(() -> {
+            ImageResolver imageResolver = new ImageResolver();
+            return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
+        });
+        assertThat(image.getEtag(), containsString(subject));
+        assertThat(image.getEtag(), containsString(status));
+        assertThat(image.getEtag(), containsString("null"));
     }
 
     @Test
     public void TestGetNonDefaultBall() throws Exception {
-        ImageResolverBallDummy ImageTester = new ImageResolverBallDummy();
-        String style = "ball-16x16"; // should give url
-        String status = null;
-        String subject = null;
-        String colorName = null;
-        String fileName = "images/16x16/red.png";
-        BallColor ball=BallColor.RED;
-        StatusImage TestImage = ImageTester.getImage(ball, style, subject, status, colorName, null, null);
-        assertThat(TestImage.getEtag(), containsString(fileName));
-
+        JenkinsRule.WebClient wc = jenkinsRule.createWebClient();
+        String sizeHint = "16x16";
+        String style = "ball-" + sizeHint; // should give url
+        String subject = getSubject();
+        String status = getStatus();
+        BallColor ball = BallColor.RED;
+        String colorName = ball.toString();
+        StatusImage image = wc.executeOnServer(() -> {
+            ImageResolver imageResolver = new ImageResolver();
+            return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
+        });
+        assertThat(image.getEtag(), not(containsString(subject)));
+        assertThat(image.getEtag(), not(containsString(status)));
+        assertThat(image.getEtag(), containsString("images/" + sizeHint + "/" + colorName + ".png"));
     }
 
     @Test
     public void testShouldReturnEmpty() throws Exception {
-        ImageResolverBallDummy ImageTester = new ImageResolverBallDummy();
-        String style = "ball-42x45"; // should throw exception
-        String status = null;
-        String subject = null;
+        JenkinsRule.WebClient wc = jenkinsRule.createWebClient();
+        String style = "ball-42x45"; // invalid size hint will return default empty image
+        String subject = getSubject();
+        String status = getStatus();
         String colorName = null;
-        String fileName = "DoesNotExist";
         BallColor ball=BallColor.BLUE;
-        StatusImage TestImage = ImageTester.getImage(ball, style, subject, status, colorName, null, null);
-        assertThat(TestImage.getEtag(), containsString("empty"));
-
+        StatusImage image = wc.executeOnServer(() -> {
+            ImageResolver imageResolver = new ImageResolver();
+            return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
+        });
+        assertThat(image.getEtag(), not(containsString(subject)));
+        assertThat(image.getEtag(), not(containsString(status)));
+        assertThat(image.getEtag(), containsString("empty"));
     }
 
     private final Random random = new Random();
@@ -205,5 +182,4 @@ public class ImageResolverTest {
         assertThat(image.getContentType(), is("image/svg+xml;charset=utf-8"));
         assertThat(image.measureText("W"), is(9));
     }
-
 }
