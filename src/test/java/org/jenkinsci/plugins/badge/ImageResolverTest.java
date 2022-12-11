@@ -119,21 +119,17 @@ public class ImageResolverTest {
     };
 
     private BallColor getJobStatusColor() {
-        return jobStatusColors[0]; // random.nextInt(jobStatusColors.length)]; // A job status animated color
+        return jobStatusColors[random.nextInt(jobStatusColors.length)]; // A job status animated color
     }
 
     private BallColor[] animatedColors = {
         BallColor.ABORTED_ANIME,
         BallColor.DISABLED_ANIME,
         BallColor.NOTBUILT_ANIME,
-        BallColor.BLUE_ANIME,
-        BallColor.GREY_ANIME,
-        BallColor.RED_ANIME,
-        BallColor.YELLOW_ANIME,
     };
 
     private BallColor getAnimatedColor() {
-        return animatedColors[0]; // random.nextInt(animatedColors.length)]; // An animated color
+        return animatedColors[random.nextInt(animatedColors.length)]; // An animated color with specific meaning
     }
 
     /* Any one of these colors will result in a lightgrey colored image */
@@ -147,7 +143,7 @@ public class ImageResolverTest {
     };
 
     private BallColor getLightGreyBallColor() {
-        return lightGreyEquivalents[0]; // random.nextInt(lightGreyEquivalents.length)]; // A light grey equivalent ball color
+        return lightGreyEquivalents[random.nextInt(lightGreyEquivalents.length)]; // A light grey equivalent ball color
     }
 
     @Test
@@ -205,5 +201,4 @@ public class ImageResolverTest {
         assertThat(image.getContentType(), is("image/svg+xml;charset=utf-8"));
         assertThat(image.measureText("W"), is(9));
     }
-
 }
