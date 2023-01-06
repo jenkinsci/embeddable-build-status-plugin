@@ -1,16 +1,16 @@
 package org.jenkinsci.plugins.badge.extensions;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import hudson.model.Job;
 import hudson.model.Result;
 import hudson.model.Run;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 class BuildParameterRunSelectorExtensionTest {
 
@@ -47,6 +47,7 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "lastFailed", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectFirstFailedBuild() {
         when(mockProject.getFirstBuild()).thenReturn(mockRun);
@@ -55,12 +56,14 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "firstFailed", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectLastSuccessfulBuild() {
         when(mockProject.getLastSuccessfulBuild()).thenReturn(mockRun);
         Run actualRun = extension.select(mockProject, "lastSuccessful", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectFirstSuccessfulBuild() {
         when(mockProject.getFirstBuild()).thenReturn(mockRun);
@@ -69,12 +72,14 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "firstSuccessful", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectLastUnsuccessfulBuild() {
         when(mockProject.getLastUnsuccessfulBuild()).thenReturn(mockRun);
         Run actualRun = extension.select(mockProject, "lastUnsuccessful", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectFirstUnsuccessfulBuild() {
         when(mockProject.getFirstBuild()).thenReturn(mockRun);
@@ -90,6 +95,7 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "lastStable", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectFirstStableBuild() {
         when(mockProject.getFirstBuild()).thenReturn(mockRun);
@@ -105,6 +111,7 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "lastUnstable", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectFirstUnstableBuild() {
         when(mockProject.getFirstBuild()).thenReturn(mockRun);
@@ -120,6 +127,7 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "lastCompleted", null);
         assertThat(actualRun, is(mockRun));
     }
+
     @Test
     void shouldSelectFirstCompletedBuild() {
         when(mockProject.getFirstBuild()).thenReturn(mockRun);
@@ -128,5 +136,4 @@ class BuildParameterRunSelectorExtensionTest {
         Run actualRun = extension.select(mockProject, "firstCompleted", null);
         assertThat(actualRun, is(mockRun));
     }
-
 }

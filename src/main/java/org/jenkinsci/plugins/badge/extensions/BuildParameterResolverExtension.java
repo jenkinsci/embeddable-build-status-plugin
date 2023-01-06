@@ -1,31 +1,28 @@
 /**
- * @author Thomas Doering (thomas-dee)
- * Licensed under the MIT License. See License.txt in the project root for
- * license information.
+ * @author Thomas Doering (thomas-dee) Licensed under the MIT License. See License.txt in the
+ *     project root for license information.
  */
-
 package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.Extension;
 import hudson.model.Actionable;
-import hudson.model.Run;
 import hudson.model.Job;
-import hudson.model.ParametersAction;
 import hudson.model.ParameterValue;
-
+import hudson.model.ParametersAction;
+import hudson.model.Run;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
 @Extension
 public class BuildParameterResolverExtension implements ParameterResolverExtensionPoint {
     private static Pattern pattern = Pattern.compile("params\\.([^\\{\\}\\s]+)");
-    private static Pattern defaultPattern = Pattern.compile("params\\.([^\\{\\}\\s\\|]+)\\|([^\\}\\|]+)");
+    private static Pattern defaultPattern =
+            Pattern.compile("params\\.([^\\{\\}\\s\\|]+)\\|([^\\}\\|]+)");
 
     public String resolve(Actionable actionable, String parameter) {
         if (actionable instanceof Run) {
-            Run<?, ?> run = (Run<?, ?>)actionable;
+            Run<?, ?> run = (Run<?, ?>) actionable;
 
             ParametersAction params = run.getAction(ParametersAction.class);
             if (params != null) {
@@ -38,7 +35,12 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                     if (val != null) {
                         // replace ${params.<ParamName>|<DefaultValue>} with the value
                         String valueStr = val.toString();
-                        parameter = matcher.replaceAll(valueStr.replace("\\", "\\\\").replace("$", "\\$").replace("{", "\\{").replace("}", "\\}"));
+                        parameter =
+                                matcher.replaceAll(
+                                        valueStr.replace("\\", "\\\\")
+                                                .replace("$", "\\$")
+                                                .replace("{", "\\{")
+                                                .replace("}", "\\}"));
                         matcher = defaultPattern.matcher(parameter);
                     } else {
                         // replace ${params.<ParamName>|<DefaultValue>} with the <DefaultValue>
@@ -46,7 +48,7 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                         matcher = defaultPattern.matcher(parameter);
                     }
                 }
-    
+
                 // try to match any ${params.<ParamName>}
                 matcher = pattern.matcher(parameter);
                 while (matcher.find()) {
@@ -56,7 +58,12 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                     if (val != null) {
                         // replace ${params.<ParamName>} with the value
                         String valueStr = val.toString();
-                        parameter = matcher.replaceFirst(valueStr.replace("\\", "\\\\").replace("$", "\\$").replace("{", "\\{").replace("}", "\\}"));
+                        parameter =
+                                matcher.replaceFirst(
+                                        valueStr.replace("\\", "\\\\")
+                                                .replace("$", "\\$")
+                                                .replace("{", "\\{")
+                                                .replace("}", "\\}"));
                         matcher = pattern.matcher(parameter);
                     } else {
                         // replace ${params.<ParamName>} with empty string
@@ -64,9 +71,9 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                         matcher = pattern.matcher(parameter);
                     }
                 }
-            }    
+            }
         } else if (actionable instanceof Job<?, ?>) {
-            parameter = resolve(((Job<?, ?>)actionable).getLastBuild(), parameter);
+            parameter = resolve(((Job<?, ?>) actionable).getLastBuild(), parameter);
         }
         return parameter;
     }

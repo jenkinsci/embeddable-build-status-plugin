@@ -25,17 +25,14 @@
 // code borrowed from https://github.com/jenkinsci/badge-plugin
 package org.jenkinsci.plugins.badge.annotations;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-/**
- * A required badge param
- */
-
+/** A required badge param */
 @Documented
 @Retention(RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})

@@ -22,20 +22,17 @@
  * THE SOFTWARE.
  */
 
- // code borrowed from https://github.com/jenkinsci/badge-plugin
+// code borrowed from https://github.com/jenkinsci/badge-plugin
 package org.jenkinsci.plugins.badge.annotations;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-/**
- * An optional badge param
- */
-
+/** An optional badge param */
 @Documented
 @Retention(RUNTIME)
 @Target({ElementType.METHOD, ElementType.PARAMETER})
