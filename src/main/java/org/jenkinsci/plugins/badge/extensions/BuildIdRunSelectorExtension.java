@@ -1,15 +1,12 @@
 /**
- * @author Thomas Doering (thomas-dee)
- * Licensed under the MIT License. See License.txt in the project root for
- * license information.
+ * @author Thomas Doering (thomas-dee) Licensed under the MIT License. See License.txt in the
+ *     project root for license information.
  */
-
- package org.jenkinsci.plugins.badge.extensions;
+package org.jenkinsci.plugins.badge.extensions;
 
 import hudson.Extension;
-import hudson.model.Run;
 import hudson.model.Job;
-
+import hudson.model.Run;
 import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionPoint;
 
 @SuppressWarnings("rawtypes")
@@ -37,17 +34,17 @@ public class BuildIdRunSelectorExtension implements InternalRunSelectorExtension
             if (build.equals("last")) {
                 run = project.getLastBuild();
             } else if (build.equals("lastFailed")) {
-                run = project.getLastFailedBuild();                           
+                run = project.getLastFailedBuild();
             } else if (build.equals("lastSuccessful")) {
-                run = project.getLastSuccessfulBuild();                           
+                run = project.getLastSuccessfulBuild();
             } else if (build.equals("lastUnsuccessful")) {
-                run = project.getLastUnsuccessfulBuild();                           
+                run = project.getLastUnsuccessfulBuild();
             } else if (build.equals("lastStable")) {
-                run = project.getLastStableBuild();                           
+                run = project.getLastStableBuild();
             } else if (build.equals("lastUnstable")) {
-                run = project.getLastUnstableBuild();                           
+                run = project.getLastUnstableBuild();
             } else if (build.equals("lastCompleted")) {
-                run = project.getLastCompletedBuild();                           
+                run = project.getLastCompletedBuild();
             } else {
                 // try to get build via ID
                 run = project.getBuild(build);
@@ -55,7 +52,7 @@ public class BuildIdRunSelectorExtension implements InternalRunSelectorExtension
                     run = project.getBuildByNumber(buildNr);
                 }
             }
-        }   
+        }
         return run;
     }
 }

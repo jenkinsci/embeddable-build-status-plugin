@@ -1,53 +1,54 @@
 /**
  * @author Dominik Bartholdi (imod)
- * @author Thomas Doering (thomas-dee)
- * Licensed under the MIT License. See License.txt in the project root for
- * license information.
+ * @author Thomas Doering (thomas-dee) Licensed under the MIT License. See License.txt in the
+ *     project root for license information.
  */
-
 package org.jenkinsci.plugins.badge.actions;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
+import hudson.model.UnprotectedRootAction;
 import hudson.security.ACL;
 import hudson.security.ACLContext;
 import hudson.security.Permission;
 import hudson.security.PermissionScope;
 import hudson.util.HttpResponses;
-
 import java.io.IOException;
-
 import jenkins.model.Jenkins;
-
+import org.jenkinsci.plugins.badge.*;
+import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionPoint;
+import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
+import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.WebMethod;
-import hudson.model.UnprotectedRootAction;
-
-import org.jenkinsci.plugins.badge.*;
-import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
-import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionPoint;
-import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Exposes the build status badge via unprotected URL.
  *
- * Even though the URL is unprotected, the user does still need the 'ViewStatus' permission on the given Job. If you want the status icons to be public readable/accessible, just grant the 'ViewStatus'
- * permission globally to 'anonymous'.
+ * <p>Even though the URL is unprotected, the user does still need the 'ViewStatus' permission on
+ * the given Job. If you want the status icons to be public readable/accessible, just grant the
+ * 'ViewStatus' permission globally to 'anonymous'.
  */
 @SuppressWarnings("rawtypes")
 @Extension
 public class PublicBuildStatusAction implements UnprotectedRootAction {
-    public final static Permission VIEW_STATUS = new Permission(Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
+    public static final Permission VIEW_STATUS =
+            new Permission(
+                    Item.PERMISSIONS,
+                    "ViewStatus",
+                    Messages._ViewStatus_Permission(),
+                    Item.READ,
+                    PermissionScope.ITEM);
     private static final Jenkins jInstance = Jenkins.get();
     private IconRequestHandler iconRequestHandler;
+
     public PublicBuildStatusAction() throws IOException {
         iconRequestHandler = new IconRequestHandler();
     }
@@ -68,40 +69,72 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
     }
 
     @WebMethod(name = "icon")
-    public HttpResponse doIcon(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, 
-                                @QueryParameter String build, @QueryParameter String style, 
-                                @QueryParameter String subject, @QueryParameter String status, 
-                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config, @QueryParameter String link) {
+    public HttpResponse doIcon(
+            StaplerRequest req,
+            StaplerResponse rsp,
+            @QueryParameter String job,
+            @QueryParameter String build,
+            @QueryParameter String style,
+            @QueryParameter String subject,
+            @QueryParameter String status,
+            @QueryParameter String color,
+            @QueryParameter String animatedOverlayColor,
+            @QueryParameter String config,
+            @QueryParameter String link) {
         if (job == null) {
-            return PluginImpl.iconRequestHandler.handleIconRequest(style, subject, status, color, animatedOverlayColor, link);
+            return PluginImpl.iconRequestHandler.handleIconRequest(
+                    style, subject, status, color, animatedOverlayColor, link);
         } else {
             Job<?, ?> project = getProject(job, false);
-            if(build != null && project != null) {
+            if (build != null && project != null) {
                 Run<?, ?> run = getRun(project, build, false);
-                return iconRequestHandler.handleIconRequestForRun(run, style, subject, status, color, animatedOverlayColor, config, link);
+                return iconRequestHandler.handleIconRequestForRun(
+                        run, style, subject, status, color, animatedOverlayColor, config, link);
             } else {
-                return iconRequestHandler.handleIconRequestForJob(project, style, subject, status, color, animatedOverlayColor, config, link);
+                return iconRequestHandler.handleIconRequestForJob(
+                        project, style, subject, status, color, animatedOverlayColor, config, link);
             }
         }
     }
 
     @WebMethod(name = "icon.svg")
-    public HttpResponse doIconDotSvg(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, 
-                                @QueryParameter String build, @QueryParameter String style, 
-                                @QueryParameter String subject, @QueryParameter String status, 
-                                @QueryParameter String color, @QueryParameter String animatedOverlayColor, 
-                                @QueryParameter String config, @QueryParameter String link) {
-        return doIcon(req, rsp, job, build, style, subject, status, color, animatedOverlayColor, config, link);
+    public HttpResponse doIconDotSvg(
+            StaplerRequest req,
+            StaplerResponse rsp,
+            @QueryParameter String job,
+            @QueryParameter String build,
+            @QueryParameter String style,
+            @QueryParameter String subject,
+            @QueryParameter String status,
+            @QueryParameter String color,
+            @QueryParameter String animatedOverlayColor,
+            @QueryParameter String config,
+            @QueryParameter String link) {
+        return doIcon(
+                req,
+                rsp,
+                job,
+                build,
+                style,
+                subject,
+                status,
+                color,
+                animatedOverlayColor,
+                config,
+                link);
     }
 
-    public String doText(StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+    public String doText(
+            StaplerRequest req,
+            StaplerResponse rsp,
+            @QueryParameter String job,
+            @QueryParameter String build) {
         if (job == null) {
             return "Missing query parameter: job";
         }
 
         Job<?, ?> project = getProject(job, true);
-        if(build != null) {
+        if (build != null) {
             Run<?, ?> run = getRun(project, build, true);
             return run.getIconColor().getDescription();
         } else {
@@ -112,11 +145,13 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
     private static Job<?, ?> getProject(String job, Boolean throwErrorWhenNotFound) {
         Job<?, ?> p = null;
         if (job != null) {
-            // as the user might have ViewStatus permission only (e.g. as anonymous) we get the project impersonate and check for permission after getting the project
+            // as the user might have ViewStatus permission only (e.g. as anonymous) we get the
+            // project impersonate and check for permission after getting the project
 
             try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 // first try to get Job via JobSelectorExtensionPoints
-                for (JobSelectorExtensionPoint jobSelector : ExtensionList.lookup(JobSelectorExtensionPoint.class)) {
+                for (JobSelectorExtensionPoint jobSelector :
+                        ExtensionList.lookup(JobSelectorExtensionPoint.class)) {
                     p = jobSelector.select(job);
                     if (p != null) {
                         break;
@@ -136,21 +171,26 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
             }
             return null;
         }
-        
+
         return p;
     }
 
-    @SuppressFBWarnings(value = "NP_LOAD_OF_KNOWN_NULL_VALUE", justification = "'run' is only null for the first enclosing for(token) run")
-    public static Run<?, ?> getRun(Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
+    @SuppressFBWarnings(
+            value = "NP_LOAD_OF_KNOWN_NULL_VALUE",
+            justification = "'run' is only null for the first enclosing for(token) run")
+    public static Run<?, ?> getRun(
+            Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
         Run<?, ?> run = null;
 
         if (project != null && build != null) {
-            // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the project impersonate and check for permission after getting the project
+            // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the
+            // project impersonate and check for permission after getting the project
             try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 for (String token : build.split(",")) {
                     Run newRun = null;
                     // first: try to get Run via our InternalRunSelectorExtensionPoints
-                    for (InternalRunSelectorExtensionPoint runSelector : ExtensionList.lookup(InternalRunSelectorExtensionPoint.class)) {
+                    for (InternalRunSelectorExtensionPoint runSelector :
+                            ExtensionList.lookup(InternalRunSelectorExtensionPoint.class)) {
                         newRun = runSelector.select(project, token, run);
                         if (newRun != null) {
                             break;
@@ -159,7 +199,8 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
 
                     if (newRun == null) {
                         // second: try to get Run via RunSelectorExtensionPoints
-                        for (RunSelectorExtensionPoint runSelector : ExtensionList.lookup(RunSelectorExtensionPoint.class)) {
+                        for (RunSelectorExtensionPoint runSelector :
+                                ExtensionList.lookup(RunSelectorExtensionPoint.class)) {
                             newRun = runSelector.select(project, token, run);
                             if (newRun != null) {
                                 break;

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -6,23 +7,17 @@
     <version>4.53</version>
     <relativePath />
   </parent>
-  <properties>
-    <changelist>999999-SNAPSHOT</changelist>
-    <jenkins.version>2.361.4</jenkins.version>
-    <spotbugs.effort>Max</spotbugs.effort>
-    <spotbugs.failOnError>true</spotbugs.failOnError>
-  </properties>
-
-  <name>Embeddable Build Status Plugin</name>
   <artifactId>embeddable-build-status</artifactId>
   <version>${changelist}</version>
   <packaging>hpi</packaging>
+
+  <name>Embeddable Build Status Plugin</name>
   <url>https://github.com/jenkinsci/embeddable-build-status-plugin</url>
 
   <licenses>
     <license>
-        <name>MIT License</name>
-        <url>https://opensource.org/licenses/MIT</url>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
     </license>
   </licenses>
 
@@ -33,6 +28,51 @@
       <email>mark.earl.waite@gmail.com</email>
     </developer>
   </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+    <tag>${scmTag}</tag>
+    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+  </scm>
+  <properties>
+    <changelist>999999-SNAPSHOT</changelist>
+    <jenkins.version>2.361.4</jenkins.version>
+    <spotbugs.effort>Max</spotbugs.effort>
+    <spotbugs.failOnError>true</spotbugs.failOnError>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom-2.361.x</artifactId>
+        <version>1763.v092b_8980a_f5e</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>ionicons-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>script-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins.workflow</groupId>
+      <artifactId>workflow-step-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <repositories>
     <repository>
@@ -48,44 +88,57 @@
     </pluginRepository>
   </pluginRepositories>
 
-  <scm>
-    <connection>scm:git:https://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>${scmTag}</tag>
-  </scm>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>script-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-step-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.jenkins.plugins</groupId>
-      <artifactId>ionicons-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>io.jenkins.tools.bom</groupId>
-            <artifactId>bom-2.361.x</artifactId>
-            <version>1763.v092b_8980a_f5e</version>
-            <scope>import</scope>
-            <type>pom</type>
-        </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>2.29.0</version>
+          <configuration>
+            <!-- define a language-specific format -->
+            <java>
+              <!-- no need to specify files, inferred automatically -->
+              <!-- apply a specific flavor of google-java-format -->
+              <googleJavaFormat>
+                <version>1.15.0</version>
+                <style>AOSP</style>
+              </googleJavaFormat>
+              <endWithNewline />
+              <removeUnusedImports />
+            </java>
+            <pom>
+              <indent>
+                <spaces>true</spaces>
+              </indent>
+              <includes>
+                <include>pom.xml</include>
+              </includes>
+              <sortPom>
+                <expandEmptyElements>false</expandEmptyElements>
+                <sortDependencies>groupId,artifactId</sortDependencies>
+                <sortDependencyExclusions>groupId,artifactId</sortDependencyExclusions>
+                <sortExecutions>true</sortExecutions>
+                <sortModules>true</sortModules>
+                <sortPlugins>groupId,artifactId</sortPlugins>
+                <sortProperties>true</sortProperties>
+                <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+              </sortPom>
+            </pom>
+          </configuration>
+          <executions>
+            <execution>
+              <!-- Runs in verify phase by default -->
+              <goals>
+                <!-- Can be disabled using -Dspotless.check.skip -->
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <profiles>
     <profile>

@@ -1,51 +1,44 @@
 /**
  * @author Kohsuke Kawaguchi
- * @author Thomas Doering (thomas-dee)
- * Licensed under the MIT License. See License.txt in the project root for
- * license information.
+ * @author Thomas Doering (thomas-dee) Licensed under the MIT License. See License.txt in the
+ *     project root for license information.
  */
-
 package org.jenkinsci.plugins.badge;
 
-import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.IOUtils;
-import jenkins.model.Jenkins;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import static javax.servlet.http.HttpServletResponse.*;
 
 import hudson.PluginWrapper;
-
-import javax.servlet.ServletException;
-
 import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import jenkins.model.Jenkins;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-import static javax.servlet.http.HttpServletResponse.*;
 /**
  * Status image as an {@link HttpResponse}, with proper cache handling.
  *
- * <p>
- * Originally we used 302 redirects to map the status URL to a proper permanent image URL,
- * but it turns out that some browsers cache 302 redirects in violation of RFC
- * (see http://code.google.com/p/chromium/issues/detail?id=103458)
+ * <p>Originally we used 302 redirects to map the status URL to a proper permanent image URL, but it
+ * turns out that some browsers cache 302 redirects in violation of RFC (see
+ * http://code.google.com/p/chromium/issues/detail?id=103458)
  *
- * <p>
- * So this version directly serves the image at the status URL. Since the status
- * can change any time, we use ETag to skip the actual data transfer if possible.
+ * <p>So this version directly serves the image at the status URL. Since the status can change any
+ * time, we use ETag to skip the actual data transfer if possible.
  */
 class StatusImage implements HttpResponse {
     public static final Logger LOGGER = Logger.getLogger(StatusImage.class.getName());
@@ -59,26 +52,30 @@ class StatusImage implements HttpResponse {
     /**
      * To improve the caching, compute unique ETag.
      *
-     * This needs to differentiate different image types, and possible future image changes
-     * in newer versions of this plugin.
+     * <p>This needs to differentiate different image types, and possible future image changes in
+     * newer versions of this plugin.
      */
     private final String etag;
+
     private final String length;
     private String contentType = null;
 
-    private final Map<String, String> colors = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
-        {
-            put( "red", "#e05d44" );
-            put( "brightgreen", "#44cc11" );
-            put( "green", "#97CA00" );
-            put( "yellowgreen", "#a4a61d" );
-            put( "yellow", "#dfb317" );
-            put( "orange", "#fe7d37" );
-            put( "lightgrey", "#9f9f9f" );
-            put( "blue", "#007ec6" );
-        };
-    };
+    private final Map<String, String> colors =
+            new HashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("red", "#e05d44");
+                    put("brightgreen", "#44cc11");
+                    put("green", "#97CA00");
+                    put("yellowgreen", "#a4a61d");
+                    put("yellow", "#dfb317");
+                    put("orange", "#fe7d37");
+                    put("lightgrey", "#9f9f9f");
+                    put("blue", "#007ec6");
+                }
+                ;
+            };
 
     StatusImage() {
         etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
@@ -97,26 +94,48 @@ class StatusImage implements HttpResponse {
         length = Integer.toString(payload.length);
     }
 
-    StatusImage(String subject, String status, String colorName, String animatedColorName, String style, String link) throws IOException {
+    StatusImage(
+            String subject,
+            String status,
+            String colorName,
+            String animatedColorName,
+            String style,
+            String link)
+            throws IOException {
         // escape URL parameters
         if (subject != null) subject = StringEscapeUtils.escapeHtml(subject);
         if (status != null) status = StringEscapeUtils.escapeHtml(status);
-        if (animatedColorName != null) animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
+        if (animatedColorName != null)
+            animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
         if (colorName != null) colorName = StringEscapeUtils.escapeHtml(colorName);
-        if (link != null) link = StringEscapeUtils.escapeHtml(StringEscapeUtils.escapeHtml(link)); // double-escape because concatenating into an attribute effectively removes one level of quoting
-        
+        if (link != null)
+            link =
+                    StringEscapeUtils.escapeHtml(
+                            StringEscapeUtils.escapeHtml(
+                                    link)); // double-escape because concatenating into an attribute
+        // effectively removes one level of quoting
+
         if (baseUrl != null) {
-            etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
-    
-            if (style == null || !Arrays.asList("flat-square", "plastic").contains(style)) { // explicitly list allowed values for SECURITY-2792
+            etag =
+                    Jenkins.RESOURCE_PATH
+                            + '/'
+                            + subject
+                            + status
+                            + colorName
+                            + animatedColorName
+                            + style;
+
+            if (style == null
+                    || !Arrays.asList("flat-square", "plastic")
+                            .contains(style)) { // explicitly list allowed values for SECURITY-2792
                 style = "flat";
             }
 
             URL image = new URL(baseUrl, "status/" + style + ".svg");
-                    
+
             URL animatedSnippet = null;
             String animatedColor = null;
-            
+
             if (animatedColorName != null) {
                 animatedSnippet = new URL(baseUrl, "status/animatedOverlay.svg.snippet");
                 animatedColor = colors.get(animatedColorName.toLowerCase());
@@ -129,12 +148,12 @@ class StatusImage implements HttpResponse {
                 }
             }
 
-            double[] widths = { measureText(subject) + 20, measureText(status) + 20 };
+            double[] widths = {measureText(subject) + 20, measureText(status) + 20};
 
             if (animatedColor != null) {
                 widths[1] += 4;
             }
-            
+
             String color = colors.get(colorName.toLowerCase());
             if (color == null) {
                 if (colorName.matches("-?[0-9a-fA-F]+")) {
@@ -143,7 +162,7 @@ class StatusImage implements HttpResponse {
                     color = colorName;
                 }
             }
-            
+
             String fullwidth = String.valueOf(widths[0] + widths[1]);
             String subjectWidth = String.valueOf(widths[0]);
             String statusWidth = String.valueOf(widths[1]);
@@ -156,9 +175,10 @@ class StatusImage implements HttpResponse {
             if (animatedSnippet != null) {
                 String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
                 try (InputStream animatedOverlayStream = animatedSnippet.openStream()) {
-                    animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
-                        .replace("{{reducedStatusWidth}}", reducedStatusWidth)
-                        .replace("{{animatedColor}}", animatedColor);
+                    animatedOverlay =
+                            IOUtils.toString(animatedOverlayStream, "utf-8")
+                                    .replace("{{reducedStatusWidth}}", reducedStatusWidth)
+                                    .replace("{{animatedColor}}", animatedColor);
                 }
             }
 
@@ -167,7 +187,10 @@ class StatusImage implements HttpResponse {
                     URL url = new URL(link);
                     final String protocol = url.getProtocol();
                     if (protocol.equals("http") || protocol.equals("https")) {
-                        linkCode = "<svg onclick=\"window.open(&quot;" + link + "&quot;);\" style=\"cursor: pointer;\" xmlns";
+                        linkCode =
+                                "<svg onclick=\"window.open(&quot;"
+                                        + link
+                                        + "&quot;);\" style=\"cursor: pointer;\" xmlns";
                     } else {
                         LOGGER.log(Level.FINE, "Invalid link protocol: {0}", protocol);
                     }
@@ -177,17 +200,19 @@ class StatusImage implements HttpResponse {
             }
 
             try (InputStream s = image.openStream()) {
-                payload = IOUtils.toString(s, "utf-8")
-                        .replace("{{animatedOverlayColor}}", animatedOverlay)
-                        .replace("{{fullwidth}}", fullwidth)
-                        .replace("{{subjectWidth}}", subjectWidth)
-                        .replace("{{statusWidth}}", statusWidth)
-                        .replace("{{subjectPos}}", subjectPos)
-                        .replace("{{statusPos}}", statusPos)
-                        .replace("{{subject}}", subject)
-                        .replace("{{status}}", status)
-                        .replace("{{color}}", color)
-                        .replace("<svg xmlns", linkCode).getBytes(Charset.forName("UTF-8"));
+                payload =
+                        IOUtils.toString(s, "utf-8")
+                                .replace("{{animatedOverlayColor}}", animatedOverlay)
+                                .replace("{{fullwidth}}", fullwidth)
+                                .replace("{{subjectWidth}}", subjectWidth)
+                                .replace("{{statusWidth}}", statusWidth)
+                                .replace("{{subjectPos}}", subjectPos)
+                                .replace("{{statusPos}}", statusPos)
+                                .replace("{{subject}}", subject)
+                                .replace("{{status}}", status)
+                                .replace("{{color}}", color)
+                                .replace("<svg xmlns", linkCode)
+                                .getBytes(Charset.forName("UTF-8"));
             }
 
             length = Integer.toString(payload.length);
@@ -195,11 +220,11 @@ class StatusImage implements HttpResponse {
         } else {
             etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
             length = Integer.toString(0);
-            payload = new byte[0];    
+            payload = new byte[0];
         }
     }
 
-    private final static FontMetrics DEFAULT_FONT_METRICS;
+    private static final FontMetrics DEFAULT_FONT_METRICS;
 
     static {
         Font defaultFont = null;
@@ -210,12 +235,15 @@ class StatusImage implements HttpResponse {
                 defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
                 defaultFont = defaultFont.deriveFont(11f);
             } catch (FontFormatException ex) {
-                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
+                Logger.getLogger(StatusImage.class.getName())
+                        .log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
             } catch (IOException ex) {
-                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+                Logger.getLogger(StatusImage.class.getName())
+                        .log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
             }
         } catch (MalformedURLException ex) {
-            Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
+            Logger.getLogger(StatusImage.class.getName())
+                    .log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
         }
         Canvas canvas = new Canvas();
         DEFAULT_FONT_METRICS = canvas.getFontMetrics(defaultFont);
@@ -226,15 +254,16 @@ class StatusImage implements HttpResponse {
     }
 
     @Override
-    public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
+    public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node)
+            throws IOException, ServletException {
         String v = req.getHeader("If-None-Match");
         if (etag.equals(v)) {
             rsp.setStatus(SC_NOT_MODIFIED);
             return;
         }
 
-        rsp.setHeader("ETag",etag);
-        rsp.setHeader("Expires","Fri, 01 Jan 1984 00:00:00 GMT");
+        rsp.setHeader("ETag", etag);
+        rsp.setHeader("Expires", "Fri, 01 Jan 1984 00:00:00 GMT");
         rsp.setHeader("Cache-Control", "no-cache, no-store, private");
         if (contentType != null) {
             rsp.setHeader("Content-Type", contentType);

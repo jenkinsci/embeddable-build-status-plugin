@@ -1,10 +1,8 @@
 /**
- * @author Thomas Doering (thomas-dee)
- * Licensed under the MIT License. See License.txt in the project root for
- * license information.
+ * @author Thomas Doering (thomas-dee) Licensed under the MIT License. See License.txt in the
+ *     project root for license information.
  */
-
- package org.jenkinsci.plugins.badge;
+package org.jenkinsci.plugins.badge;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -13,16 +11,19 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
 public class EmbeddableBadgeConfig implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final Map<String, String> colors = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
-        {
-            put( "failing", "red" );
-            put( "passing", "brightgreen" );
-            put( "unstable", "yellow" );
-            put( "aborted", "aborted" );
-            put( "running", "blue" );
-        };
-    };
+    private final Map<String, String> colors =
+            new HashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+
+                {
+                    put("failing", "red");
+                    put("passing", "brightgreen");
+                    put("unstable", "yellow");
+                    put("aborted", "aborted");
+                    put("running", "blue");
+                }
+                ;
+            };
 
     private final String id;
     private String subject = null;
@@ -30,7 +31,7 @@ public class EmbeddableBadgeConfig implements Serializable {
     private String color = null;
     private String animatedOverlayColor = null;
     private String link = null;
-  
+
     public EmbeddableBadgeConfig(String id) {
         this.id = id;
     }
@@ -84,11 +85,11 @@ public class EmbeddableBadgeConfig implements Serializable {
     }
 
     public String getLink() {
-      return link;
+        return link;
     }
 
     @Whitelisted
     public void setLink(String link) {
-      this.link = link;
+        this.link = link;
     }
 }

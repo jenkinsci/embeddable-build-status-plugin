@@ -1,19 +1,17 @@
 package org.jenkinsci.plugins.badge;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import hudson.model.Action;
 import hudson.model.Job;
-import org.hamcrest.core.Is;
+import java.io.IOException;
+import java.util.Collection;
 import org.jenkinsci.plugins.badge.actions.JobBadgeAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.util.Collection;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class JobBadgeActionFactoryTest {
 
