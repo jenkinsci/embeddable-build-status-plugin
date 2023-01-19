@@ -11,7 +11,7 @@ buildPlugin(
   artifactCachingProxyEnabled: true,
   // Test Java 11 with minimum Jenkins version, Java 17 with a more recent version
   configurations: [
+    [platform: 'linux',   jdk: '11'], // Linux first so that coverage results are reported
     [platform: 'windows', jdk: '17', jenkins: '2.381'],
-    [platform: 'linux',   jdk: '11'],
   ]
 )
