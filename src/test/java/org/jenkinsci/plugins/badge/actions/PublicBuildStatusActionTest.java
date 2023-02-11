@@ -10,6 +10,7 @@ import hudson.model.FreeStyleProject;
 import hudson.model.Run;
 import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
+import java.io.File;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -124,6 +125,6 @@ public class PublicBuildStatusActionTest {
     }
 
     private boolean isWindows() {
-        return true;
+        return File.pathSeparatorChar == ';';
     }
 }
