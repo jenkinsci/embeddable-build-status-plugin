@@ -1,106 +1,129 @@
 package org.jenkinsci.plugins.badge.actions;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import hudson.model.FreeStyleProject;
 import hudson.model.Run;
+import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
+import java.io.IOException;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 public class PublicBuildStatusActionTest {
 
-    private PublicBuildStatusAction publicBuildStatusActionMock;
+    // JenkinsRule startup cost is high on Windows
+    // Use a ClassRule to create one JenkinsRule used by all tests
+    @ClassRule public static JenkinsRule j = new JenkinsRule();
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    @Rule public TestName name = new TestName();
+
+    private static final String SUCCESS_MARKER = "fill=\"#44cc11\"";
+    private static final String NOT_RUN_MARKER = "fill=\"#9f9f9f\"";
+
+    private FreeStyleProject job;
+    private String jobStatusUrl;
+    private JenkinsRule.WebClient webClient;
 
     @Before
-    public void setUp() throws Exception {
-        publicBuildStatusActionMock = new PublicBuildStatusAction();
+    public void createJob() throws IOException {
+        // Give each job a name based on the name of the test method
+        // Simplifies debugging and failure diagnosis
+        // Also avoids any caching from reusing job name
+        job = j.createFreeStyleProject("job-" + name.getMethodName());
+        // Assure the job can pass on Windows and Unix
+        job.getBuildersList()
+                .add(
+                        isWindows()
+                                ? new BatchFile("echo hello from a batch file")
+                                : new Shell("echo hello from a shell"));
+        String statusUrl = j.getURL().toString() + "buildStatus/icon";
+        jobStatusUrl = statusUrl + "?job=" + job.getName();
+    }
+
+    @Before
+    public void createWebClient() {
+        webClient = j.createWebClient();
     }
 
     @Test
-    public void testDoIcon() throws Exception {
-        FreeStyleProject project = j.createFreeStyleProject();
-        project.getBuildersList().add(new Shell("echo hello"));
-        Run<?, ?> build = project.scheduleBuild2(0).get();
-
-        StaplerRequest request = mock(StaplerRequest.class);
-        StaplerResponse response = mock(StaplerResponse.class);
-
-        PublicBuildStatusAction action = new PublicBuildStatusAction();
-        HttpResponse httpResponse =
-                action.doIcon(
-                        request,
-                        response,
-                        project.getName(),
-                        Integer.toString(build.getNumber()),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
-
-        assertNotNull(httpResponse);
+    public void testDoIconJobBefore() throws Exception {
+        // Check job status icon is "not run" before job runs
+        JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
+        String result = json.getContentAsString();
+        assertThat(result, containsString("<svg "));
+        assertThat(result, not(containsString(SUCCESS_MARKER)));
+        assertThat(result, containsString(NOT_RUN_MARKER));
     }
 
     @Test
-    public void testDoIconForJob() throws Exception {
-        FreeStyleProject project = j.createFreeStyleProject();
-        project.getBuildersList().add(new Shell("echo hello"));
+    public void testDoIconBuildBefore() throws Exception {
+        String buildStatusUrl = jobStatusUrl + "&build=123";
 
-        StaplerRequest request = mock(StaplerRequest.class);
-        StaplerResponse response = mock(StaplerResponse.class);
+        // Check build status icon is "not run" before job runs
+        JenkinsRule.JSONWebResponse json = webClient.getJSON(buildStatusUrl);
+        String result = json.getContentAsString();
+        assertThat(result, containsString("<svg "));
+        assertThat(result, not(containsString(SUCCESS_MARKER)));
+        assertThat(result, containsString(NOT_RUN_MARKER));
+    }
 
-        PublicBuildStatusAction action = new PublicBuildStatusAction();
-        HttpResponse httpResponse =
-                action.doIcon(
-                        request,
-                        response,
-                        project.getName(),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
+    @Test
+    public void testDoIconJobAfter() throws Exception {
+        // Run the job, assert that it was successful
+        Run<?, ?> build = job.scheduleBuild2(0).get();
+        j.assertBuildStatusSuccess(build);
 
-        assertNotNull(httpResponse);
+        // Check job status icon is correct after job runs successfully
+        JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
+        String result = json.getContentAsString();
+        assertThat(result, containsString("<svg "));
+        assertThat(result, containsString(SUCCESS_MARKER));
+        assertThat(result, not(containsString(NOT_RUN_MARKER)));
+    }
+
+    @Test
+    public void testDoIconBuildAfter() throws Exception {
+        // Run the job, assert that it was successful
+        Run<?, ?> build = job.scheduleBuild2(0).get();
+        j.assertBuildStatusSuccess(build);
+
+        // Check build status icon is correct after job runs successfully
+        String buildStatusUrl = jobStatusUrl + "&build=" + build.getNumber();
+        JenkinsRule.JSONWebResponse json = webClient.getJSON(buildStatusUrl);
+        String result = json.getContentAsString();
+        assertThat(result, containsString("<svg "));
+        assertThat(result, containsString(SUCCESS_MARKER));
+        assertThat(result, not(containsString(NOT_RUN_MARKER)));
     }
 
     @Test
     public void testGetUrlName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
-        String expected = "buildStatus";
-        String actual = action.getUrlName();
-        assertEquals(expected, actual);
+        assertThat(action.getUrlName(), is("buildStatus"));
     }
 
     @Test
     public void testGetIconFileName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
-        String actual = action.getIconFileName();
-        assertNull(actual);
+        assertThat(action.getIconFileName(), is(nullValue()));
     }
 
     @Test
     public void testGetDisplayName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
-        String actual = action.getDisplayName();
-        assertNull(actual);
+        assertThat(action.getDisplayName(), is(nullValue()));
     }
 
+    private boolean isWindows() {
+        return true;
+    }
 }
