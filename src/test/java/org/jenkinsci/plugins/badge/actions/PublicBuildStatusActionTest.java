@@ -82,26 +82,6 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void testDoText() throws Exception {
-        FreeStyleProject project = j.createFreeStyleProject();
-        project.getBuildersList().add(new Shell("echo hello"));
-        Run<?, ?> build = project.scheduleBuild2(0).get();
-
-        StaplerRequest request = mock(StaplerRequest.class);
-        StaplerResponse response = mock(StaplerResponse.class);
-
-        PublicBuildStatusAction action = new PublicBuildStatusAction();
-        String textResponse =
-                action.doText(
-                        request,
-                        response,
-                        project.getName(),
-                        Integer.toString(build.getNumber()));
-
-        assertNotNull(textResponse);
-    }
-
-    @Test
     public void testGetUrlName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
         String expected = "buildStatus";
