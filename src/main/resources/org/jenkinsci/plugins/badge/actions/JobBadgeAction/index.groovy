@@ -23,12 +23,12 @@ l.layout {
 </script>
 <style>
     INPUT {
-        font-family: Console, "Courier New", Courier, monospace;
         border: none;
         font-size: -2;
     }
     INPUT.select-all {
         width:100%;
+        font-family: Console, "Courier New", Courier, monospace;
     }
     IMG#badge {
         margin-left:2em;
