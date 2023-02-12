@@ -4,7 +4,7 @@ import java.net.URLEncoder;
 def l = namespace(lib.LayoutTagLib)
 def st = namespace("jelly:stapler")
 
-l.layout {
+l.layout(type: "one-column") {
     l.main_panel {
         h2(_("Embeddable Build Status Icon"))
         p(raw(_("blurb")))
