@@ -1,0 +1,14 @@
+INPUT {
+    border: none;
+    font-size: -2;
+}
+INPUT.select-all {
+    width:100%;
+    font-family: Console, "Courier New", Courier, monospace;
+}
+IMG#badge {
+    margin-left:2em;
+}
+h3 {
+    border-bottom: 1px solid grey;
+}

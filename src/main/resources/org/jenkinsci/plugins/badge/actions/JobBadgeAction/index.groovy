@@ -8,36 +8,8 @@ l.layout {
     l.main_panel {
         h2(_("Embeddable Build Status Icon"))
         p(raw(_("blurb")))
-        raw("""
-<p>
-</p>
-<script>
-    Behaviour.register({
-        "INPUT.select-all" : function(e) {
-            e.onclick = function () {
-                e.focus();
-                e.select();
-            }
-        }
-    });
-</script>
-<style>
-    INPUT {
-        font-family: Console, "Courier New", Courier, monospace;
-        border: none;
-        font-size: -2;
-    }
-    INPUT.select-all {
-        width:100%;
-    }
-    IMG#badge {
-        margin-left:2em;
-    }
-    h3 {
-        border-bottom: 1px solid grey;
-    }
-</style>
-""")
+        st.adjunct(includes: "org.jenkinsci.plugins.badge.actions.JobBadgeAction.ClickHandler")
+        l.css(src: "${rootURL}/plugin/embeddable-build-status/css/design.css")
 
         def fullJobName = URLEncoder.encode(my.project.fullName, "UTF-8");
         def jobUrl =  "${app.rootUrl}${my.project.url}";
