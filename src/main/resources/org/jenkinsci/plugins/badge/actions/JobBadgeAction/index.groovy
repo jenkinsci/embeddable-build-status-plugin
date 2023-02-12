@@ -9,7 +9,7 @@ l.layout {
         h2(_("Embeddable Build Status Icon"))
         p(raw(_("blurb")))
         st.adjunct(includes: "org.jenkinsci.plugins.badge.actions.JobBadgeAction.ClickHandler")
-        l.css(src: "${rootURL}/plugin/embeddable-build-status/css/design.css")
+        l.css(src: "/plugin/embeddable-build-status/css/design.css")
 
         def fullJobName = URLEncoder.encode(my.project.fullName, "UTF-8");
         def jobUrl =  "${app.rootUrl}${my.project.url}";
