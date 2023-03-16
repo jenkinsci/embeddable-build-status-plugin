@@ -14,11 +14,11 @@ public class EmbeddableBadgeConfigTest {
         String id = "testId-constructor";
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig(id);
         assertThat(embeddableBadgeConfig.getID(), is(id));
-        assertThat(embeddableBadgeConfig.getSubject(), IsNull.nullValue());
-        assertThat(embeddableBadgeConfig.getStatus(), IsNull.nullValue());
-        assertThat(embeddableBadgeConfig.getAnimatedOverlayColor(), IsNull.nullValue());
-        assertThat(embeddableBadgeConfig.getLink(), IsNull.nullValue());
-        assertThat(embeddableBadgeConfig.getColor(), IsNull.nullValue());
+        assertThat(embeddableBadgeConfig.getSubject(), is(nullValue()));
+        assertThat(embeddableBadgeConfig.getStatus(), is(nullValue()));
+        assertThat(embeddableBadgeConfig.getAnimatedOverlayColor(), is(nullValue()));
+        assertThat(embeddableBadgeConfig.getLink(), is(nullValue()));
+        assertThat(embeddableBadgeConfig.getColor(), is(nullValue()));
     }
 
     @Test
