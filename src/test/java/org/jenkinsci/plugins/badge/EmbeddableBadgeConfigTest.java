@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 public class EmbeddableBadgeConfigTest {
     @Test
     public void testConstructor() {
-        String id = "testId";
+        String id = "testId-constructor";
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig(id);
         assertThat(embeddableBadgeConfig.getID(), is(id));
         assertThat(embeddableBadgeConfig.getSubject(), IsNull.nullValue());
@@ -23,7 +23,7 @@ public class EmbeddableBadgeConfigTest {
 
     @Test
     public void testGetAnimatedOverlayColorBlueForRunning() {
-        EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId");
+        EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-running-blue");
         embeddableBadgeConfig.setStatus("running");
         assertThat(embeddableBadgeConfig.getAnimatedOverlayColor(), is("blue"));
     }
@@ -37,7 +37,7 @@ public class EmbeddableBadgeConfigTest {
         "running,blue"
     })
     public void testGetColor(String status, String expected) {
-        EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId");
+        EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-status-" + status);
         embeddableBadgeConfig.setStatus(status);
         assertThat(embeddableBadgeConfig.getColor(), is(expected));
     }
