@@ -22,7 +22,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testGetAnimatedOverlayColorBlueForRunning(){
+    public void testGetAnimatedOverlayColorBlueForRunning() {
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId");
         embeddableBadgeConfig.setStatus("running");
         assertThat(embeddableBadgeConfig.getAnimatedOverlayColor(), is("blue"));
@@ -30,13 +30,13 @@ public class EmbeddableBadgeConfigTest {
 
     @ParameterizedTest
     @CsvSource({
-        "failing,red", 
-        "passing,brightgreen", 
-        "unstable,yellow", 
-        "aborted,aborted", 
+        "failing,red",
+        "passing,brightgreen",
+        "unstable,yellow",
+        "aborted,aborted",
         "running,blue"
     })
-    public void testGetColor(String status, String expected){
+    public void testGetColor(String status, String expected) {
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId");
         embeddableBadgeConfig.setStatus(status);
         assertThat(embeddableBadgeConfig.getColor(), is(expected));
