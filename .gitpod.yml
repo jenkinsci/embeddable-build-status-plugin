@@ -1,21 +1,17 @@
-# Using an updated Gitpod docker image (when using a non default JDK or tools)
-image:
-  file: .gitpod.Dockerfile
-
 tasks:
-  - init: sdk default java  11.0.15-tem && mvn clean verify
+  - name: Setup and Build
+    before: |
+      # Download and Install Java 17.0.6-tem
+      yes Y | sdk install java 17.0.6-tem
+
+    init: |
+      # Run
+      mvn hpi:run
 
 vscode:
   extensions:
-    - bierner.markdown-preview-github-styles
-    - github.vscode-pull-request-github
-    # - redhat.vscode-xml
-    # - hbenl.test-adapter-converter
-    # - hbenl.vscode-test-explorer
-
-    - vscjava.vscode-java-pack
     - redhat.java
     - vscjava.vscode-java-debug
-    - vscjava.vscode-java-dependency
     - vscjava.vscode-java-test
     - vscjava.vscode-maven
+    - vscjava.vscode-java-dependency
