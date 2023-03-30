@@ -4,9 +4,12 @@ tasks:
       # Download and Install Java 17.0.6-tem
       yes Y | sdk install java 17.0.6-tem
 
-    init: |
+  -  init: |
       # Run
-      mvn hpi:run
+      mvn hpi:run -Dhost=0.0.0.0
+       
+  - command: gp ports await 8080 && gp url 8080 && gp preview $(gp url 8080)/jenkins/
+    name: Preview
 
 vscode:
   extensions:
