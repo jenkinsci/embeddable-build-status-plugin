@@ -1,21 +1,19 @@
-# Using an updated Gitpod docker image (when using a non default JDK or tools)
-image:
-  file: .gitpod.Dockerfile
-
 tasks:
-  - init: sdk default java  11.0.15-tem && mvn clean verify
+  - name: Preview
+    command: gp ports await 8080 && gp url 8080 && gp preview $(gp url 8080)/jenkins/
+
+  - name: Run Jenkins
+    init: |
+      # Download and Install Java 17.0.6-tem
+      yes Y | sdk install java 17.0.6-tem
+
+    command: |
+      mvn hpi:run -Dhost=0.0.0.0      
 
 vscode:
   extensions:
-    - bierner.markdown-preview-github-styles
-    - github.vscode-pull-request-github
-    # - redhat.vscode-xml
-    # - hbenl.test-adapter-converter
-    # - hbenl.vscode-test-explorer
-
-    - vscjava.vscode-java-pack
     - redhat.java
     - vscjava.vscode-java-debug
-    - vscjava.vscode-java-dependency
     - vscjava.vscode-java-test
     - vscjava.vscode-maven
+    - vscjava.vscode-java-dependency
