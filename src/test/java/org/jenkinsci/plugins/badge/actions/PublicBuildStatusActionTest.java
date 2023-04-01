@@ -23,9 +23,11 @@ public class PublicBuildStatusActionTest {
 
     // JenkinsRule startup cost is high on Windows
     // Use a ClassRule to create one JenkinsRule used by all tests
-    @ClassRule public static JenkinsRule j = new JenkinsRule();
+    @ClassRule
+    public static JenkinsRule j = new JenkinsRule();
 
-    @Rule public TestName name = new TestName();
+    @Rule
+    public TestName name = new TestName();
 
     private static final String SUCCESS_MARKER = "fill=\"#44cc11\"";
     private static final String NOT_RUN_MARKER = "fill=\"#9f9f9f\"";

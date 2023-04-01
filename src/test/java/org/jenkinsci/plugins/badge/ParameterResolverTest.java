@@ -16,8 +16,7 @@ class ParameterResolverTest {
         "Build ${params.BUILD_BRANCH|master} (${displayName}),Build params.BUILD_BRANCH|master (displayName)"
     })
     void shouldResolveSubjectWithVariables(String queryParameter, String expectedParameter) {
-        String resolvedParameter =
-                new ParameterResolver().resolve(Mockito.mock(Actionable.class), queryParameter);
+        String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), queryParameter);
         assertThat(resolvedParameter, is(expectedParameter));
     }
 }

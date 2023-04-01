@@ -39,13 +39,8 @@ import org.kohsuke.stapler.WebMethod;
 @SuppressWarnings("rawtypes")
 @Extension
 public class PublicBuildStatusAction implements UnprotectedRootAction {
-    public static final Permission VIEW_STATUS =
-            new Permission(
-                    Item.PERMISSIONS,
-                    "ViewStatus",
-                    Messages._ViewStatus_Permission(),
-                    Item.READ,
-                    PermissionScope.ITEM);
+    public static final Permission VIEW_STATUS = new Permission(
+            Item.PERMISSIONS, "ViewStatus", Messages._ViewStatus_Permission(), Item.READ, PermissionScope.ITEM);
     private static final Jenkins jInstance = Jenkins.get();
     private IconRequestHandler iconRequestHandler;
 
@@ -110,25 +105,11 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
             @QueryParameter String animatedOverlayColor,
             @QueryParameter String config,
             @QueryParameter String link) {
-        return doIcon(
-                req,
-                rsp,
-                job,
-                build,
-                style,
-                subject,
-                status,
-                color,
-                animatedOverlayColor,
-                config,
-                link);
+        return doIcon(req, rsp, job, build, style, subject, status, color, animatedOverlayColor, config, link);
     }
 
     public String doText(
-            StaplerRequest req,
-            StaplerResponse rsp,
-            @QueryParameter String job,
-            @QueryParameter String build) {
+            StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
         if (job == null) {
             return "Missing query parameter: job";
         }
@@ -150,8 +131,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
 
             try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 // first try to get Job via JobSelectorExtensionPoints
-                for (JobSelectorExtensionPoint jobSelector :
-                        ExtensionList.lookup(JobSelectorExtensionPoint.class)) {
+                for (JobSelectorExtensionPoint jobSelector : ExtensionList.lookup(JobSelectorExtensionPoint.class)) {
                     p = jobSelector.select(job);
                     if (p != null) {
                         break;
@@ -178,8 +158,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
     @SuppressFBWarnings(
             value = "NP_LOAD_OF_KNOWN_NULL_VALUE",
             justification = "'run' is only null for the first enclosing for(token) run")
-    public static Run<?, ?> getRun(
-            Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
+    public static Run<?, ?> getRun(Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
         Run<?, ?> run = null;
 
         if (project != null && build != null) {

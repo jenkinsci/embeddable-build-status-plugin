@@ -29,21 +29,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageResolver {
-    private final Map<String, String> statuses =
-            new HashMap<String, String>() {
-                private static final long serialVersionUID = 1L;
+    private final Map<String, String> statuses = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
 
-                {
-                    put("red", "failing");
-                    put("brightgreen", "passing");
-                    put("yellow", "unstable");
-                    put("aborted", "aborted");
-                    put("blue", "running");
-                    put("disabled", "disabled");
-                    put("notbuilt", "not run");
-                }
-                ;
-            };
+        {
+            put("red", "failing");
+            put("brightgreen", "passing");
+            put("yellow", "unstable");
+            put("aborted", "aborted");
+            put("blue", "running");
+            put("disabled", "disabled");
+            put("notbuilt", "not run");
+        }
+        ;
+    };
 
     public StatusImage getImage(
             BallColor color,
@@ -103,11 +102,8 @@ public class ImageResolver {
         }
 
         if (status == null) {
-            status =
-                    statuses.get(
-                            statusAnimatedOverlayColorName != null
-                                    ? statusAnimatedOverlayColorName
-                                    : statusColorName);
+            status = statuses.get(
+                    statusAnimatedOverlayColorName != null ? statusAnimatedOverlayColorName : statusColorName);
             if (status == null) {
                 status = "unknown";
             }

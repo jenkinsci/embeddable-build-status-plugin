@@ -27,13 +27,11 @@ public class ParameterResolver {
                     }
                 }
                 if (resolvedMatch != null) {
-                    parameter =
-                            matcher.replaceFirst(
-                                    resolvedMatch
-                                            .replace("\\", "\\\\")
-                                            .replace("$", "\\$")
-                                            .replace("{", "\\{")
-                                            .replace("}", "\\}"));
+                    parameter = matcher.replaceFirst(resolvedMatch
+                            .replace("\\", "\\\\")
+                            .replace("$", "\\$")
+                            .replace("{", "\\{")
+                            .replace("}", "\\}"));
                 } else {
                     parameter = matcher.replaceFirst("$1");
                 }

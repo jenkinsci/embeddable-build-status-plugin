@@ -27,14 +27,13 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                     ${startTime}
                 */
 
-                parameter =
-                        parameter
-                                .replace("buildId", run.getId())
-                                .replace("buildNumber", Integer.toString(run.getNumber()))
-                                .replace("duration", run.getDurationString())
-                                .replace("description", Objects.toString(run.getDescription(), ""))
-                                .replace("displayName", run.getDisplayName())
-                                .replace("startTime", run.getTimestampString());
+                parameter = parameter
+                        .replace("buildId", run.getId())
+                        .replace("buildNumber", Integer.toString(run.getNumber()))
+                        .replace("duration", run.getDurationString())
+                        .replace("description", Objects.toString(run.getDescription(), ""))
+                        .replace("displayName", run.getDisplayName())
+                        .replace("startTime", run.getTimestampString());
 
             } else if (actionable instanceof Job<?, ?>) {
                 parameter = resolve(((Job<?, ?>) actionable).getLastBuild(), parameter);
