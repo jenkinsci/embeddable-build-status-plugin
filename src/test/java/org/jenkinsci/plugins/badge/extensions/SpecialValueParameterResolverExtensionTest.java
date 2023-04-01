@@ -70,8 +70,7 @@ class SpecialValueParameterResolverExtensionTest {
     @Test
     void testMultipleParameters() {
         String actualParameter =
-                extension.resolve(
-                        mockRun, "buildId buildNumber duration startTime displayName description");
+                extension.resolve(mockRun, "buildId buildNumber duration startTime displayName description");
         assertThat(actualParameter, is("1234 1234 23:35 23:35 display name run description"));
     }
 }

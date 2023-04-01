@@ -47,7 +47,7 @@ class StatusImage implements HttpResponse {
 
     private static final Jenkins jInstance = Jenkins.get();
     private static final PluginWrapper plugin = jInstance.pluginManager.getPlugin(PLGIN_NAME);
-    private static final URL baseUrl = (plugin != null ? plugin.baseResourceURL : null);
+    private static final URL baseUrl = plugin != null ? plugin.baseResourceURL : null;
 
     /**
      * To improve the caching, compute unique ETag.
@@ -60,22 +60,21 @@ class StatusImage implements HttpResponse {
     private final String length;
     private String contentType = null;
 
-    private final Map<String, String> colors =
-            new HashMap<String, String>() {
-                private static final long serialVersionUID = 1L;
+    private final Map<String, String> colors = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
 
-                {
-                    put("red", "#e05d44");
-                    put("brightgreen", "#44cc11");
-                    put("green", "#97CA00");
-                    put("yellowgreen", "#a4a61d");
-                    put("yellow", "#dfb317");
-                    put("orange", "#fe7d37");
-                    put("lightgrey", "#9f9f9f");
-                    put("blue", "#007ec6");
-                }
-                ;
-            };
+        {
+            put("red", "#e05d44");
+            put("brightgreen", "#44cc11");
+            put("green", "#97CA00");
+            put("yellowgreen", "#a4a61d");
+            put("yellow", "#dfb317");
+            put("orange", "#fe7d37");
+            put("lightgrey", "#9f9f9f");
+            put("blue", "#007ec6");
+        }
+        ;
+    };
 
     StatusImage() {
         etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
@@ -94,36 +93,28 @@ class StatusImage implements HttpResponse {
         length = Integer.toString(payload.length);
     }
 
-    StatusImage(
-            String subject,
-            String status,
-            String colorName,
-            String animatedColorName,
-            String style,
-            String link)
+    StatusImage(String subject, String status, String colorName, String animatedColorName, String style, String link)
             throws IOException {
         // escape URL parameters
-        if (subject != null) subject = StringEscapeUtils.escapeHtml(subject);
-        if (status != null) status = StringEscapeUtils.escapeHtml(status);
-        if (animatedColorName != null)
+        if (subject != null) {
+            subject = StringEscapeUtils.escapeHtml(subject);
+        }
+        if (status != null) {
+            status = StringEscapeUtils.escapeHtml(status);
+        }
+        if (animatedColorName != null) {
             animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
-        if (colorName != null) colorName = StringEscapeUtils.escapeHtml(colorName);
-        if (link != null)
-            link =
-                    StringEscapeUtils.escapeHtml(
-                            StringEscapeUtils.escapeHtml(
-                                    link)); // double-escape because concatenating into an attribute
-        // effectively removes one level of quoting
+        }
+        if (colorName != null) {
+            colorName = StringEscapeUtils.escapeHtml(colorName);
+        }
+        if (link != null) {
+            // double-escape because concatenating into an attribute effectively removes one level of quoting
+            link = StringEscapeUtils.escapeHtml(StringEscapeUtils.escapeHtml(link));
+        }
 
         if (baseUrl != null) {
-            etag =
-                    Jenkins.RESOURCE_PATH
-                            + '/'
-                            + subject
-                            + status
-                            + colorName
-                            + animatedColorName
-                            + style;
+            etag = Jenkins.RESOURCE_PATH + '/' + subject + status + colorName + animatedColorName + style;
 
             if (style == null
                     || !Arrays.asList("flat-square", "plastic")
@@ -175,10 +166,9 @@ class StatusImage implements HttpResponse {
             if (animatedSnippet != null) {
                 String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
                 try (InputStream animatedOverlayStream = animatedSnippet.openStream()) {
-                    animatedOverlay =
-                            IOUtils.toString(animatedOverlayStream, "utf-8")
-                                    .replace("{{reducedStatusWidth}}", reducedStatusWidth)
-                                    .replace("{{animatedColor}}", animatedColor);
+                    animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
+                            .replace("{{reducedStatusWidth}}", reducedStatusWidth)
+                            .replace("{{animatedColor}}", animatedColor);
                 }
             }
 
@@ -187,10 +177,9 @@ class StatusImage implements HttpResponse {
                     URL url = new URL(link);
                     final String protocol = url.getProtocol();
                     if (protocol.equals("http") || protocol.equals("https")) {
-                        linkCode =
-                                "<svg onclick=\"window.open(&quot;"
-                                        + link
-                                        + "&quot;);\" style=\"cursor: pointer;\" xmlns";
+                        linkCode = "<svg onclick=\"window.open(&quot;"
+                                + link
+                                + "&quot;);\" style=\"cursor: pointer;\" xmlns";
                     } else {
                         LOGGER.log(Level.FINE, "Invalid link protocol: {0}", protocol);
                     }
@@ -200,19 +189,18 @@ class StatusImage implements HttpResponse {
             }
 
             try (InputStream s = image.openStream()) {
-                payload =
-                        IOUtils.toString(s, "utf-8")
-                                .replace("{{animatedOverlayColor}}", animatedOverlay)
-                                .replace("{{fullwidth}}", fullwidth)
-                                .replace("{{subjectWidth}}", subjectWidth)
-                                .replace("{{statusWidth}}", statusWidth)
-                                .replace("{{subjectPos}}", subjectPos)
-                                .replace("{{statusPos}}", statusPos)
-                                .replace("{{subject}}", subject)
-                                .replace("{{status}}", status)
-                                .replace("{{color}}", color)
-                                .replace("<svg xmlns", linkCode)
-                                .getBytes(Charset.forName("UTF-8"));
+                payload = IOUtils.toString(s, "utf-8")
+                        .replace("{{animatedOverlayColor}}", animatedOverlay)
+                        .replace("{{fullwidth}}", fullwidth)
+                        .replace("{{subjectWidth}}", subjectWidth)
+                        .replace("{{statusWidth}}", statusWidth)
+                        .replace("{{subjectPos}}", subjectPos)
+                        .replace("{{statusPos}}", statusPos)
+                        .replace("{{subject}}", subject)
+                        .replace("{{status}}", status)
+                        .replace("{{color}}", color)
+                        .replace("<svg xmlns", linkCode)
+                        .getBytes(Charset.forName("UTF-8"));
             }
 
             length = Integer.toString(payload.length);
@@ -238,8 +226,7 @@ class StatusImage implements HttpResponse {
                 Logger.getLogger(StatusImage.class.getName())
                         .log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
             } catch (IOException ex) {
-                Logger.getLogger(StatusImage.class.getName())
-                        .log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(StatusImage.class.getName())

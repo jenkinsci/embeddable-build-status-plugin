@@ -32,10 +32,12 @@ public class RunBadgeAction implements Action, IconSpec {
         return "symbol-shield-outline plugin-ionicons-api";
     }
 
+    @Override
     public String getDisplayName() {
         return Messages.RunBadgeAction_DisplayName();
     }
 
+    @Override
     public String getUrlName() {
         return "badge";
     }
