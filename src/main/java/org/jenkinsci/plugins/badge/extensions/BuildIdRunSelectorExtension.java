@@ -12,6 +12,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionP
 @SuppressWarnings("rawtypes")
 @Extension
 public class BuildIdRunSelectorExtension implements InternalRunSelectorExtensionPoint {
+    @Override
     public Run select(Job project, String build, Run run) {
         Integer buildNr = 1;
         Boolean buildIdIsInteger = true;

@@ -116,9 +116,7 @@ public class AddEmbeddableBadgeConfigStep extends Step {
 
     public static class Execution extends SynchronousStepExecution<EmbeddableBadgeConfig> {
 
-        @SuppressFBWarnings(
-                value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
-                justification = "Only used when starting.")
+        @SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED", justification = "Only used when starting.")
         private final transient EmbeddableBadgeConfig badgeConfig;
 
         Execution(EmbeddableBadgeConfig badgeConfig, StepContext context) {

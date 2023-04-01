@@ -35,10 +35,12 @@ public class JobBadgeAction implements Action, IconSpec {
         return "symbol-shield-outline plugin-ionicons-api";
     }
 
+    @Override
     public String getDisplayName() {
         return Messages.JobBadgeAction_DisplayName();
     }
 
+    @Override
     public String getUrlName() {
         return "badge";
     }

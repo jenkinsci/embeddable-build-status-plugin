@@ -14,6 +14,7 @@ import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoi
 @Extension
 public class SpecialValueParameterResolverExtension implements ParameterResolverExtensionPoint {
 
+    @Override
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
             if (actionable instanceof Run<?, ?>) {
@@ -27,14 +28,13 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                     ${startTime}
                 */
 
-                parameter =
-                        parameter
-                                .replace("buildId", run.getId())
-                                .replace("buildNumber", Integer.toString(run.getNumber()))
-                                .replace("duration", run.getDurationString())
-                                .replace("description", Objects.toString(run.getDescription(), ""))
-                                .replace("displayName", run.getDisplayName())
-                                .replace("startTime", run.getTimestampString());
+                parameter = parameter
+                        .replace("buildId", run.getId())
+                        .replace("buildNumber", Integer.toString(run.getNumber()))
+                        .replace("duration", run.getDurationString())
+                        .replace("description", Objects.toString(run.getDescription(), ""))
+                        .replace("displayName", run.getDisplayName())
+                        .replace("startTime", run.getTimestampString());
 
             } else if (actionable instanceof Job<?, ?>) {
                 parameter = resolve(((Job<?, ?>) actionable).getLastBuild(), parameter);

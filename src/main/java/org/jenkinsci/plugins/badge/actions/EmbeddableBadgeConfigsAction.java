@@ -21,28 +21,29 @@ import org.kohsuke.stapler.export.ExportedBean;
 @ExportedBean(defaultVisibility = 2)
 public class EmbeddableBadgeConfigsAction implements Action, Serializable, BuildBadgeAction {
     private static final long serialVersionUID = 1L;
-    private Map<String, EmbeddableBadgeConfig> badgeConfigs =
-            new HashMap<String, EmbeddableBadgeConfig>();
+    private Map<String, EmbeddableBadgeConfig> badgeConfigs = new HashMap<String, EmbeddableBadgeConfig>();
 
     public EmbeddableBadgeConfigsAction() {}
 
     /* Action methods */
+    @Override
     public String getUrlName() {
         return "";
     }
 
+    @Override
     public String getDisplayName() {
         return "";
     }
 
+    @Override
     public String getIconFileName() {
         return null;
     }
 
     public static EmbeddableBadgeConfig resolve(Run<?, ?> run, String id) {
         if (id != null) {
-            EmbeddableBadgeConfigsAction badgeConfigs =
-                    run.getAction(EmbeddableBadgeConfigsAction.class);
+            EmbeddableBadgeConfigsAction badgeConfigs = run.getAction(EmbeddableBadgeConfigsAction.class);
             if (badgeConfigs != null) {
                 return badgeConfigs.getConfig(id);
             }

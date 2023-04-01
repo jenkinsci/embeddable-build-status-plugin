@@ -34,7 +34,8 @@ import org.jvnet.hudson.test.JenkinsRule;
 
 public class StatusImageTest {
 
-    @ClassRule public static JenkinsRule jenkinsRule = new JenkinsRule();
+    @ClassRule
+    public static JenkinsRule jenkinsRule = new JenkinsRule();
 
     public StatusImageTest() {}
 
@@ -66,15 +67,13 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = null;
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
     }
 
     @Test
@@ -85,16 +84,14 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = "plastic";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -105,8 +102,7 @@ public class StatusImageTest {
         String animatedColorName = "fe7d37";
         String style = "plastic";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
@@ -114,22 +110,18 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()),
-                allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
-    public void testConstructorFailingBuildPlasticStyleNumericColorAnimatedNumericColor()
-            throws Exception {
+    public void testConstructorFailingBuildPlasticStyleNumericColorAnimatedNumericColor() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "ff0000";
         String animatedColorName = "fe7d37";
         String style = "plastic";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
@@ -137,9 +129,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()),
-                allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -150,8 +140,7 @@ public class StatusImageTest {
         String animatedColorName = "yellow";
         String style = "plastic";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
@@ -159,9 +148,7 @@ public class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()),
-                allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -172,16 +159,14 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = "plastic";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -192,16 +177,14 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = "plastic";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -212,16 +195,14 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = "flat-square";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -232,16 +213,14 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = "flat-square";
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -252,15 +231,13 @@ public class StatusImageTest {
         String animatedColorName = null;
         String style = null;
         String link = null;
-        StatusImage statusImage =
-                new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
         assertThat(statusImage.getEtag(), containsString(subject));
         assertThat(statusImage.getEtag(), containsString(status));
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(
-                Integer.parseInt(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
+        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
     }
 
     // private static final String PNG_CONTENT_TYPE = "image/png";

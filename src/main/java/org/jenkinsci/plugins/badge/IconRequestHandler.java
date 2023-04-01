@@ -21,14 +21,8 @@ public class IconRequestHandler {
     }
 
     public StatusImage handleIconRequest(
-            String style,
-            String subject,
-            String status,
-            String color,
-            String animatedOverlayColor,
-            String link) {
-        return iconResolver.getImage(
-                BallColor.BLUE, style, subject, status, color, animatedOverlayColor, link);
+            String style, String subject, String status, String color, String animatedOverlayColor, String link) {
+        return iconResolver.getImage(BallColor.BLUE, style, subject, status, color, animatedOverlayColor, link);
     }
 
     public StatusImage handleIconRequestForJob(
@@ -54,26 +48,36 @@ public class IconRequestHandler {
                             || color == null
                             || animatedOverlayColor == null
                             || link == null)) {
-                EmbeddableBadgeConfig badgeConfig =
-                        EmbeddableBadgeConfigsAction.resolve(job, config);
+                EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(job, config);
                 if (badgeConfig != null) {
-                    if (subject == null) subject = badgeConfig.getSubject();
-                    if (status == null) status = badgeConfig.getStatus();
-                    if (color == null) color = badgeConfig.getColor();
-                    if (animatedOverlayColor == null)
+                    if (subject == null) {
+                        subject = badgeConfig.getSubject();
+                    }
+                    if (status == null) {
+                        status = badgeConfig.getStatus();
+                    }
+                    if (color == null) {
+                        color = badgeConfig.getColor();
+                    }
+                    if (animatedOverlayColor == null) {
                         animatedOverlayColor = badgeConfig.getAnimatedOverlayColor();
-                    if (link == null) link = badgeConfig.getLink();
+                    }
+                    if (link == null) {
+                        link = badgeConfig.getLink();
+                    }
                 } else {
                     // fallback to unknown badge
-                    if (status == null) status = "not run";
-                    if (color == null) color = "lightgrey";
+                    if (status == null) {
+                        status = "not run";
+                    }
+                    if (color == null) {
+                        color = "lightgrey";
+                    }
                 }
             }
-            return iconResolver.getImage(
-                    job.getIconColor(), style, subject, status, color, animatedOverlayColor, link);
+            return iconResolver.getImage(job.getIconColor(), style, subject, status, color, animatedOverlayColor, link);
         } else {
-            return iconResolver.getImage(
-                    BallColor.NOTBUILT, style, subject, null, null, null, null);
+            return iconResolver.getImage(BallColor.NOTBUILT, style, subject, null, null, null, null);
         }
     }
 
@@ -100,26 +104,36 @@ public class IconRequestHandler {
                             || color == null
                             || animatedOverlayColor == null
                             || link == null)) {
-                EmbeddableBadgeConfig badgeConfig =
-                        EmbeddableBadgeConfigsAction.resolve(run, config);
+                EmbeddableBadgeConfig badgeConfig = EmbeddableBadgeConfigsAction.resolve(run, config);
                 if (badgeConfig != null) {
-                    if (subject == null) subject = badgeConfig.getSubject();
-                    if (status == null) status = badgeConfig.getStatus();
-                    if (color == null) color = badgeConfig.getColor();
-                    if (animatedOverlayColor == null)
+                    if (subject == null) {
+                        subject = badgeConfig.getSubject();
+                    }
+                    if (status == null) {
+                        status = badgeConfig.getStatus();
+                    }
+                    if (color == null) {
+                        color = badgeConfig.getColor();
+                    }
+                    if (animatedOverlayColor == null) {
                         animatedOverlayColor = badgeConfig.getAnimatedOverlayColor();
-                    if (link == null) link = badgeConfig.getLink();
+                    }
+                    if (link == null) {
+                        link = badgeConfig.getLink();
+                    }
                 } else {
                     // fallback to disabled badge
-                    if (status == null) status = "not run";
-                    if (color == null) color = "lightgrey";
+                    if (status == null) {
+                        status = "not run";
+                    }
+                    if (color == null) {
+                        color = "lightgrey";
+                    }
                 }
             }
-            return iconResolver.getImage(
-                    run.getIconColor(), style, subject, status, color, animatedOverlayColor, link);
+            return iconResolver.getImage(run.getIconColor(), style, subject, status, color, animatedOverlayColor, link);
         } else {
-            return iconResolver.getImage(
-                    BallColor.NOTBUILT, style, subject, null, null, null, null);
+            return iconResolver.getImage(BallColor.NOTBUILT, style, subject, null, null, null, null);
         }
     }
 }

@@ -17,9 +17,8 @@ import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionP
 @SuppressWarnings("rawtypes")
 @Extension
 public class BuildParameterRunSelectorExtension implements InternalRunSelectorExtensionPoint {
-    private static Pattern outerSelector =
-            Pattern.compile(
-                    "(last|first)(Failed|Successful|Unsuccessful|Stable|Unstable|Completed){0,1}(:\\$\\{([^\\{\\}\\s]+)\\}){0,1}");
+    private static Pattern outerSelector = Pattern.compile(
+            "(last|first)(Failed|Successful|Unsuccessful|Stable|Unstable|Completed){0,1}(:\\$\\{([^\\{\\}\\s]+)\\}){0,1}");
     private static Pattern paramsPattern = Pattern.compile("params\\.([^=]+)=(.*)");
 
     private Boolean matchRule(Job job, Run run, String rule) {
@@ -81,7 +80,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                 }
 
                 if (run != null) {
-                    Boolean doBreak = (specific == null);
+                    Boolean doBreak = specific == null;
                     if (!doBreak) {
                         Result result = run.getResult();
                         if (result != null) {
@@ -92,23 +91,12 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                             Boolean isUnsuccessful = !isSuccessful;
                             Boolean isStable = isSuccessful;
 
-                            doBreak =
-                                    (specific.equals("Completed") && isCompleted)
-                                            || (specific.equals("Successful")
-                                                    && isCompleted
-                                                    && isSuccessful)
-                                            || (specific.equals("Failed")
-                                                    && isCompleted
-                                                    && isFailed)
-                                            || (specific.equals("Unstable")
-                                                    && isCompleted
-                                                    && isUnstable)
-                                            || (specific.equals("Unsuccessful")
-                                                    && isCompleted
-                                                    && isUnsuccessful)
-                                            || (specific.equals("Stable")
-                                                    && isCompleted
-                                                    && isStable);
+                            doBreak = (specific.equals("Completed") && isCompleted)
+                                    || (specific.equals("Successful") && isCompleted && isSuccessful)
+                                    || (specific.equals("Failed") && isCompleted && isFailed)
+                                    || (specific.equals("Unstable") && isCompleted && isUnstable)
+                                    || (specific.equals("Unsuccessful") && isCompleted && isUnsuccessful)
+                                    || (specific.equals("Stable") && isCompleted && isStable);
                         }
                     }
 
@@ -121,6 +109,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
         return run;
     }
 
+    @Override
     public Run select(Job job, String runId, Run run) {
         Matcher matcher = outerSelector.matcher(runId);
         while (matcher.find()) {
