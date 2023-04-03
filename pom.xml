@@ -109,6 +109,7 @@
               </indent>
               <includes>
                 <include>pom.xml</include>
+                <include>src/spotbugs/excludesFilter.xml</include>
               </includes>
               <sortPom>
                 <expandEmptyElements>false</expandEmptyElements>
