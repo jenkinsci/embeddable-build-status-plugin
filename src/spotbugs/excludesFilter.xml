@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<FindBugsFilter>
+  <!--
+    Exclusions in this section have been triaged and determined to be
+    false positives.
+  -->
+  <Match>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    <Or>
+      <Class name="org.jenkinsci.plugins.badge.EmbeddableBadgeConfig"/>
+      <Class name="org.jenkinsci.plugins.badge.EmbeddableBadgeConfig$1"/>
+      <Class name="org.jenkinsci.plugins.badge.ImageResolver"/>
+      <Class name="org.jenkinsci.plugins.badge.ImageResolver$1"/>
+      <Class name="org.jenkinsci.plugins.badge.StatusImage"/>
+      <Class name="org.jenkinsci.plugins.badge.StatusImage$1"/>
+      <Class name="org.jenkinsci.plugins.badge.actions.RunBadgeAction"/>
+      <Class name="org.jenkinsci.plugins.badge.actions.RunBadgeAction$1"/>
+    </Or>
+  </Match>
+  <Match>
+    <Bug pattern="SE_INNER_CLASS"/>
+    <Class name="org.jenkinsci.plugins.badge.EmbeddableBadgeConfig$1"/>
+  </Match>
+  <Match>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    <Class name="org.jenkinsci.plugins.badge.actions.RunBadgeAction"/>
+    <Field name="project"/>
+  </Match>
+  <Match>
+    <!-- Iterates over the list of runs using a local variable -->
+    <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+    <Class name="org.jenkinsci.plugins.badge.extensions.BuildIdRunSelectorExtension"/>
+  </Match>
+  <Match>
+    <!-- Only converts color names that are US-ASCII -->
+    <Bug pattern="DM_CONVERT_CASE"/>
+    <Class name="org.jenkinsci.plugins.badge.StatusImage"/>
+  </Match>
+
+  <!--
+    Here lies technical debt. Exclusions in this section have not yet
+    been triaged. When working on this section, pick an exclusion to
+    triage, then:
+
+    - Add a @SuppressFBWarnings(value = "[...]", justification = "[...]")
+      annotation if it is a false positive.  Indicate the reason why
+      it is a false positive, then remove the exclusion from this
+      section.
+
+    - If it is not a false positive, fix the bug, then remove the
+      exclusion from this section.
+   -->
+  <Match>
+    <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    <Class name="org.jenkinsci.plugins.badge.extensions.BuildParameterRunSelectorExtension"/>
+    <Method name="matchRule"/>
+  </Match>
+</FindBugsFilter>
