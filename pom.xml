@@ -44,7 +44,7 @@
     <changelist>999999-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
-    <jenkins.version>2.361.4</jenkins.version>
+    <jenkins.version>2.375.4</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.threshold>Low</spotbugs.threshold>
   </properties>
@@ -53,7 +53,7 @@
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.361.x</artifactId>
+        <artifactId>bom-2.375.x</artifactId>
         <version>1981.v17df70e84a_a_1</version>
         <type>pom</type>
         <scope>import</scope>
