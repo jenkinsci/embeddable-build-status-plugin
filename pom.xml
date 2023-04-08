@@ -27,6 +27,9 @@
       <id>markewaite</id>
       <name>Mark Waite</name>
       <email>mark.earl.waite@gmail.com</email>
+      <roles>
+        <role>developer</role>
+      </roles>
     </developer>
   </developers>
 
