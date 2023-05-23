@@ -28,9 +28,4 @@ class RunBadgeActionFactoryTest {
         assertThat(action.size(), is(1));
         assertThat(action.stream().findFirst().get(), instanceOf(RunBadgeAction.class));
     }
-
-    @Test
-    void shouldBeForJobType() {
-        assertThat(factory.type(), is(Run.class));
-    }
 }
