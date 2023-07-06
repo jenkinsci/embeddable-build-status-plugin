@@ -1,18 +1,23 @@
+# Per https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
 version: 2
 updates:
-  - package-ecosystem: maven
-    directory: /
+
+  # Maintain dependencies for maven
+  - package-ecosystem: "maven"
+    directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
     open-pull-requests-limit: 10
-    target-branch: master
+    target-branch: "master"
     reviewers:
-      - MarkEWaite
+      - "MarkEWaite"
     labels:
-      - dependencies
-  - package-ecosystem: github-actions
-    directory: /
+      - "dependencies"
+
+  # Maintain dependencies for GitHub actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: monthly
+      interval: "monthly"
     labels:
-      - skip-changelog
+      - "skip-changelog"
