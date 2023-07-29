@@ -1,6 +1,7 @@
 # Embeddable Build Status Plugin
 
 This plugin provides customizable badges (similar to [shields.io](https://shields.io)) to any website.
+A [text variant](Text-variant) is also available that returns the build status as text.
 
 For each variant there are two URLs available for inclusion:
 - **protected** exposes the badge to users having at least `Read` permission on the job:
@@ -23,7 +24,7 @@ Customization can be done via query parameters.
 
 # Query Parameters
 ## `style`
-Four basic types are supported:
+Four badge types are supported by the badge variant:
 ### *plastic*
 ![Badge](src/doc/plastic_unconfigured.svg "Badge") (default)
 
@@ -213,3 +214,15 @@ You can use the `config` query parameter to reference the `win32build` id:
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
 
+# Text variant
+
+The text variant returns a string representing the build status.
+Build status strings include:
+
+* Success - the build succeeded
+* Failed - the build failed
+* Unstable - the build succeeded but one or more tests failed
+* Aborted - the build was canceled
+* Not built - the build has not yet run
+
+More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html).
