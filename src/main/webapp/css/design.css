@@ -9,6 +9,12 @@ INPUT.select-all {
 IMG#badge {
     margin-left:2em;
 }
+h2 {
+    margin-bottom: 1px;
+    margin-top: 1em;
+}
 h3 {
     border-bottom: 1px solid grey;
+    margin-bottom: 1px;
+    margin-top: 1em;
 }
