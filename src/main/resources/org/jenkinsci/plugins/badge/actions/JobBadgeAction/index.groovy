@@ -65,6 +65,12 @@ l.layout(type: "one-column") {
         b {text(_("unprotected"))}
         input(type:"text",value:"[![Build Status](${publicBadge})](${jobUrl})",class:"select-all")
 
+        h3(_("Asciidoc"))
+        b {text(_("protected"))}
+        input(type:"text",value:"image:${badgeUrl}[link='${jobUrl}']",class:"select-all")
+        b {text(_("unprotected"))}
+        input(type:"text",value:"image:${publicBadge})[link='${jobUrl}']",class:"select-all")
+
         h3(_("HTML"))
         b {text(_("protected"))}
         input(type:"text",value:"<a href='${jobUrl}'><img src='${badgeUrl}'></a>",class:"select-all")
