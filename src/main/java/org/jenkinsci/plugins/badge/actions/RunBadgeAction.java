@@ -7,10 +7,13 @@ package org.jenkinsci.plugins.badge.actions;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.Run;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.jenkins.ui.icon.IconSpec;
 import org.jenkinsci.plugins.badge.*;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.WebMethod;
 
 public class RunBadgeAction implements Action, IconSpec {
@@ -40,6 +43,26 @@ public class RunBadgeAction implements Action, IconSpec {
     @Override
     public String getUrlName() {
         return "badge";
+    }
+
+    public String getUrl() {
+        /* TODO: Is a permission check needed here? */
+        /* Needed for the jelly syntax hints page */
+        String url = Stapler.getCurrentRequest().getReferer();
+        return url == null ? "null-referer" : url;
+    }
+
+    public String getUrlEncodedFullName() {
+        /* TODO: Is a permission check needed here? */
+        /* Needed for the jelly syntax hints page */
+        if (project == null) {
+            return "null-project-no-url-encoded-fullName";
+        }
+        if (project.getFullName() == null) {
+            return "null-project-fullName-no-url-encoded-fullName";
+        }
+        String fullName = URLEncoder.encode(project.getFullName(), StandardCharsets.UTF_8);
+        return fullName == null ? "null-url-encoded-fullName" : fullName;
     }
 
     @WebMethod(name = "icon")
