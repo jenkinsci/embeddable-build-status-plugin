@@ -12,7 +12,7 @@ For each variant there are two URLs available for inclusion:
   If you omit any query parameter the default badge for the job/build will be returned:
 
   ![Badge](src/doc/flat_unconfigured.svg "Badge")
-  
+
 - **unprotected**  exposes the badge to users having at least `ViewStatus` permission on the job
 
   Example: `http://<jenkinsroot>/buildStatus?...`
@@ -64,7 +64,7 @@ You can override the color using the following valid color values:
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
 ## `job`
-**Note: This parameters is only supported for the unprotected URL!** 
+**Note: This parameters is only supported for the unprotected URL!**
 
 The path for the selected job **or**
 any selector implemented via `JobSelectorExtensionPoint`
@@ -81,14 +81,14 @@ If you are using <b>Multibranch Pipelines</b> the <b>branch</b> within the selec
 would become\
 <code>?job=<span style="color: blue">path%2Fto%2Fjob</span>%2Fbranch<b style="color: red">%252F</b>path</code> <b style="color: green">&#10004;</b>
 
-##### *ExtensionPoint* 
+##### *ExtensionPoint*
 This plugin provides a `JobSelectorExtensionPoint` which allow for custom job selector implementations.
 
 ## `build`
-Select the build. 
+Select the build.
 
 ### *Notes*
-- This parameter is supported for the protected **and** unprotected URL! 
+- This parameter is supported for the protected **and** unprotected URL!
 - For the unprotected URL use the [job](#job) parameter is also required!
 
 ### *Selectors*
@@ -109,7 +109,7 @@ Allowed selectors are:
   - `lastStable`
   - `firstCompleted`
   - `lastSuccessful:${params.BRANCH=master}`
-  
+
 ##### *ExtensionPoint*
 This plugin provides a `RunSelectorExtensionPoint` which allow for custom run selector implementations.
 
@@ -135,25 +135,25 @@ Available builtin variables are:
 
    **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:
    `params.<BuildParameterName>|<FallbackValue>`
- 
+
 Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
 
 ##### *ExtensionPoint*
 This plugin provides a `ParameterResolverExtensionPoint` which allow for custom `${<Parameter>}` resolver implementations.
-# DSL 
+# DSL
 
 ```groovy
 /**
  * Adds a badge configuration with the given id.
  * minimal params
- * 
+ *
  * id: A unique id for the configuration
  */
 addEmbeddableBadgeConfiguration(id: <id>)
 
 /**
  * all params
- * 
+ *
  * id: A unique id for the configuration
  * subject: A subject text
  * status: A status text
