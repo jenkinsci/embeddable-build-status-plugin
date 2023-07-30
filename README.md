@@ -217,12 +217,12 @@ You can use the `config` query parameter to reference the `win32build` id:
 # Text variant
 
 The text variant returns a string representing the build status.
-Build status strings include:
+Build status strings returned by the text variant include:
 
-* Success - the build succeeded
-* Failed - the build failed
-* Unstable - the build succeeded but one or more tests failed
-* Aborted - the build was canceled
-* Not built - the build has not yet run
+* `Success` - the build succeeded
+* `Failed` - the build failed
+* `Unstable` - the build succeeded but one or more tests failed
+* `Aborted` - the build was canceled
+* `Not built` - the build has not yet run
 
 More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html).
