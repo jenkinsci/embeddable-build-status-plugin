@@ -97,7 +97,7 @@ l.layout(type: "one-column") {
 
         h3(_("Bitbucket"))
         b {text(_("protected"))}
-        input(type:"text",value:"[Build Status](${badgeUrl}) \"${jobUrl}\")",class:"select-all")
+        input(type:"text",value:"[Build Status](${badgeUrl} \"${jobUrl}\")",class:"select-all")
         b {text(_("unprotected"))}
         input(type:"text",value:"[Build Status](${publicBadge} \"${jobUrl}\")",class:"select-all")
 
