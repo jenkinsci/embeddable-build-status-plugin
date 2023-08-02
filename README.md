@@ -82,8 +82,8 @@ If you are using <b>Multibranch Pipelines</b> the <b>branch</b> within the selec
 would become\
 <code>?job=<span style="color: blue">path%2Fto%2Fjob</span>%2Fbranch<b style="color: red">%252F</b>path</code> <b style="color: green">&#10004;</b>
 
-##### *ExtensionPoint*
-This plugin provides a `JobSelectorExtensionPoint` which allow for custom job selector implementations.
+##### *ExtensionPoint* 
+This plugin provides a [`JobSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#jobselectorextensionpoint) which allow for custom job selector implementations.
 
 ## `build`
 Select the build.
@@ -112,7 +112,7 @@ Allowed selectors are:
   - `lastSuccessful:${params.BRANCH=master}`
 
 ##### *ExtensionPoint*
-This plugin provides a `RunSelectorExtensionPoint` which allow for custom run selector implementations.
+This plugin provides a [`RunSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#runselectorextensionpoint) which allow for custom run selector implementations.
 
 ### *Concatenation*
 
@@ -140,8 +140,8 @@ Available builtin variables are:
 Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
 
 ##### *ExtensionPoint*
-This plugin provides a `ParameterResolverExtensionPoint` which allow for custom `${<Parameter>}` resolver implementations.
-# DSL
+This plugin provides a [`ParameterResolverExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#parameterresolverextensionpoint) which allow for custom `${<Parameter>}` resolver implementations.
+# DSL 
 
 ```groovy
 /**
