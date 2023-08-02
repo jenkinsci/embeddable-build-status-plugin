@@ -1,6 +1,7 @@
 # Embeddable Build Status Plugin
 
 This plugin provides customizable badges (similar to [shields.io](https://shields.io)) to any website.
+A [text variant](#text-variant) is also available that returns the build status as text.
 
 For each variant there are two URLs available for inclusion:
 - **protected** exposes the badge to users having at least `Read` permission on the job:
@@ -12,7 +13,7 @@ For each variant there are two URLs available for inclusion:
   If you omit any query parameter the default badge for the job/build will be returned:
 
   ![Badge](src/doc/flat_unconfigured.svg "Badge")
-  
+
 - **unprotected**  exposes the badge to users having at least `ViewStatus` permission on the job
 
   Example: `http://<jenkinsroot>/buildStatus?...`
@@ -23,7 +24,7 @@ Customization can be done via query parameters.
 
 # Query Parameters
 ## `style`
-Four basic types are supported:
+Four badge types are supported by the badge variant:
 ### *plastic*
 ![Badge](src/doc/plastic_unconfigured.svg "Badge") (default)
 
@@ -64,7 +65,7 @@ You can override the color using the following valid color values:
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
 ## `job`
-**Note: This parameters is only supported for the unprotected URL!** 
+**Note: This parameters is only supported for the unprotected URL!**
 
 The path for the selected job **or**
 any selector implemented via `JobSelectorExtensionPoint`
@@ -85,10 +86,10 @@ would become\
 This plugin provides a [`JobSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#jobselectorextensionpoint) which allow for custom job selector implementations.
 
 ## `build`
-Select the build. 
+Select the build.
 
 ### *Notes*
-- This parameter is supported for the protected **and** unprotected URL! 
+- This parameter is supported for the protected **and** unprotected URL!
 - For the unprotected URL use the [job](#job) parameter is also required!
 
 ### *Selectors*
@@ -109,7 +110,7 @@ Allowed selectors are:
   - `lastStable`
   - `firstCompleted`
   - `lastSuccessful:${params.BRANCH=master}`
-  
+
 ##### *ExtensionPoint*
 This plugin provides a [`RunSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#runselectorextensionpoint) which allow for custom run selector implementations.
 
@@ -135,7 +136,7 @@ Available builtin variables are:
 
    **Note:** If the build parameter is not set you can use the following syntax to use a fallback value:
    `params.<BuildParameterName>|<FallbackValue>`
- 
+
 Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
 
 ##### *ExtensionPoint*
@@ -146,14 +147,14 @@ This plugin provides a [`ParameterResolverExtensionPoint`](https://www.jenkins.i
 /**
  * Adds a badge configuration with the given id.
  * minimal params
- * 
+ *
  * id: A unique id for the configuration
  */
 addEmbeddableBadgeConfiguration(id: <id>)
 
 /**
  * all params
- * 
+ *
  * id: A unique id for the configuration
  * subject: A subject text
  * status: A status text
@@ -213,3 +214,15 @@ You can use the `config` query parameter to reference the `win32build` id:
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
 
+# Text variant
+
+The text variant returns a string representing the build status.
+Build status strings returned by the text variant include:
+
+* `Success` - the build succeeded
+* `Failed` - the build failed
+* `Unstable` - the build succeeded but one or more tests failed
+* `Aborted` - the build was canceled
+* `Not built` - the build has not yet run
+
+More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html).
