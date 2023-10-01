@@ -52,18 +52,25 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                 run = findSpecific(job, job.getFirstBuild(), what, specific);
             } else {
                 if (specific != null) {
-                    if (specific.equals("Failed")) {
-                        run = job.getLastFailedBuild();
-                    } else if (specific.equals("Successful")) {
-                        run = job.getLastSuccessfulBuild();
-                    } else if (specific.equals("Unsuccessful")) {
-                        run = job.getLastUnsuccessfulBuild();
-                    } else if (specific.equals("Stable")) {
-                        run = job.getLastStableBuild();
-                    } else if (specific.equals("Unstable")) {
-                        run = job.getLastUnstableBuild();
-                    } else if (specific.equals("Completed")) {
-                        run = job.getLastCompletedBuild();
+                    switch (specific) {
+                        case "Failed":
+                            run = job.getLastFailedBuild();
+                            break;
+                        case "Successful":
+                            run = job.getLastSuccessfulBuild();
+                            break;
+                        case "Unsuccessful":
+                            run = job.getLastUnsuccessfulBuild();
+                            break;
+                        case "Stable":
+                            run = job.getLastStableBuild();
+                            break;
+                        case "Unstable":
+                            run = job.getLastUnstableBuild();
+                            break;
+                        case "Completed":
+                            run = job.getLastCompletedBuild();
+                            break;
                     }
                 }
 

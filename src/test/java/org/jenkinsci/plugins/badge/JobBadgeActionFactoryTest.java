@@ -2,7 +2,6 @@ package org.jenkinsci.plugins.badge;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import hudson.model.Action;
 import hudson.model.Job;

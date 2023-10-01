@@ -21,7 +21,7 @@ import org.kohsuke.stapler.export.ExportedBean;
 @ExportedBean(defaultVisibility = 2)
 public class EmbeddableBadgeConfigsAction implements Action, Serializable, BuildBadgeAction {
     private static final long serialVersionUID = 1L;
-    private Map<String, EmbeddableBadgeConfig> badgeConfigs = new HashMap<String, EmbeddableBadgeConfig>();
+    private Map<String, EmbeddableBadgeConfig> badgeConfigs = new HashMap<>();
 
     public EmbeddableBadgeConfigsAction() {}
 
@@ -63,8 +63,6 @@ public class EmbeddableBadgeConfigsAction implements Action, Serializable, Build
     @Exported
     public void addConfig(EmbeddableBadgeConfig config) {
         String id = config.getID();
-        if (badgeConfigs.get(id) == null) {
-            badgeConfigs.put(id, config);
-        }
+        badgeConfigs.putIfAbsent(id, config);
     }
 }
