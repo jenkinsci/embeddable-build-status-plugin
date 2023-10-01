@@ -71,6 +71,8 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                         case "Completed":
                             run = job.getLastCompletedBuild();
                             break;
+                        default:
+                            break;
                     }
                 }
 
