@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageResolver {
-    private final Map<String, String> statuses = new HashMap<String, String>() {
+    private final Map<String, String> statuses = new HashMap<>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -41,7 +41,6 @@ public class ImageResolver {
             put("disabled", "disabled");
             put("notbuilt", "not run");
         }
-        ;
     };
 
     public StatusImage getImage(

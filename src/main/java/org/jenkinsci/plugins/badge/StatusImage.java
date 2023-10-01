@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +60,7 @@ class StatusImage implements HttpResponse {
     private final String length;
     private String contentType = null;
 
-    private final Map<String, String> colors = new HashMap<String, String>() {
+    private final Map<String, String> colors = new HashMap<>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -73,7 +73,6 @@ class StatusImage implements HttpResponse {
             put("lightgrey", "#9f9f9f");
             put("blue", "#007ec6");
         }
-        ;
     };
 
     StatusImage() {
@@ -166,7 +165,7 @@ class StatusImage implements HttpResponse {
             if (animatedSnippet != null) {
                 String reducedStatusWidth = String.valueOf(widths[1] - 4.0);
                 try (InputStream animatedOverlayStream = animatedSnippet.openStream()) {
-                    animatedOverlay = IOUtils.toString(animatedOverlayStream, "utf-8")
+                    animatedOverlay = IOUtils.toString(animatedOverlayStream, StandardCharsets.UTF_8)
                             .replace("{{reducedStatusWidth}}", reducedStatusWidth)
                             .replace("{{animatedColor}}", animatedColor);
                 }
@@ -189,7 +188,7 @@ class StatusImage implements HttpResponse {
             }
 
             try (InputStream s = image.openStream()) {
-                payload = IOUtils.toString(s, "utf-8")
+                payload = IOUtils.toString(s, StandardCharsets.UTF_8)
                         .replace("{{animatedOverlayColor}}", animatedOverlay)
                         .replace("{{fullwidth}}", fullwidth)
                         .replace("{{subjectWidth}}", subjectWidth)
@@ -200,7 +199,7 @@ class StatusImage implements HttpResponse {
                         .replace("{{status}}", status)
                         .replace("{{color}}", color)
                         .replace("<svg xmlns", linkCode)
-                        .getBytes(Charset.forName("UTF-8"));
+                        .getBytes(StandardCharsets.UTF_8);
             }
 
             length = Integer.toString(payload.length);
