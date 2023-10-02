@@ -1,15 +1,16 @@
 package org.jenkinsci.plugins.badge.dsl;
 
-import org.junit.Test;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 
+import org.junit.Test;
+
 public class AddEmbeddableBadgeConfigStepTest {
     @Test
     public void testConstructor() {
-        AddEmbeddableBadgeConfigStep addEmbeddableBadgeConfigStep = new AddEmbeddableBadgeConfigStep("test-Id-constructor");
+        AddEmbeddableBadgeConfigStep addEmbeddableBadgeConfigStep =
+                new AddEmbeddableBadgeConfigStep("test-Id-constructor");
         assertThat(addEmbeddableBadgeConfigStep.getID(), is("test-Id-constructor"));
         assertThat(addEmbeddableBadgeConfigStep.getSubject(), is(nullValue()));
         assertThat(addEmbeddableBadgeConfigStep.getStatus(), is(nullValue()));
@@ -19,9 +20,9 @@ public class AddEmbeddableBadgeConfigStepTest {
     }
 
     @Test
-    public void testGetAnimatedOverlayColor(){
-        AddEmbeddableBadgeConfigStep addEmbeddableBadgeConfigStep = new AddEmbeddableBadgeConfigStep("test-animated-overlay-color");
-        assertThat(addEmbeddableBadgeConfigStep.getColor(),is(nullValue()));
+    public void testGetAnimatedOverlayColor() {
+        AddEmbeddableBadgeConfigStep addEmbeddableBadgeConfigStep =
+                new AddEmbeddableBadgeConfigStep("test-animated-overlay-color");
+        assertThat(addEmbeddableBadgeConfigStep.getColor(), is(nullValue()));
     }
-
 }
