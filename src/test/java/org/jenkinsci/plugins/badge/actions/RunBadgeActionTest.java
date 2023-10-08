@@ -88,13 +88,6 @@ class RunBadgeActionTest {
 
         assertEquals("full-name", runBadgeAction.getUrlEncodedFullName());
     }
-
-    @Test
-    void doIcon() {}
-
-    @Test
-    void doIconDotSvg() {}
-
     @Test
     void doText() {
         Run mockRun = Mockito.mock(Run.class);
