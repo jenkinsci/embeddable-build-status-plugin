@@ -88,6 +88,7 @@ class RunBadgeActionTest {
 
         assertEquals("full-name", runBadgeAction.getUrlEncodedFullName());
     }
+
     @Test
     void doText() {
         Run mockRun = Mockito.mock(Run.class);
