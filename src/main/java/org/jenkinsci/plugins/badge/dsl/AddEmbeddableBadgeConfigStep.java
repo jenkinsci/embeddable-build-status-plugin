@@ -108,7 +108,7 @@ public class AddEmbeddableBadgeConfigStep extends Step {
 
         @Override
         public Set<Class<?>> getRequiredContext() {
-            Set<Class<?>> set = new HashSet<Class<?>>();
+            Set<Class<?>> set = new HashSet<>();
             set.add(TaskListener.class);
             return set;
         }

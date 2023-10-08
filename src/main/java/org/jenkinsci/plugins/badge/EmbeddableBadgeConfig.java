@@ -11,7 +11,7 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
 public class EmbeddableBadgeConfig implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final Map<String, String> colors = new HashMap<String, String>() {
+    private final Map<String, String> colors = new HashMap<>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -21,7 +21,6 @@ public class EmbeddableBadgeConfig implements Serializable {
             put("aborted", "aborted");
             put("running", "blue");
         }
-        ;
     };
 
     private final String id;

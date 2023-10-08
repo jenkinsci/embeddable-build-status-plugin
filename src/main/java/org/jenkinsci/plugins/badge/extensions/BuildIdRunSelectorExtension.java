@@ -32,26 +32,35 @@ public class BuildIdRunSelectorExtension implements InternalRunSelectorExtension
                 run = run.getPreviousBuild();
             }
         } else {
-            if (build.equals("last")) {
-                run = project.getLastBuild();
-            } else if (build.equals("lastFailed")) {
-                run = project.getLastFailedBuild();
-            } else if (build.equals("lastSuccessful")) {
-                run = project.getLastSuccessfulBuild();
-            } else if (build.equals("lastUnsuccessful")) {
-                run = project.getLastUnsuccessfulBuild();
-            } else if (build.equals("lastStable")) {
-                run = project.getLastStableBuild();
-            } else if (build.equals("lastUnstable")) {
-                run = project.getLastUnstableBuild();
-            } else if (build.equals("lastCompleted")) {
-                run = project.getLastCompletedBuild();
-            } else {
-                // try to get build via ID
-                run = project.getBuild(build);
-                if (run == null && buildIdIsInteger) {
-                    run = project.getBuildByNumber(buildNr);
-                }
+            switch (build) {
+                case "last":
+                    run = project.getLastBuild();
+                    break;
+                case "lastFailed":
+                    run = project.getLastFailedBuild();
+                    break;
+                case "lastSuccessful":
+                    run = project.getLastSuccessfulBuild();
+                    break;
+                case "lastUnsuccessful":
+                    run = project.getLastUnsuccessfulBuild();
+                    break;
+                case "lastStable":
+                    run = project.getLastStableBuild();
+                    break;
+                case "lastUnstable":
+                    run = project.getLastUnstableBuild();
+                    break;
+                case "lastCompleted":
+                    run = project.getLastCompletedBuild();
+                    break;
+                default:
+                    // try to get build via ID
+                    run = project.getBuild(build);
+                    if (run == null && buildIdIsInteger) {
+                        run = project.getBuildByNumber(buildNr);
+                    }
+                    break;
             }
         }
         return run;
