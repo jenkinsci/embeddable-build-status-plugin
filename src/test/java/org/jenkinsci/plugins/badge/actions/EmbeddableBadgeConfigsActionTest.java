@@ -33,18 +33,4 @@ public class EmbeddableBadgeConfigsActionTest {
     public void getIconFileNameTest() {
         assertThat(embeddableBadgeConfigsAction.getIconFileName(), is(nullValue()));
     }
-
-    @Test
-    public void resolveTest() {
-        Job mockRun = Mockito.mock(Job.class);
-        Mockito.when(mockRun.getParent()).thenReturn(null);
-        assertThat(mockRun.getLastBuild(), is(nullValue()));
-    }
-
-    @Test
-    public void getConfigTest() {
-        Run mockRun = Mockito.mock(Run.class);
-        Mockito.when(mockRun.getParent()).thenReturn(null);
-        assertThat(mockRun.getId(), is(nullValue()));
-    }
 }
