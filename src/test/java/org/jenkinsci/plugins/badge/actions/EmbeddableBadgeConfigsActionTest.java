@@ -16,9 +16,6 @@ public class EmbeddableBadgeConfigsActionTest {
 
     @BeforeEach
     void setUp() {
-        Run mockRun = Mockito.mock(Run.class);
-        Job mockJob = Mockito.mock(Job.class);
-        Mockito.when(mockRun.getParent()).thenReturn(mockJob);
         embeddableBadgeConfigsAction = new EmbeddableBadgeConfigsAction();
     }
 
