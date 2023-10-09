@@ -6,7 +6,6 @@ import static org.hamcrest.core.IsNull.nullValue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class EmbeddableBadgeConfigsActionTest {
 
