@@ -89,16 +89,16 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                 }
 
                 if (run != null) {
-                    Boolean doBreak = specific == null;
+                    boolean doBreak = specific == null;
                     if (!doBreak) {
                         Result result = run.getResult();
                         if (result != null) {
-                            Boolean isCompleted = result.isCompleteBuild();
-                            Boolean isSuccessful = result == Result.SUCCESS;
-                            Boolean isFailed = result == Result.FAILURE;
-                            Boolean isUnstable = result == Result.UNSTABLE;
-                            Boolean isUnsuccessful = !isSuccessful;
-                            Boolean isStable = isSuccessful;
+                            boolean isCompleted = result.isCompleteBuild();
+                            boolean isSuccessful = result == Result.SUCCESS;
+                            boolean isFailed = result == Result.FAILURE;
+                            boolean isUnstable = result == Result.UNSTABLE;
+                            boolean isUnsuccessful = !isSuccessful;
+                            boolean isStable = isSuccessful;
 
                             doBreak = (specific.equals("Completed") && isCompleted)
                                     || (specific.equals("Successful") && isCompleted && isSuccessful)
