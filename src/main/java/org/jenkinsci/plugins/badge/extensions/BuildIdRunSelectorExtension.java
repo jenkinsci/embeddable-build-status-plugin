@@ -14,8 +14,8 @@ import org.jenkinsci.plugins.badge.extensionpoints.InternalRunSelectorExtensionP
 public class BuildIdRunSelectorExtension implements InternalRunSelectorExtensionPoint {
     @Override
     public Run select(Job project, String build, Run run) {
-        Integer buildNr = 1;
-        Boolean buildIdIsInteger = true;
+        int buildNr = 1;
+        boolean buildIdIsInteger = true;
         try {
             buildNr = Integer.parseInt(build);
         } catch (NumberFormatException e) {
