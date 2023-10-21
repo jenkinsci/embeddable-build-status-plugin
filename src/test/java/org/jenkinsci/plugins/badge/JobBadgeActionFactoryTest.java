@@ -1,7 +1,8 @@
 package org.jenkinsci.plugins.badge;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 
 import hudson.model.Action;
 import hudson.model.Job;
