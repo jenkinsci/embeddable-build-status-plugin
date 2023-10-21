@@ -1,7 +1,9 @@
 package org.jenkinsci.plugins.badge;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import hudson.model.BallColor;
 import java.io.IOException;
