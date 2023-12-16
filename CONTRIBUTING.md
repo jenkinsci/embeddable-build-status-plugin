@@ -50,15 +50,6 @@ Run automated tests with multiple Java virtual machines in a development with th
 $ mvn clean -DforkCount=1C verify
 ```
 
-## Code formatting
-
-Code formatting is maintained by the `spotless` plugin.
-Format the code with the command:
-
-```
-$ mvn spotless:apply
-```
-
 ## Report an Issue
 
 Use the ["Report an issue" page](https://www.jenkins.io/participate/report-issue/redirect/#17120) to submit bug reports.
