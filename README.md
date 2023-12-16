@@ -65,7 +65,7 @@ You can override the color using the following valid color values:
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
 ## `job`
-**Note: This parameters is only supported for the unprotected URL!**
+**Note: This parameter is only supported for the unprotected URL!**
 
 The path for the selected job **or**
 any selector implemented via `JobSelectorExtensionPoint`
