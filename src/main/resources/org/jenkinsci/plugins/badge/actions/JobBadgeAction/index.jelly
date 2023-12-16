@@ -8,13 +8,24 @@
   <j:set var="publicBadge" value="${app.rootUrl}buildStatus/icon?job=${fullJobName}"/>
   <j:set var="publicText"  value="${app.rootUrl}buildStatus/text?job=${fullJobName}"/>
 
-  <l:layout title="${%Embeddable Build Status Icon}" type="one-column">
+  <l:layout title="${%Embeddable Build Status}" type="one-column" xmlns:f="/lib/form">
     <l:header>
       <link rel='stylesheet' href='${app.rootUrl}/plugin/embeddable-build-status/css/design.css' type='text/css'/>
     </l:header>
     <l:main-panel>
-      <h1>${%Embeddable Build Status Icon}</h1>
+      <h1>${%Embeddable Build Status}</h1>
       <p>${%blurb}</p>
+
+      <div class="ebs-builder">
+        <div class="ebs-builder__preview">
+
+        </div>
+        <div class="ebs-builder__controls">
+          <f:entry title="a">
+            <f:textbox name="a" value="avalue" autocomplete="on"/>
+          </f:entry>
+        </div>
+      </div>
 
       <h2>${%Examples}</h2>
       <small>${%examples_note}</small>
