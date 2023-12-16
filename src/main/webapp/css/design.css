@@ -8,6 +8,7 @@
     overflow: hidden;
     padding: var(--section-padding);
     height: 400px;
+    font-size: 0.9rem;
 
     &::before {
         content: "";
@@ -43,7 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 0.9rem !important;
+    font-size: inherit;
     font-weight: 500;
 
     .jenkins-form-label {
@@ -63,14 +64,8 @@
         padding: 0.75rem 2.5rem 0.75rem 1rem;
         width: unset !important;
         font-size: inherit;
-        font-weight: inherit;
         cursor: pointer;
         box-shadow: none !important;
-    }
-
-    .jenkins-checkbox label {
-        font-weight: inherit;
-        margin-right: 1rem;
     }
 }
 
@@ -80,7 +75,7 @@
 
 .jenkins-copy-button {
     padding: 1rem;
-    font-size: 0.9rem;
+    font-size: inherit;
 
     div {
         display: flex;
@@ -101,7 +96,7 @@
     border: 2px solid color-mix(in srgb, var(--button-background) 25%, transparent);
     border-radius: 0.6rem;
     width: 100%;
-    font-size: 0.8rem;
+    font-size: inherit;
     box-shadow: 0 0 0 10px transparent;
     transition: var(--standard-transition);
 
