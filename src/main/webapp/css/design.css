@@ -1,24 +1,117 @@
-/*INPUT {*/
-/*    border: none;*/
-/*    font-size: -2;*/
-/*}*/
-/*INPUT.select-all {*/
-/*    width:100%;*/
-/*    font-family: Console, "Courier New", Courier, monospace;*/
-/*}*/
-/*IMG#badge {*/
-/*    margin-left:2em;*/
-/*}*/
-/*h2 {*/
-/*    margin-bottom: 1px;*/
-/*    margin-top: 1em;*/
-/*}*/
-/*h3.help-format {*/
-/*    border-bottom: 1px solid grey;*/
-/*    margin-bottom: 1px;*/
-/*    margin-top: 1em;*/
-/*}*/
-
 .ebs-builder {
-    margin-bottom: 1000px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background: color-mix(in srgb, var(--button-background) 25%, transparent);
+    border-radius: 1rem;
+    overflow: hidden;
+    padding: var(--section-padding);
+    height: 400px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(at 50% 100%, var(--red), transparent 70%),
+                    radial-gradient(at 20% 100%, var(--blue), transparent 80%),
+                    radial-gradient(at 70% 100%, var(--yellow), transparent 80%);
+        z-index: -1;
+        opacity: 0.1;
+    }
+}
+
+.ebs-builder__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 75px;
+    width: 360px;
+
+    img {
+        scale: 150%;
+    }
+}
+
+.ebs-copy-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ebs-copy-container__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem !important;
+    font-weight: 500;
+
+    .jenkins-form-label {
+        visibility: collapse;
+        margin: 0;
+    }
+
+    .jenkins-select {
+        width: unset !important;
+        box-shadow: none;
+    }
+
+    .ebs-input {
+        background: transparent !important;
+        border: none;
+        min-height: 0;
+        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        width: unset !important;
+        font-size: inherit;
+        font-weight: inherit;
+        cursor: pointer;
+        box-shadow: none !important;
+    }
+
+    .jenkins-checkbox label {
+        font-weight: inherit;
+        margin-right: 1rem;
+    }
+}
+
+.ebs-builder__controls {
+    width: 360px;
+}
+
+.jenkins-copy-button {
+    padding: 1rem;
+    font-size: 0.9rem;
+
+    div {
+        display: flex;
+        /*color: var(--text-color-secondary);*/
+        margin-right: 10px;
+        width: 360px;
+        max-width: 360px;
+        overflow: scroll;
+        mask-image: linear-gradient(90deg, white calc(100% - 20px), transparent);
+    }
+}
+
+.ebs-input {
+    appearance: none;
+    outline: none;
+    padding: 0.7rem 0.75rem;
+    background: var(--button-background);
+    border: 2px solid color-mix(in srgb, var(--button-background) 25%, transparent);
+    border-radius: 0.6rem;
+    width: 100%;
+    font-size: 0.8rem;
+    box-shadow: 0 0 0 10px transparent;
+    transition: var(--standard-transition);
+
+    &:hover {
+        background: var(--button-background--hover);
+    }
+
+    &:active, &:focus {
+        background: var(--button-background--hover);
+        border-color: transparent;
+        box-shadow: 0 0 0 5px hsl(from var(--button-background) h s l / 50%);
+    }
 }
