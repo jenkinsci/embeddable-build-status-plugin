@@ -82,9 +82,6 @@ If you are using <strong>Multibranch Pipelines</strong> the <strong>branch</stro
 would become\
 <code>?job=path%2Fto%2Fjob%2Fbranch<strong>%252F</strong>path</code> <strong>&#10004;</strong>
 
-##### *ExtensionPoint* 
-This plugin provides a [`JobSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#jobselectorextensionpoint) which allow for custom job selector implementations.
-
 ## `build`
 Select the build.
 
@@ -111,9 +108,6 @@ Allowed selectors are:
   - `firstCompleted`
   - `lastSuccessful:${params.BRANCH=master}`
 
-##### *ExtensionPoint*
-This plugin provides a [`RunSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#runselectorextensionpoint) which allow for custom run selector implementations.
-
 ### *Concatenation*
 
 All those selectors can be concatenated as comma separated list:
@@ -139,9 +133,7 @@ Available builtin variables are:
 
 Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
 
-##### *ExtensionPoint*
-This plugin provides a [`ParameterResolverExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#parameterresolverextensionpoint) which allow for custom `${<Parameter>}` resolver implementations.
-# DSL 
+# DSL
 
 ```groovy
 /**
@@ -225,4 +217,22 @@ Build status strings returned by the text variant include:
 * `Aborted` - the build was canceled
 * `Not built` - the build has not yet run
 
-More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html).
+More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html#field.summary).
+
+## Extension points for plugin developers
+
+A [Jenkins `Extension` annotation](https://www.jenkins.io/doc/developer/extensibility/#extension-annotation) allows Jenkins to discover classes, instantiate them, and register them in global lists of implementations of their supertypes and interfaces.
+The plugin provides several extension points that plugin developers can use to extend the behavior of the plugin.
+The Jenkins developer documentation provides more details on [extensions](https://www.jenkins.io/doc/developer/extensions/) and how to use them.
+
+### `JobSelectorExtensionPoint`
+
+The [`JobSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/JobSelectorExtensionPoint.html) allows custom job selector implementations.
+
+### `RunSelectorExtensionPoint`
+
+The [`RunSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/JobSelectorExtensionPoint.html) allows custom run selector implementations.
+
+### `ParameterResolverExtensionPoint`
+
+The [`ParameterResolverExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/ParameterResolverExtensionPoint.html) allow custom `${<Parameter>}` resolver implementations.
