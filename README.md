@@ -1,5 +1,16 @@
 # Embeddable Build Status Plugin
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Query Parameters](#query-parameters)
+- [Parameter Resolver](#parameter-resolver)
+- [Pipeline (DSL)](#pipeline-dsl)
+- [Text variant](#text-variant)
+- [Extension points for plugin developers](#extension-points-for-plugin-developers)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 This plugin provides customizable badges (similar to [shields.io](https://shields.io)) to any website.
 A [text variant](#text-variant) is also available that returns the build status as text.
 
@@ -122,6 +133,7 @@ This searches in the last `10` runs for the first successful build of the `maste
 Provide a link to be opened on clicking on the badge.
 
 ## Parameter Resolver
+
 The query parameters `subject`, `status`, `color`, `animatedOverlayColor` and `link` support the usage of variables like `?subject=Build ${variable}`
 
 Available builtin variables are:
