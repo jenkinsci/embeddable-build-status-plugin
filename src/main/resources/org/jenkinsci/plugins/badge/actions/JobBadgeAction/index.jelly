@@ -54,12 +54,12 @@
 
       <h3 class="help-format">${%Plain link}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${badgeUrl}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${badgeUrl}"/>
         <br/>
         ${badgeUrl}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${publicBadge}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${publicBadge}"/>
         <br/>
         ${publicBadge}
       </p>
@@ -69,12 +69,12 @@
 
       <h3 class="help-format">${%Markdown}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${markdownProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${markdownProtectedLink}"/>
         <br/>
         ${markdownProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${markdownUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${markdownUnprotectedLink}"/>
         <br/>
         ${markdownUnprotectedLink}
       </p>
@@ -84,12 +84,12 @@
 
       <h3 class="help-format">${%HTML}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${htmlProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${htmlProtectedLink}"/>
         <br/>
         ${htmlProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${htmlUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${htmlUnprotectedLink}"/>
         <br/>
         ${htmlUnprotectedLink}
       </p>
@@ -99,12 +99,12 @@
 
       <h3 class="help-format">${%Asciidoc}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${asciidocProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${asciidocProtectedLink}"/>
         <br/>
         ${asciidocProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${asciidocUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${asciidocUnprotectedLink}"/>
         <br/>
         ${asciidocUnprotectedLink}
       </p>
@@ -114,12 +114,12 @@
 
       <h3 class="help-format">${%Confluence}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${confluenceProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${confluenceProtectedLink}"/>
         <br/>
         ${confluenceProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${confluenceUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${confluenceUnprotectedLink}"/>
         <br/>
         ${confluenceUnprotectedLink}
       </p>
@@ -129,12 +129,12 @@
 
       <h3 class="help-format">${%XWiki}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${xwikiProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${xwikiProtectedLink}"/>
         <br/>
         ${xwikiProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${xwikiUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${xwikiUnprotectedLink}"/>
         <br/>
         ${xwikiUnprotectedLink}
       </p>
@@ -144,12 +144,12 @@
 
       <h3 class="help-format">${%RDoc}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${rdocProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${rdocProtectedLink}"/>
         <br/>
         ${rdocProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${rdocUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${rdocUnprotectedLink}"/>
         <br/>
         ${rdocUnprotectedLink}
       </p>
@@ -159,12 +159,12 @@
 
       <h3 class="help-format">${%Textile}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${textileProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${textileProtectedLink}"/>
         <br/>
         ${textileProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${textileUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${textileUnprotectedLink}"/>
         <br/>
         ${textileUnprotectedLink}
       </p>
@@ -174,12 +174,12 @@
 
       <h3 class="help-format">${%Bitbucket}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${bitbucketProtectedLink}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${bitbucketProtectedLink}"/>
         <br/>
         ${bitbucketProtectedLink}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${bitbucketUnprotectedLink}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${bitbucketUnprotectedLink}"/>
         <br/>
         ${bitbucketUnprotectedLink}
       </p>
@@ -189,12 +189,12 @@
 
       <h3 class="help-format">${%Text Only}</h3>
       <p>
-        <b>${%Protected}</b> <l:copyButton text="${textUrl}"/>
+        <strong>${%Protected}</strong> <l:copyButton text="${textUrl}"/>
         <br/>
         ${textUrl}
       </p>
       <p>
-        <b>${%Unprotected}</b> <l:copyButton text="${publicText}"/>
+        <strong>${%Unprotected}</strong> <l:copyButton text="${publicText}"/>
         <br/>
         ${publicText}
       </p>

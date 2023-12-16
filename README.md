@@ -61,7 +61,7 @@ The customized examples above uses the following query parameters:
 
 You can override the color using the following valid color values:
 - one of the values: `red`, `brightgreen`, `green`, `yellowgreen`, `yellow`, `orange`, `lightgrey`, `blue`
-- a valid hexadecimal HTML RGB color <b>without</b> the hashtag (e.g. `FFAABB`).
+- a valid hexadecimal HTML RGB color <strong>without</strong> the hashtag (e.g. `FFAABB`).
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
 ## `job`
@@ -75,12 +75,12 @@ If you omit this parameter you can customize any "untethered" badge you like.
 **Important**
 
 The job selector string **must** be URL escaped. \
-If you are using <b>Multibranch Pipelines</b> the <b>branch</b> within the selector needs to be URL encoded <b style="color: red">twice</b>.
+If you are using <strong>Multibranch Pipelines</strong> the <strong>branch</strong> within the selector needs to be URL encoded <strong>twice</strong>.
 
 *Example* \
-<code>?job=<span style="color: blue">path/to/job</span>/branch/path</code> <b style="color: red">&#10060;</b> \
+<code>?job=path/to/job/branch/path</code> <strong>&#10060;</strong> \
 would become\
-<code>?job=<span style="color: blue">path%2Fto%2Fjob</span>%2Fbranch<b style="color: red">%252F</b>path</code> <b style="color: green">&#10004;</b>
+<code>?job=path%2Fto%2Fjob%2Fbranch<strong>%252F</strong>path</code> <strong>&#10004;</strong>
 
 ##### *ExtensionPoint* 
 This plugin provides a [`JobSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#jobselectorextensionpoint) which allow for custom job selector implementations.
@@ -122,7 +122,7 @@ All those selectors can be concatenated as comma separated list:
 
 This searches in the last `10` runs for the first successful build of the `master` branch (provided the Build Parameter `BRANCH` exists).
 
-**Note:** If you are using <b>Multibranch Pipelines</b> the <b>branch name</b> within the selector needs to be URL encoded <b style="color: red">twice</b> (see [job](#job) for further information).
+**Note:** If you are using <strong>Multibranch Pipelines</strong> the <strong>branch name</strong> within the selector needs to be URL encoded twice (see [job](#job) for further information).
 
 ## `link`
 Provide a link to be opened on clicking on the badge.
