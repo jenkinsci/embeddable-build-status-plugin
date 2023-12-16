@@ -22,25 +22,25 @@ For each variant there are two URLs available for inclusion:
 
 Customization can be done via query parameters.
 
-# Query Parameters
-## `style`
+## Query Parameters
+### `style`
 Four badge types are supported by the badge variant:
-### *plastic*
+#### *plastic*
 ![Badge](src/doc/plastic_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/plastic_configured.svg "Customized Badge") (customized)
 
-### *flat* (default)
+#### *flat* (default)
 ![Badge](src/doc/flat_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/flat_configured.svg "Customized Badge") (customized)
 
-### *flat-square*
+#### *flat-square*
 ![Badge](src/doc/flat-square_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/flat-square_configured.svg "Customized Badge") (customized)
 
-### *ball-&lt;size&gt;*
+#### *ball-&lt;size&gt;*
 This style returns the standard Jenkins "balls".
 
 Supported sizes are: `16x16`, `24x24`, `32x32` and `48x48` (and probably more... just try).
@@ -49,22 +49,22 @@ Supported sizes are: `16x16`, `24x24`, `32x32` and `48x48` (and probably more...
 
 **Note:** If you are using this style **all other query parameters** will have **no effect**.
 
-## `config`
+### `config`
 You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
 
-## `subject` and `status`
+### `subject` and `status`
 The customized examples above uses the following query parameters:
 
 `?subject=Custom Text&status=My passing text`
 
-## `color` and `animatedOverlayColor`
+### `color` and `animatedOverlayColor`
 
 You can override the color using the following valid color values:
 - one of the values: `red`, `brightgreen`, `green`, `yellowgreen`, `yellow`, `orange`, `lightgrey`, `blue`
 - a valid hexadecimal HTML RGB color <strong>without</strong> the hashtag (e.g. `FFAABB`).
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
-## `job`
+### `job`
 **Note: This parameter is only supported for the unprotected URL!**
 
 The path for the selected job **or**
@@ -82,14 +82,13 @@ If you are using <strong>Multibranch Pipelines</strong> the <strong>branch</stro
 would become\
 <code>?job=path%2Fto%2Fjob%2Fbranch<strong>%252F</strong>path</code> <strong>&#10004;</strong>
 
-## `build`
+### `build`
+
 Select the build.
+This parameter is supported for the protected **and** unprotected URL!
+For the unprotected URL use the [job](#job) parameter is also required!
 
-### *Notes*
-- This parameter is supported for the protected **and** unprotected URL!
-- For the unprotected URL use the [job](#job) parameter is also required!
-
-### *Selectors*
+#### *Selectors*
 Allowed selectors are:
 
 - Build-ID (`integer`)
@@ -108,7 +107,7 @@ Allowed selectors are:
   - `firstCompleted`
   - `lastSuccessful:${params.BRANCH=master}`
 
-### *Concatenation*
+#### *Concatenation*
 
 All those selectors can be concatenated as comma separated list:
 
@@ -118,10 +117,11 @@ This searches in the last `10` runs for the first successful build of the `maste
 
 **Note:** If you are using <strong>Multibranch Pipelines</strong> the <strong>branch name</strong> within the selector needs to be URL encoded twice (see [job](#job) for further information).
 
-## `link`
+### `link`
+
 Provide a link to be opened on clicking on the badge.
 
-# Parameter Resolver
+## Parameter Resolver
 The query parameters `subject`, `status`, `color`, `animatedOverlayColor` and `link` support the usage of variables like `?subject=Build ${variable}`
 
 Available builtin variables are:
@@ -133,7 +133,7 @@ Available builtin variables are:
 
 Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
 
-# DSL
+## Pipeline (DSL)
 
 ```groovy
 /**
@@ -154,12 +154,18 @@ addEmbeddableBadgeConfiguration(id: <id>)
  * animatedOverlayColor: A valid color (RGB-HEX: RRGGBB or valid SVG color name)
  * link: The link to be opened upon clicking.
  */
-addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>, animatedOverlayColor: <string>, link: <string>)
+addEmbeddableBadgeConfiguration(id: <string>,
+                                subject: <string>,
+                                status: <string>,
+                                color: <string>,
+                                animatedOverlayColor: <string>,
+                                link: <string>)
 ```
 
 This function returns a configuration object.
 
-#### Example
+### Example
+
 ```groovy
 def win32BuildBadge = addEmbeddableBadgeConfiguration(id: "win32build", subject: "Windows Build")
 
@@ -206,7 +212,7 @@ You can use the `config` query parameter to reference the `win32build` id:
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
 
-# Text variant
+## Text variant
 
 The text variant returns a string representing the build status.
 Build status strings returned by the text variant include:
@@ -221,7 +227,7 @@ More details of the valid build results are available in the [Jenkins javadoc](h
 
 ## Extension points for plugin developers
 
-A [Jenkins `Extension` annotation](https://www.jenkins.io/doc/developer/extensibility/#extension-annotation) allows Jenkins to discover classes, instantiate them, and register them in global lists of implementations of their supertypes and interfaces.
+A [Jenkins Extension annotation](https://www.jenkins.io/doc/developer/extensibility/#extension-annotation) allows Jenkins to discover classes, instantiate them, and register them in global lists of implementations of their supertypes and interfaces.
 The plugin provides several extension points that plugin developers can use to extend the behavior of the plugin.
 The Jenkins developer documentation provides more details on [extensions](https://www.jenkins.io/doc/developer/extensions/) and how to use them.
 
