@@ -231,7 +231,7 @@ The [`JobSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddab
 
 ### `RunSelectorExtensionPoint`
 
-The [`RunSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/JobSelectorExtensionPoint.html) allows custom run selector implementations.
+The [`RunSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/RunSelectorExtensionPoint.html) allows custom run selector implementations.
 
 ### `ParameterResolverExtensionPoint`
 
