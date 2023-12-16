@@ -227,7 +227,7 @@ More details of the valid build results are available in the [Jenkins javadoc](h
 
 ## Extension points for plugin developers
 
-A [Jenkins `Extension` annotation](https://www.jenkins.io/doc/developer/extensibility/#extension-annotation) allows Jenkins to discover classes, instantiate them, and register them in global lists of implementations of their supertypes and interfaces.
+A [Jenkins Extension annotation](https://www.jenkins.io/doc/developer/extensibility/#extension-annotation) allows Jenkins to discover classes, instantiate them, and register them in global lists of implementations of their supertypes and interfaces.
 The plugin provides several extension points that plugin developers can use to extend the behavior of the plugin.
 The Jenkins developer documentation provides more details on [extensions](https://www.jenkins.io/doc/developer/extensions/) and how to use them.
 
