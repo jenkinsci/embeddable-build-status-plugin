@@ -81,7 +81,7 @@ public class EmbeddableBadgeConfigTest {
         String color = "";
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-empty-color");
         config.setColor(color);
-        assertThat(config.getColor(), is(nullValue()));
+        assertThat(config.getColor(), is(""));
     }
 
     @Test
