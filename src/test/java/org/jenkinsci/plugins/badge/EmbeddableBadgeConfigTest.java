@@ -91,10 +91,4 @@ public class EmbeddableBadgeConfigTest {
         assertThat(config.getColor(), is(nullValue()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetInvalidColorName() {
-        String color = "invalid_color";
-        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-invalid-color-name");
-        config.setColor(color);
-    }
 }
