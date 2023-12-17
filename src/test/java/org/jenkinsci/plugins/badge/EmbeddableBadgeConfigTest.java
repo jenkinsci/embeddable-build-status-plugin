@@ -35,4 +35,11 @@ public class EmbeddableBadgeConfigTest {
         embeddableBadgeConfig.setStatus(status);
         assertThat(embeddableBadgeConfig.getColor(), is(expected));
     }
+    @Test
+    public void testGetSubject() {
+    String subject = "Test Subject";
+    EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-subject");
+    embeddableBadgeConfig.setSubject(subject);
+    assertThat(embeddableBadgeConfig.getSubject(), is(subject));
+}
 }
