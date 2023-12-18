@@ -90,5 +90,4 @@ public class EmbeddableBadgeConfigTest {
         config.setColor(null);
         assertThat(config.getColor(), is(nullValue()));
     }
-
 }
