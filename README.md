@@ -1,5 +1,16 @@
 # Embeddable Build Status Plugin
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Query Parameters](#query-parameters)
+- [Parameter Resolver](#parameter-resolver)
+- [Pipeline (DSL)](#pipeline-dsl)
+- [Text variant](#text-variant)
+- [Extension points for plugin developers](#extension-points-for-plugin-developers)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 This plugin provides customizable badges (similar to [shields.io](https://shields.io)) to any website.
 A [text variant](#text-variant) is also available that returns the build status as text.
 
@@ -22,25 +33,25 @@ For each variant there are two URLs available for inclusion:
 
 Customization can be done via query parameters.
 
-# Query Parameters
-## `style`
+## Query Parameters
+### `style`
 Four badge types are supported by the badge variant:
-### *plastic*
+#### *plastic*
 ![Badge](src/doc/plastic_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/plastic_configured.svg "Customized Badge") (customized)
 
-### *flat* (default)
+#### *flat* (default)
 ![Badge](src/doc/flat_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/flat_configured.svg "Customized Badge") (customized)
 
-### *flat-square*
+#### *flat-square*
 ![Badge](src/doc/flat-square_unconfigured.svg "Badge") (default)
 
 ![Customized Badge](src/doc/flat-square_configured.svg "Customized Badge") (customized)
 
-### *ball-&lt;size&gt;*
+#### *ball-&lt;size&gt;*
 This style returns the standard Jenkins "balls".
 
 Supported sizes are: `16x16`, `24x24`, `32x32` and `48x48` (and probably more... just try).
@@ -49,23 +60,23 @@ Supported sizes are: `16x16`, `24x24`, `32x32` and `48x48` (and probably more...
 
 **Note:** If you are using this style **all other query parameters** will have **no effect**.
 
-## `config`
+### `config`
 You can add pre-customized badge configurations via pipeline script (see **"DSL"** below).
 
-## `subject` and `status`
+### `subject` and `status`
 The customized examples above uses the following query parameters:
 
 `?subject=Custom Text&status=My passing text`
 
-## `color` and `animatedOverlayColor`
+### `color` and `animatedOverlayColor`
 
 You can override the color using the following valid color values:
 - one of the values: `red`, `brightgreen`, `green`, `yellowgreen`, `yellow`, `orange`, `lightgrey`, `blue`
-- a valid hexadecimal HTML RGB color <b>without</b> the hashtag (e.g. `FFAABB`).
+- a valid hexadecimal HTML RGB color <strong>without</strong> the hashtag (e.g. `FFAABB`).
 - any valid [SVG color name](https://www.december.com/html/spec/colorsvg.html)
 
-## `job`
-**Note: This parameters is only supported for the unprotected URL!**
+### `job`
+**Note: This parameter is only supported for the unprotected URL!**
 
 The path for the selected job **or**
 any selector implemented via `JobSelectorExtensionPoint`
@@ -75,24 +86,20 @@ If you omit this parameter you can customize any "untethered" badge you like.
 **Important**
 
 The job selector string **must** be URL escaped. \
-If you are using <b>Multibranch Pipelines</b> the <b>branch</b> within the selector needs to be URL encoded <b style="color: red">twice</b>.
+If you are using <strong>Multibranch Pipelines</strong> the <strong>branch</strong> within the selector needs to be URL encoded <strong>twice</strong>.
 
 *Example* \
-<code>?job=<span style="color: blue">path/to/job</span>/branch/path</code> <b style="color: red">&#10060;</b> \
+<code>?job=path/to/job/branch/path</code> <strong>&#10060;</strong> \
 would become\
-<code>?job=<span style="color: blue">path%2Fto%2Fjob</span>%2Fbranch<b style="color: red">%252F</b>path</code> <b style="color: green">&#10004;</b>
+<code>?job=path%2Fto%2Fjob%2Fbranch<strong>%252F</strong>path</code> <strong>&#10004;</strong>
 
-##### *ExtensionPoint* 
-This plugin provides a [`JobSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#jobselectorextensionpoint) which allow for custom job selector implementations.
+### `build`
 
-## `build`
 Select the build.
+This parameter is supported for the protected **and** unprotected URL!
+For the unprotected URL use the [job](#job) parameter is also required!
 
-### *Notes*
-- This parameter is supported for the protected **and** unprotected URL!
-- For the unprotected URL use the [job](#job) parameter is also required!
-
-### *Selectors*
+#### *Selectors*
 Allowed selectors are:
 
 - Build-ID (`integer`)
@@ -111,10 +118,7 @@ Allowed selectors are:
   - `firstCompleted`
   - `lastSuccessful:${params.BRANCH=master}`
 
-##### *ExtensionPoint*
-This plugin provides a [`RunSelectorExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#runselectorextensionpoint) which allow for custom run selector implementations.
-
-### *Concatenation*
+#### *Concatenation*
 
 All those selectors can be concatenated as comma separated list:
 
@@ -122,12 +126,14 @@ All those selectors can be concatenated as comma separated list:
 
 This searches in the last `10` runs for the first successful build of the `master` branch (provided the Build Parameter `BRANCH` exists).
 
-**Note:** If you are using <b>Multibranch Pipelines</b> the <b>branch name</b> within the selector needs to be URL encoded <b style="color: red">twice</b> (see [job](#job) for further information).
+**Note:** If you are using <strong>Multibranch Pipelines</strong> the <strong>branch name</strong> within the selector needs to be URL encoded twice (see [job](#job) for further information).
 
-## `link`
+### `link`
+
 Provide a link to be opened on clicking on the badge.
 
-# Parameter Resolver
+## Parameter Resolver
+
 The query parameters `subject`, `status`, `color`, `animatedOverlayColor` and `link` support the usage of variables like `?subject=Build ${variable}`
 
 Available builtin variables are:
@@ -139,9 +145,7 @@ Available builtin variables are:
 
 Example: `?subject=Build ${params.BUILD_BRANCH|master} (${displayName})`
 
-##### *ExtensionPoint*
-This plugin provides a [`ParameterResolverExtensionPoint`](https://www.jenkins.io/doc/developer/extensions/embeddable-build-status/#parameterresolverextensionpoint) which allow for custom `${<Parameter>}` resolver implementations.
-# DSL 
+## Pipeline (DSL)
 
 ```groovy
 /**
@@ -162,12 +166,18 @@ addEmbeddableBadgeConfiguration(id: <id>)
  * animatedOverlayColor: A valid color (RGB-HEX: RRGGBB or valid SVG color name)
  * link: The link to be opened upon clicking.
  */
-addEmbeddableBadgeConfiguration(id: <string>, subject: <string>, status: <string>, color: <string>, animatedOverlayColor: <string>, link: <string>)
+addEmbeddableBadgeConfiguration(id: <string>,
+                                subject: <string>,
+                                status: <string>,
+                                color: <string>,
+                                animatedOverlayColor: <string>,
+                                link: <string>)
 ```
 
 This function returns a configuration object.
 
-#### Example
+### Example
+
 ```groovy
 def win32BuildBadge = addEmbeddableBadgeConfiguration(id: "win32build", subject: "Windows Build")
 
@@ -214,7 +224,7 @@ You can use the `config` query parameter to reference the `win32build` id:
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")
 
-# Text variant
+## Text variant
 
 The text variant returns a string representing the build status.
 Build status strings returned by the text variant include:
@@ -225,4 +235,22 @@ Build status strings returned by the text variant include:
 * `Aborted` - the build was canceled
 * `Not built` - the build has not yet run
 
-More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html).
+More details of the valid build results are available in the [Jenkins javadoc](https://javadoc.jenkins-ci.org/hudson/model/Result.html#field.summary).
+
+## Extension points for plugin developers
+
+A [Jenkins Extension annotation](https://www.jenkins.io/doc/developer/extensibility/#extension-annotation) allows Jenkins to discover classes, instantiate them, and register them in global lists of implementations of their supertypes and interfaces.
+The plugin provides several extension points that plugin developers can use to extend the behavior of the plugin.
+The Jenkins developer documentation provides more details on [extensions](https://www.jenkins.io/doc/developer/extensions/) and how to use them.
+
+### `JobSelectorExtensionPoint`
+
+The [`JobSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/JobSelectorExtensionPoint.html) allows custom job selector implementations.
+
+### `RunSelectorExtensionPoint`
+
+The [`RunSelectorExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/RunSelectorExtensionPoint.html) allows custom run selector implementations.
+
+### `ParameterResolverExtensionPoint`
+
+The [`ParameterResolverExtensionPoint`](https://javadoc.jenkins-ci.org/plugin/embeddable-build-status/org/jenkinsci/plugins/badge/extensionpoints/ParameterResolverExtensionPoint.html) allow custom `${<Parameter>}` resolver implementations.
