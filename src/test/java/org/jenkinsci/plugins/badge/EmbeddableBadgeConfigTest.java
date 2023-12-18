@@ -35,4 +35,59 @@ public class EmbeddableBadgeConfigTest {
         embeddableBadgeConfig.setStatus(status);
         assertThat(embeddableBadgeConfig.getColor(), is(expected));
     }
+
+    @Test
+    public void testSetSubject() {
+        String subject = "Test Subject";
+        EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-subject");
+        embeddableBadgeConfig.setSubject(subject);
+        assertThat(embeddableBadgeConfig.getSubject(), is(subject));
+    }
+
+    @Test
+    public void testSetValidLink() {
+        String link = "https://jenkins.io";
+        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-valid-link");
+        config.setLink(link);
+        assertThat(config.getLink(), is(link));
+    }
+
+    @Test
+    public void testSetEmptyLink() {
+        String link = "";
+        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-empty-link");
+        config.setLink(link);
+        assertThat(config.getLink(), is(link));
+    }
+
+    @Test
+    public void testSetValidDefaultColor() {
+        String color = "red";
+        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-valid-default-color");
+        config.setColor(color);
+        assertThat(config.getColor(), is(color));
+    }
+
+    @Test
+    public void testSetValidCustomColor() {
+        String color = "#ff00ff"; // Magenta
+        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-valid-custom-color");
+        config.setColor(color);
+        assertThat(config.getColor(), is(color));
+    }
+
+    @Test
+    public void testSetEmptyColor() {
+        String color = "";
+        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-empty-color");
+        config.setColor(color);
+        assertThat(config.getColor(), is(""));
+    }
+
+    @Test
+    public void testSetNullColor() {
+        EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-null-color");
+        config.setColor(null);
+        assertThat(config.getColor(), is(nullValue()));
+    }
 }
