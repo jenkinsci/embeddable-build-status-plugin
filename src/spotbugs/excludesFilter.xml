@@ -5,15 +5,6 @@
     false positives.
   -->
   <Match>
-    <Bug pattern="CT_CONSTRUCTOR_THROW" />
-    <Or>
-      <Class name="org.jenkinsci.plugins.badge.JobBadgeActionFactory" />     
-      <Class name="org.jenkinsci.plugins.badge.RunBadgeActionFactory" />
-      <Class name="org.jenkinsci.plugins.badge.StatusImage" />
-      <Class name="org.jenkinsci.plugins.badge.actions.PublicBuildStatusAction" />
-    </Or>
-  </Match>
-  <Match>
     <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
     <Or>
       <Class name="org.jenkinsci.plugins.badge.EmbeddableBadgeConfig" />

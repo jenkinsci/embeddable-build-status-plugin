@@ -50,6 +50,9 @@
     <spotbugs-maven-plugin.version>4.8.2.0</spotbugs-maven-plugin.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.threshold>Low</spotbugs.threshold>
+    <!-- TODO: Remove when plugin pom includes this omitVisitors -->
+    <!-- https://github.com/jenkinsci/plugin-pom/pull/869 -->
+    <spotbugs.omitVisitors>ConstructorThrow,FindReturnRef</spotbugs.omitVisitors>
     <spotless.check.skip>false</spotless.check.skip>
   </properties>
 
