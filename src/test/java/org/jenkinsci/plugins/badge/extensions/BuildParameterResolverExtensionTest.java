@@ -30,9 +30,15 @@ public class BuildParameterResolverExtensionTest {
 
     // A custom class to control the toString() behavior
     private static class CustomObject {
+        final String returnValue;
+
+        CustomObject(String returnValue) {
+            this.returnValue = returnValue;
+        }
+
         @Override
         public String toString() {
-            return "default";
+            return returnValue;
         }
     }
 
@@ -93,17 +99,18 @@ public class BuildParameterResolverExtensionTest {
     }
 
     @Test
-    void resolveShouldReplaceParameterWithDefaultValueIfParamValueToStringIsNull() {
+    void resolveShouldReplaceParameterWithCustomObjectValueIfParamValueToStringIsNull() {
         String paramName = "paramName";
         String defaultValue = "default";
         String parameter = "params." + paramName + "|" + defaultValue;
+        String customObjectReturnValue = defaultValue + "CustomObject";
 
         ParameterValue valueMock = mock(ParameterValue.class);
-        when(valueMock.getValue()).thenReturn(new CustomObject());
+        when(valueMock.getValue()).thenReturn(new CustomObject(customObjectReturnValue));
 
         when(paramsMock.getParameter(paramName)).thenReturn(valueMock);
         when(runMock.getAction(ParametersAction.class)).thenReturn(paramsMock);
 
-        assertEquals(defaultValue, resolver.resolve(runMock, parameter));
+        assertEquals(customObjectReturnValue, resolver.resolve(runMock, parameter));
     }
 }
