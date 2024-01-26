@@ -99,7 +99,7 @@ public class BuildParameterResolverExtensionTest {
         String parameter = "params." + paramName + "|" + defaultValue;
 
         ParameterValue valueMock = mock(ParameterValue.class);
-        when(valueMock.getValue()).thenReturn(new CustomObject()); // Replace CustomObject with your own class
+        when(valueMock.getValue()).thenReturn(new CustomObject());
 
         when(paramsMock.getParameter(paramName)).thenReturn(valueMock);
         when(runMock.getAction(ParametersAction.class)).thenReturn(paramsMock);
