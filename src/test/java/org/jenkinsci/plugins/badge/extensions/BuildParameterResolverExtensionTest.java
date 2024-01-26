@@ -35,6 +35,7 @@ public class BuildParameterResolverExtensionTest {
             return "default";
         }
     }
+
     @Test
     void resolveShouldReturnOriginalParameterIfRunIsNull() {
         String parameter = "params.paramName";
@@ -105,5 +106,4 @@ public class BuildParameterResolverExtensionTest {
 
         assertEquals(defaultValue, resolver.resolve(runMock, parameter));
     }
-
 }
