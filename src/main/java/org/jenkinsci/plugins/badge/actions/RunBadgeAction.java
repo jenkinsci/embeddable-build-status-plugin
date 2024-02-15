@@ -14,6 +14,7 @@ import org.jenkinsci.plugins.badge.*;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.WebMethod;
 
 public class RunBadgeAction implements Action, IconSpec {
@@ -48,8 +49,17 @@ public class RunBadgeAction implements Action, IconSpec {
     public String getUrl() {
         /* TODO: Is a permission check needed here? */
         /* Needed for the jelly syntax hints page */
-        String url = Stapler.getCurrentRequest().getReferer();
-        return url == null ? "null-referer" : url;
+        String url = "";
+        StaplerRequest req = Stapler.getCurrentRequest();
+        if (req != null && req.getRequestURL() != null) {
+            url = req.getRequestURL().toString();
+            int badgeIndex = url.lastIndexOf("badge/");
+
+            if (badgeIndex != -1) {
+                url = url.substring(0, badgeIndex);
+            }
+        }
+        return url;
     }
 
     public String getUrlEncodedFullName() {
