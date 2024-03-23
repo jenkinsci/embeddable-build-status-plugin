@@ -53,10 +53,12 @@ public class JobBadgeAction implements Action, IconSpec {
         /* Needed for the jelly syntax hints page */
         String url = "";
         StaplerRequest req = Stapler.getCurrentRequest();
-        if (req != null) {
-            url = req.getReferer();
-            if (url == null) {
-                url = "null-referer";
+        if (req != null && req.getRequestURL() != null) {
+            url = req.getRequestURL().toString();
+            int badgeIndex = url.lastIndexOf("badge/");
+
+            if (badgeIndex != -1) {
+                url = url.substring(0, badgeIndex);
             }
         }
         return url;
