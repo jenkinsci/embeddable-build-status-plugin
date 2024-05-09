@@ -7,6 +7,7 @@ package org.jenkinsci.plugins.badge;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.PluginWrapper;
 import java.awt.Canvas;
 import java.awt.Font;
@@ -81,6 +82,7 @@ class StatusImage implements HttpResponse {
         payload = new byte[0];
     }
 
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "jInstance never to be null")
     StatusImage(String fileName) throws IOException {
         URL rootUrl = new URL(jInstance.getRootUrl());
         etag = '"' + fileName + '"';
