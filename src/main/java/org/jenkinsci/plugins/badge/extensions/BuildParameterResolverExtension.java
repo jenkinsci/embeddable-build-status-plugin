@@ -21,8 +21,7 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
 
     @Override
     public String resolve(Actionable actionable, String parameter) {
-        if (actionable instanceof Run) {
-            Run<?, ?> run = (Run<?, ?>) actionable;
+        if (actionable instanceof Run<?, ?> run) {
 
             ParametersAction params = run.getAction(ParametersAction.class);
             if (params != null) {
@@ -68,8 +67,8 @@ public class BuildParameterResolverExtension implements ParameterResolverExtensi
                     }
                 }
             }
-        } else if (actionable instanceof Job<?, ?>) {
-            parameter = resolve(((Job<?, ?>) actionable).getLastBuild(), parameter);
+        } else if (actionable instanceof Job<?, ?> job) {
+            parameter = resolve(job.getLastBuild(), parameter);
         }
         return parameter;
     }
