@@ -2,6 +2,8 @@ package org.jenkinsci.plugins.badge.extensions;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import hudson.model.Job;
@@ -96,5 +98,14 @@ class SpecialValueParameterResolverExtensionTest {
     void testResolveWithNoMatchingParameters() {
         String actualParameter = extension.resolve(mockRun, "noMatchingParameters");
         assertThat(actualParameter, is("noMatchingParameters"));
+    }
+
+    @Test
+    void testResolveWhenJobHasNoLastBuild() {
+        Job<?, ?> job = mock(Job.class);
+        when(job.getLastBuild()).thenReturn(null);
+
+        String parameter = "${buildId}${buildNumber}";
+        assertEquals("${buildId}${buildNumber}", extension.resolve(job, parameter));
     }
 }
