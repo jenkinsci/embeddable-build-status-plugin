@@ -95,7 +95,7 @@ class SpecialValueParameterResolverExtensionTest {
 
     @Test
     void testResolveWhenJobHasNoLastBuild() {
-        Job<?, ?> job = mock(Job.class);
+        Job<?, ?> job = Mockito.mock(Job.class);
         when(job.getLastBuild()).thenReturn(null);
 
         String parameter = "${buildId}${buildNumber}";
