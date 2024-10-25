@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-class SpecialValueParameterResolverExtensionTest {
+class SpecialValueParameterResolverExtensionTest{
 
     private SpecialValueParameterResolverExtension extension;
     private Job mockProject;
@@ -75,15 +75,15 @@ class SpecialValueParameterResolverExtensionTest {
     }
 
     @Test
-    void resolveEmptyStringParameter(){
+    void resolveEmptyStringParameter() {
         String actualParameter = extension.resolve(mockRun, "");
         assertThat(actualParameter, is(""));
     }
 
     @Test
-    void resolvewithNullParameter(){
+    void resolvewithNullParameter() {
         String actualParameter = extension.resolve(mockRun, null);
-        assertThat(actualParameter, is((String)null));
+        assertThat(actualParameter, is((String) null));
     }
 
     @Test
