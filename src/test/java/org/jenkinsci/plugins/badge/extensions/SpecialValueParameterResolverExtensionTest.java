@@ -83,7 +83,7 @@ class SpecialValueParameterResolverExtensionTest {
     }
 
     @Test
-    void resolvewithNullParameter() {
+    void resolveWithNullParameter() {
         String actualParameter = extension.resolve(mockRun, null);
         assertThat(actualParameter, is((String) null));
     }
