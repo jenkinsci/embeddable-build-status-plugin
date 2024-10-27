@@ -5,12 +5,12 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import hudson.model.Actionable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 
-public class ParameterResolverTest {
+class ParameterResolverTest {
     @ParameterizedTest
     @CsvSource({
         "Build ${params.BUILD_BRANCH},Build params.BUILD_BRANCH",
