@@ -1,14 +1,16 @@
 package org.jenkinsci.plugins.badge;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import hudson.model.Actionable;
+import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 
-class ParameterResolverTest {
+public class ParameterResolverTest {
     @ParameterizedTest
     @CsvSource({
         "Build ${params.BUILD_BRANCH},Build params.BUILD_BRANCH",
@@ -20,54 +22,62 @@ class ParameterResolverTest {
         assertThat(resolvedParameter, is(expectedParameter));
     }
 
-    void shouldResolveNullParameter() {
+    @Test
+    public void shouldResolveNullParameter() {
         String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), null);
-        assertThat(resolvedParameter, is(null));
+        assertThat(resolvedParameter, is(nullValue()));
     }
 
-    void shouldResolveEmptyParameter() {
+    @Test
+    public void shouldResolveEmptyParameter() {
         String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), "");
         assertThat(resolvedParameter, is(""));
     }
 
-    void shouldResolveParameterWithoutVariables() {
+    @Test
+    public void shouldResolveParameterWithoutVariables() {
         String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), "Build");
         assertThat(resolvedParameter, is("Build"));
     }
 
-    void shouldResolveParameterWithVariables() {
+    @Test
+    public void shouldResolveParameterWithVariables() {
         String resolvedParameter =
                 new ParameterResolver().resolve(Mockito.mock(Actionable.class), "Build ${params.BUILD_BRANCH}");
         assertThat(resolvedParameter, is("Build params.BUILD_BRANCH"));
     }
 
-    void shouldResolveParameterWithVariablesAndText() {
+    @Test
+    public void shouldResolveParameterWithVariablesAndText() {
         String resolvedParameter = new ParameterResolver()
                 .resolve(Mockito.mock(Actionable.class), "Build ${params.BUILD_BRANCH} (${displayName})");
         assertThat(resolvedParameter, is("Build params.BUILD_BRANCH (displayName)"));
     }
 
-    void shouldResolveParameterWithVariablesAndTextAndDefault() {
+    @Test
+    public void shouldResolveParameterWithVariablesAndTextAndDefault() {
         String resolvedParameter = new ParameterResolver()
                 .resolve(Mockito.mock(Actionable.class), "Build ${params.BUILD_BRANCH|master} (${displayName})");
         assertThat(resolvedParameter, is("Build params.BUILD_BRANCH|master (displayName)"));
     }
 
-    void shouldNotResolveParameterOfVaryingLengthInRegex() {
+    @Test
+    public void shouldNotResolveParameterOfVaryingLengthInRegex() {
         ParameterResolver resolver = new ParameterResolver();
         String resolvedParameter = resolver.resolve(Mockito.mock(Actionable.class), "(?<=\\w*)");
         assertThat(resolvedParameter, is("(?<=\\w*)"));
     }
 
-    void  shouldNotResolveParameterWithFullRangeUnicode(){
-        String resolvedParameter = new ParameterResolver()
-                .resolve(Mockito.mock(Actionable.class), "\\p{InGreek}");
+    @Test
+    public void shouldNotResolveParameterWithFullRangeUnicode() {
+        String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), "\\p{InGreek}");
         assertThat(resolvedParameter, is("\\p{InGreek}"));
     }
 
-    void shouldNotResolveParameterWithRegexInlineFlags(){
-        String resolvedParameter = new ParameterResolver()
-                .resolve(Mockito.mock(Actionable.class), "(${\\Build(?i) params\\b})");
+    @Test
+    public void shouldNotResolveParameterWithRegexInlineFlags() {
+        String resolvedParameter =
+                new ParameterResolver().resolve(Mockito.mock(Actionable.class), "(${\\Build(?i) params\\b})");
         assertThat(resolvedParameter, is("(${\\Build(?i) params\\b})"));
     }
 }
