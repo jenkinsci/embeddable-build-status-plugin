@@ -19,4 +19,55 @@ class ParameterResolverTest {
         String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), queryParameter);
         assertThat(resolvedParameter, is(expectedParameter));
     }
+
+    void shouldResolveNullParameter() {
+        String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), null);
+        assertThat(resolvedParameter, is(null));
+    }
+
+    void shouldResolveEmptyParameter() {
+        String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), "");
+        assertThat(resolvedParameter, is(""));
+    }
+
+    void shouldResolveParameterWithoutVariables() {
+        String resolvedParameter = new ParameterResolver().resolve(Mockito.mock(Actionable.class), "Build");
+        assertThat(resolvedParameter, is("Build"));
+    }
+
+    void shouldResolveParameterWithVariables() {
+        String resolvedParameter =
+                new ParameterResolver().resolve(Mockito.mock(Actionable.class), "Build ${params.BUILD_BRANCH}");
+        assertThat(resolvedParameter, is("Build params.BUILD_BRANCH"));
+    }
+
+    void shouldResolveParameterWithVariablesAndText() {
+        String resolvedParameter = new ParameterResolver()
+                .resolve(Mockito.mock(Actionable.class), "Build ${params.BUILD_BRANCH} (${displayName})");
+        assertThat(resolvedParameter, is("Build params.BUILD_BRANCH (displayName)"));
+    }
+
+    void shouldResolveParameterWithVariablesAndTextAndDefault() {
+        String resolvedParameter = new ParameterResolver()
+                .resolve(Mockito.mock(Actionable.class), "Build ${params.BUILD_BRANCH|master} (${displayName})");
+        assertThat(resolvedParameter, is("Build params.BUILD_BRANCH|master (displayName)"));
+    }
+
+    void shouldNotResolveParameterOfVaryingLengthInRegex() {
+        ParameterResolver resolver = new ParameterResolver();
+        String resolvedParameter = resolver.resolve(Mockito.mock(Actionable.class), "(?<=\\w*)");
+        assertThat(resolvedParameter, is("(?<=\\w*)"));
+    }
+
+    void  shouldNotResolveParameterWithFullRangeUnicode(){
+        String resolvedParameter = new ParameterResolver()
+                .resolve(Mockito.mock(Actionable.class), "\\p{InGreek}");
+        assertThat(resolvedParameter, is("\\p{InGreek}"));
+    }
+
+    void shouldNotResolveParameterWithRegexInlineFlags(){
+        String resolvedParameter = new ParameterResolver()
+                .resolve(Mockito.mock(Actionable.class), "(${\\Build(?i) params\\b})");
+        assertThat(resolvedParameter, is("(${\\Build(?i) params\\b})"));
+    }
 }
