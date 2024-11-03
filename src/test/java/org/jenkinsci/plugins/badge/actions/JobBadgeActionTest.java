@@ -59,8 +59,7 @@ public class JobBadgeActionTest {
     private static Matcher matcher;
     private static JobBadgeAction jobBadgeActionBuildAndRun;
 
-    public JobBadgeActionTest() {
-    }
+    public JobBadgeActionTest() {}
 
     @BeforeClass
     public static void createAction() throws Exception {
