@@ -189,5 +189,5 @@ public class JobBadgeActionTest {
         public void testDoText () {
             assertThat(notBuiltAction.doText(), is("Not built"));
             assertThat(successfulAction.doText(), is("Success"));
-        }
     }
+}
