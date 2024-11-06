@@ -62,6 +62,7 @@ public class PublicBuildStatusActionTest {
         // Check job status icon is "not run" before job runs
         JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
         String result = json.getContentAsString();
+        System.out.println(result);
         assertThat(result, containsString("<svg "));
         assertThat(result, not(containsString(SUCCESS_MARKER)));
         assertThat(result, containsString(NOT_RUN_MARKER));
