@@ -23,13 +23,12 @@
  */
 package org.jenkinsci.plugins.badge.actions;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -39,9 +38,6 @@ import org.jvnet.hudson.test.JenkinsRule;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class JobBadgeActionTest {
 
@@ -52,12 +48,13 @@ public class JobBadgeActionTest {
     private static JobBadgeAction notBuiltAction;
 
     private static final String SUCCESSFUL_JOB_NAME = "successful-job";
+    private static final String BUILD_AND_RUN_MARKER = "passing";
+    private static final String BUILD_NOT_RUN_MARKER = "failing";
     private static JobBadgeAction successfulAction;
     private static String jenkinsUrl;
-    private static String response;
     private static String badgeUrl;
-    private static Matcher matcher;
     private static JobBadgeAction jobBadgeActionBuildAndRun;
+    private JenkinsRule.WebClient webClient;
 
     public JobBadgeActionTest() {}
 
@@ -73,79 +70,48 @@ public class JobBadgeActionTest {
         notBuiltAction = new JobBadgeAction(notBuiltJob);
     }
 
-    @Test
-    public void setUpActionToBadgeBuildAndRun() throws IOException {
+    @Before
+    public void createWebClient() {
+        webClient = j.createWebClient();
+    }
+
+    @Before
+    public void setUpActionForBadgeToBuildAndRun() throws IOException {
         // Create an instance of JobBadgeAction
         jobBadgeActionBuildAndRun = new JobBadgeAction(successfulAction.project);
 
         // Get the Jenkins URL
-        jenkinsUrl = j.getURL().toString();
-        badgeUrl = jenkinsUrl + "job/" + jobBadgeActionBuildAndRun.getUrlEncodedFullName()+ "/build/badge/icon?build=1&style=style&subject=subject&status=status&color=green&config=config&animatedOverlayColor=animatedOverlayColor&link=link";
-        System.out.println(badgeUrl);
-
+        jenkinsUrl = j.getURL().toString() + "job/" + jobBadgeActionBuildAndRun.getUrlEncodedFullName() + "/" + "badge/icon";
+        badgeUrl = jenkinsUrl + "?build=1&style=style&subject=subject&status=status&color=green&config=config&animatedOverlayColor=animatedOverlayColor&link=link";
 
         // Open a connection to the badge URL
         URL url = new URL(badgeUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
+    }
+
+    @Test
+    public void testIconBuildAndRun() throws Exception {
+        // Check job status icon is "run" before job runs
         // Read the response from the connection
-        Scanner scanner = new Scanner(connection.getInputStream());
-        scanner.useDelimiter("\\A");
-        response = scanner.hasNext() ? scanner.next() : "";
+        JenkinsRule.JSONWebResponse json = webClient.getJSON(badgeUrl);
+        String result = json.getContentAsString();
+        assertThat(result, CoreMatchers.containsString("<svg "));
+        System.out.println(result);
+        assertThat(result, not(CoreMatchers.containsString(BUILD_NOT_RUN_MARKER)));
+        assertThat(result, CoreMatchers.containsString(BUILD_AND_RUN_MARKER));
+    }
 
-        // Close the connection
-        connection.disconnect();
-
-        Pattern pattern = Pattern.compile("<text[^>]*>(.*?)</text>");
-        matcher = pattern.matcher(response);
-
-        // Assert that the response contains the expected badge content
-        if (matcher.find()) {
-            String extractedText = matcher.group(1);
-            System.out.println("Extracted text: " + extractedText);
-            // Assert that the response contains the expected badge content
-            assertThat(response, containsString("passing"));
-        }else{
-            System.out.println("No match found");
-            assertThat("No match found", is("No match found"));
-        }
-
-//        @Test
-//        public void setUpActionToBadgeBuildNotRun() throws IOException {
-//            // Create an instance of JobBadgeAction
-//            jobBadgeActionBuildAndRun = new JobBadgeAction(successfulAction.project);
-//
-//            // Get the Jenkins URL
-//            jenkinsUrl = j.getURL().toString();
-//            badgeUrl = jenkinsUrl + "job/" + SUCCESSFUL_JOB_NAME + "/buildStatus/icon?build=1&style=style&subject=subject&status=status&color=green&config=config&animatedOverlayColor=animatedOverlayColor&link=link";
-//
-//
-//            // Open a connection to the badge URL
-//            URL url = new URL(badgeUrl);
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestMethod("GET");
-//
-//            // Read the response from the connection
-//            Scanner scanner = new Scanner(connection.getInputStream());
-//            scanner.useDelimiter("\\A");
-//            response = scanner.hasNext() ? scanner.next() : "";
-//
-//            // Close the connection
-//            connection.disconnect();
-//
-//            Pattern pattern = Pattern.compile("<text[^>]*>(.*?)</text>");
-//            matcher = pattern.matcher(response);
-//
-//            // Assert that the response contains the expected badge content
-//            if (matcher.find()) {
-//                String extractedText = matcher.group(1);
-//                System.out.println("Extracted text: " + extractedText);
-//                System.out.println(response);
-//                // Assert that the response contains the expected badge content
-//                assertThat(response, containsString("passing"));
-////
-//            }
+    @Test
+    public void testIconBuildNotRun() throws Exception {
+        // Check job status icon is "not run" before job runs
+        JenkinsRule.JSONWebResponse json = webClient.getJSON(badgeUrl);
+        String result = json.getContentAsString();
+        assertThat(result, CoreMatchers.containsString("<svg "));
+        System.out.println(result);
+        assertThat(result, not(CoreMatchers.containsString(BUILD_AND_RUN_MARKER)));
+        assertThat(result, CoreMatchers.containsString(BUILD_NOT_RUN_MARKER));
     }
 
         @Test
