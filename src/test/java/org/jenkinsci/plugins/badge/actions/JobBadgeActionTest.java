@@ -48,8 +48,8 @@ public class JobBadgeActionTest {
     private static JobBadgeAction notBuiltAction;
 
     private static final String SUCCESSFUL_JOB_NAME = "successful-job";
-    private static final String BUILD_AND_RUN_MARKER = "passing";
-    private static final String BUILD_NOT_RUN_MARKER = "failing";
+    private static final String BUILD_AND_RUN_MARKER = "fill=\"#44cc11\"";
+    private static final String BUILD_NOT_RUN_MARKER = "fill=\"#9f9f9f\"";
     private static JobBadgeAction successfulAction;
     private static String jenkinsUrl;
     private static String badgeUrl;
@@ -109,7 +109,6 @@ public class JobBadgeActionTest {
         JenkinsRule.JSONWebResponse json = webClient.getJSON(badgeUrl);
         String result = json.getContentAsString();
         assertThat(result, CoreMatchers.containsString("<svg "));
-        System.out.println(result);
         assertThat(result, not(CoreMatchers.containsString(BUILD_AND_RUN_MARKER)));
         assertThat(result, CoreMatchers.containsString(BUILD_NOT_RUN_MARKER));
     }
