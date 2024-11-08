@@ -28,7 +28,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
 
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
@@ -97,8 +96,8 @@ public class JobBadgeActionTest {
                 assertThat(result, not(containsString(BUILD_AND_RUN_MARKER)));
                 assertThat(result, containsString(BUILD_NOT_RUN_MARKER));
                 // fail("does not contain build and run marker");
-            // } else {
-            //     fail("No marker found in " + result);
+                // } else {
+                //     fail("No marker found in " + result);
             }
         }
     }
