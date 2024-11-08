@@ -23,21 +23,19 @@
  */
 package org.jenkinsci.plugins.badge.actions;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
-import org.hamcrest.CoreMatchers;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class JobBadgeActionTest {
 
@@ -51,10 +49,6 @@ public class JobBadgeActionTest {
     private static final String BUILD_AND_RUN_MARKER = "fill=\"#44cc11\"";
     private static final String BUILD_NOT_RUN_MARKER = "fill=\"#e05d44\"";
     private static JobBadgeAction successfulAction;
-    private static String jenkinsUrl;
-    private static String badgeUrl;
-    private static JobBadgeAction jobBadgeActionBuildAndRun;
-    private JenkinsRule.WebClient webClient;
 
     public JobBadgeActionTest() {}
 
@@ -70,84 +64,84 @@ public class JobBadgeActionTest {
         notBuiltAction = new JobBadgeAction(notBuiltJob);
     }
 
-    @Before
-    public void createWebClient() {
-        webClient = j.createWebClient();
-    }
-
-    @Before
-    public void setUpActionForBadgeToBuildAndRun() throws IOException {
+    @Test
+    public void testBadgeStatus() throws Exception {
         // Create an instance of JobBadgeAction
-        jobBadgeActionBuildAndRun = new JobBadgeAction(successfulAction.project);
+        JobBadgeAction action = new JobBadgeAction(successfulAction.project);
+
+        String link = "https://jenkins.io";
+        String status = "my-status";
+        String subject = "my-subject";
 
         // Get the Jenkins URL
-        jenkinsUrl = j.getURL().toString() + "job/" + jobBadgeActionBuildAndRun.getUrlEncodedFullName() + "/" + "badge/icon";
-        badgeUrl = jenkinsUrl + "?build=1&style=style&subject=subject&status=status&color=green&config=config&animatedOverlayColor=animatedOverlayColor&link=link";
-        // Open a connection to the badge URL
-        URL url = new URL(badgeUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
+        String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/" + "badge/icon";
+        String badgeUrl = jenkinsUrl + "?subject=" + subject + "&status=" + status + "&link=" + link;
+        badgeUrl = badgeUrl + "&build=1&color=green&config=my-config&animatedOverlayColor=blue"; // "&style=plastic"
 
+        // Check the badge for a job that has been built and run
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(badgeUrl);
+            String result = json.getContentAsString();
+
+            assertThat(result, containsString("<svg "));
+            assertThat(result, containsString(link));
+            assertThat(result, containsString(status));
+            assertThat(result, containsString(subject));
+            if (result.contains(BUILD_AND_RUN_MARKER)) {
+                // Assert for passing status
+                assertThat(result, containsString(BUILD_AND_RUN_MARKER));
+                assertThat(result, not(containsString(BUILD_NOT_RUN_MARKER)));
+                // fail("contains build and run marker");
+            } else if (result.contains(BUILD_NOT_RUN_MARKER)) {
+                // Assert for failing status
+                assertThat(result, not(containsString(BUILD_AND_RUN_MARKER)));
+                assertThat(result, containsString(BUILD_NOT_RUN_MARKER));
+                // fail("does not contain build and run marker");
+            } else {
+                fail("No marker found in " + result);
+            }
+        }
     }
 
     @Test
-    public void testBadgeStatus() throws Exception {
-        // Check the badge for a job that has been built and run
-        JenkinsRule.JSONWebResponse json = webClient.getJSON(badgeUrl);
-        String result = json.getContentAsString();
-
-        if (result.contains(BUILD_AND_RUN_MARKER)) {
-            // Assert for passing status
-            assertThat(result, CoreMatchers.containsString("<svg "));
-            assertThat(result, CoreMatchers.containsString(BUILD_AND_RUN_MARKER));
-            assertThat(result, not(CoreMatchers.containsString(BUILD_NOT_RUN_MARKER)));
-        } else if (result.contains(BUILD_NOT_RUN_MARKER)) {
-            // Assert for failing status
-            assertThat(result, CoreMatchers.containsString("<svg "));
-            assertThat(result, not(CoreMatchers.containsString(BUILD_AND_RUN_MARKER)));
-            assertThat(result, CoreMatchers.containsString(BUILD_NOT_RUN_MARKER));
-        }
+    public void testGetIconFileName() {
+        assertThat(notBuiltAction.getIconFileName(), is(nullValue()));
+        assertThat(successfulAction.getIconFileName(), is(nullValue()));
     }
 
-        @Test
-        public void testGetIconFileName () {
-            assertThat(notBuiltAction.getIconFileName(), is(nullValue()));
-            assertThat(successfulAction.getIconFileName(), is(nullValue()));
-        }
+    @Test
+    public void testGetIconClassName() {
+        assertThat(notBuiltAction.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
+        assertThat(successfulAction.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
+    }
 
-        @Test
-        public void testGetIconClassName () {
-            assertThat(notBuiltAction.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
-            assertThat(successfulAction.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
-        }
+    @Test
+    public void testGetDisplayName() {
+        assertThat(notBuiltAction.getDisplayName(), is("Embeddable Build Status"));
+        assertThat(successfulAction.getDisplayName(), is("Embeddable Build Status"));
+    }
 
-        @Test
-        public void testGetDisplayName () {
-            assertThat(notBuiltAction.getDisplayName(), is("Embeddable Build Status"));
-            assertThat(successfulAction.getDisplayName(), is("Embeddable Build Status"));
-        }
+    @Test
+    public void testGetUrlName() {
+        assertThat(notBuiltAction.getUrlName(), is("badge"));
+        assertThat(successfulAction.getUrlName(), is("badge"));
+    }
 
-        @Test
-        public void testGetUrlName () {
-            assertThat(notBuiltAction.getUrlName(), is("badge"));
-            assertThat(successfulAction.getUrlName(), is("badge"));
-        }
+    @Test
+    public void testGetUrl() {
+        assertThat(notBuiltAction.getUrl(), is(""));
+        assertThat(successfulAction.getUrl(), is(""));
+    }
 
-        @Test
-        public void testGetUrl () {
-            assertThat(notBuiltAction.getUrl(), is(""));
-            assertThat(successfulAction.getUrl(), is(""));
-        }
+    @Test
+    public void testGetUrlEncodedFullName() {
+        assertThat(notBuiltAction.getUrlEncodedFullName(), is(NOT_BUILT_JOB_NAME));
+        assertThat(successfulAction.getUrlEncodedFullName(), is(SUCCESSFUL_JOB_NAME));
+    }
 
-        @Test
-        public void testGetUrlEncodedFullName () {
-            assertThat(notBuiltAction.getUrlEncodedFullName(), is(NOT_BUILT_JOB_NAME));
-            assertThat(successfulAction.getUrlEncodedFullName(), is(SUCCESSFUL_JOB_NAME));
-        }
-
-        @Test
-        public void testDoText () {
-            assertThat(notBuiltAction.doText(), is("Not built"));
-            assertThat(successfulAction.doText(), is("Success"));
+    @Test
+    public void testDoText() {
+        assertThat(notBuiltAction.doText(), is("Not built"));
+        assertThat(successfulAction.doText(), is("Success"));
     }
 }
