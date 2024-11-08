@@ -34,7 +34,6 @@ public class PublicBuildStatusActionTest {
 
     private FreeStyleProject job;
     private String jobStatusUrl;
-    private JenkinsRule.WebClient webClient;
 
     @Before
     public void createJob() throws IOException {
@@ -52,19 +51,16 @@ public class PublicBuildStatusActionTest {
         jobStatusUrl = statusUrl + "?job=" + job.getName();
     }
 
-    @Before
-    public void createWebClient() {
-        webClient = j.createWebClient();
-    }
-
     @Test
     public void testDoIconJobBefore() throws Exception {
         // Check job status icon is "not run" before job runs
-        JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
-        String result = json.getContentAsString();
-        assertThat(result, containsString("<svg "));
-        assertThat(result, not(containsString(SUCCESS_MARKER)));
-        assertThat(result, containsString(NOT_RUN_MARKER));
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
+            String result = json.getContentAsString();
+            assertThat(result, containsString("<svg "));
+            assertThat(result, not(containsString(SUCCESS_MARKER)));
+            assertThat(result, containsString(NOT_RUN_MARKER));
+        }
     }
 
     @Test
@@ -72,11 +68,13 @@ public class PublicBuildStatusActionTest {
         String buildStatusUrl = jobStatusUrl + "&build=123";
 
         // Check build status icon is "not run" before job runs
-        JenkinsRule.JSONWebResponse json = webClient.getJSON(buildStatusUrl);
-        String result = json.getContentAsString();
-        assertThat(result, containsString("<svg "));
-        assertThat(result, not(containsString(SUCCESS_MARKER)));
-        assertThat(result, containsString(NOT_RUN_MARKER));
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(buildStatusUrl);
+            String result = json.getContentAsString();
+            assertThat(result, containsString("<svg "));
+            assertThat(result, not(containsString(SUCCESS_MARKER)));
+            assertThat(result, containsString(NOT_RUN_MARKER));
+        }
     }
 
     @Test
@@ -86,11 +84,13 @@ public class PublicBuildStatusActionTest {
         j.assertBuildStatusSuccess(build);
 
         // Check job status icon is correct after job runs successfully
-        JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
-        String result = json.getContentAsString();
-        assertThat(result, containsString("<svg "));
-        assertThat(result, containsString(SUCCESS_MARKER));
-        assertThat(result, not(containsString(NOT_RUN_MARKER)));
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
+            String result = json.getContentAsString();
+            assertThat(result, containsString("<svg "));
+            assertThat(result, containsString(SUCCESS_MARKER));
+            assertThat(result, not(containsString(NOT_RUN_MARKER)));
+        }
     }
 
     @Test
@@ -101,11 +101,13 @@ public class PublicBuildStatusActionTest {
 
         // Check build status icon is correct after job runs successfully
         String buildStatusUrl = jobStatusUrl + "&build=" + build.getNumber();
-        JenkinsRule.JSONWebResponse json = webClient.getJSON(buildStatusUrl);
-        String result = json.getContentAsString();
-        assertThat(result, containsString("<svg "));
-        assertThat(result, containsString(SUCCESS_MARKER));
-        assertThat(result, not(containsString(NOT_RUN_MARKER)));
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(buildStatusUrl);
+            String result = json.getContentAsString();
+            assertThat(result, containsString("<svg "));
+            assertThat(result, containsString(SUCCESS_MARKER));
+            assertThat(result, not(containsString(NOT_RUN_MARKER)));
+        }
     }
 
     @Test

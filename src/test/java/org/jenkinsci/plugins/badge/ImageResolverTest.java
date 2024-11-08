@@ -24,54 +24,57 @@ public class ImageResolverTest {
 
     @Test
     public void TestGetDefault32x32Ball() throws Exception {
-        JenkinsRule.WebClient wc = jenkinsRule.createWebClient();
-        String style = "ball"; // should give default due to invalid size in the style
-        String subject = getSubject();
-        String status = getStatus();
-        String colorName = null;
-        BallColor ball = BallColor.BLUE;
-        StatusImage image = wc.executeOnServer(() -> {
-            ImageResolver imageResolver = new ImageResolver();
-            return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
-        });
-        assertThat(image.getEtag(), containsString(subject));
-        assertThat(image.getEtag(), containsString(status));
-        assertThat(image.getEtag(), containsString("null"));
+        try (JenkinsRule.WebClient wc = jenkinsRule.createWebClient()) {
+            String style = "ball"; // should give default due to invalid size in the style
+            String subject = getSubject();
+            String status = getStatus();
+            String colorName = null;
+            BallColor ball = BallColor.BLUE;
+            StatusImage image = wc.executeOnServer(() -> {
+                ImageResolver imageResolver = new ImageResolver();
+                return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
+            });
+            assertThat(image.getEtag(), containsString(subject));
+            assertThat(image.getEtag(), containsString(status));
+            assertThat(image.getEtag(), containsString("null"));
+        }
     }
 
     @Test
     public void TestGetNonDefaultBall() throws Exception {
-        JenkinsRule.WebClient wc = jenkinsRule.createWebClient();
-        String sizeHint = "16x16";
-        String style = "ball-" + sizeHint; // should give url
-        String subject = getSubject();
-        String status = getStatus();
-        BallColor ball = BallColor.RED;
-        String colorName = ball.toString();
-        StatusImage image = wc.executeOnServer(() -> {
-            ImageResolver imageResolver = new ImageResolver();
-            return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
-        });
-        assertThat(image.getEtag(), not(containsString(subject)));
-        assertThat(image.getEtag(), not(containsString(status)));
-        assertThat(image.getEtag(), containsString("images/" + sizeHint + "/" + colorName + ".png"));
+        try (JenkinsRule.WebClient wc = jenkinsRule.createWebClient()) {
+            String sizeHint = "16x16";
+            String style = "ball-" + sizeHint; // should give url
+            String subject = getSubject();
+            String status = getStatus();
+            BallColor ball = BallColor.RED;
+            String colorName = ball.toString();
+            StatusImage image = wc.executeOnServer(() -> {
+                ImageResolver imageResolver = new ImageResolver();
+                return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
+            });
+            assertThat(image.getEtag(), not(containsString(subject)));
+            assertThat(image.getEtag(), not(containsString(status)));
+            assertThat(image.getEtag(), containsString("images/" + sizeHint + "/" + colorName + ".png"));
+        }
     }
 
     @Test
     public void testShouldReturnEmpty() throws Exception {
-        JenkinsRule.WebClient wc = jenkinsRule.createWebClient();
-        String style = "ball-42x45"; // invalid size hint will return default empty image
-        String subject = getSubject();
-        String status = getStatus();
-        String colorName = null;
-        BallColor ball = BallColor.BLUE;
-        StatusImage image = wc.executeOnServer(() -> {
-            ImageResolver imageResolver = new ImageResolver();
-            return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
-        });
-        assertThat(image.getEtag(), not(containsString(subject)));
-        assertThat(image.getEtag(), not(containsString(status)));
-        assertThat(image.getEtag(), containsString("empty"));
+        try (JenkinsRule.WebClient wc = jenkinsRule.createWebClient()) {
+            String style = "ball-42x45"; // invalid size hint will return default empty image
+            String subject = getSubject();
+            String status = getStatus();
+            String colorName = null;
+            BallColor ball = BallColor.BLUE;
+            StatusImage image = wc.executeOnServer(() -> {
+                ImageResolver imageResolver = new ImageResolver();
+                return imageResolver.getImage(ball, style, subject, status, colorName, null, null);
+            });
+            assertThat(image.getEtag(), not(containsString(subject)));
+            assertThat(image.getEtag(), not(containsString(status)));
+            assertThat(image.getEtag(), containsString("empty"));
+        }
     }
 
     private final Random random = new Random();
