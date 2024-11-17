@@ -31,6 +31,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
+import java.util.Random;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -45,8 +46,6 @@ public class JobBadgeActionTest {
     private static JobBadgeAction notBuiltAction;
 
     private static final String SUCCESSFUL_JOB_NAME = "successful-job";
-    private static final String BUILD_AND_RUN_MARKER = "fill=\"#44cc11\"";
-    private static final String BUILD_NOT_RUN_MARKER = "fill=\"#e05d44\"";
     private static JobBadgeAction successfulAction;
 
     public JobBadgeActionTest() {}
@@ -63,31 +62,51 @@ public class JobBadgeActionTest {
         notBuiltAction = new JobBadgeAction(notBuiltJob);
     }
 
+    private final Random random = new Random();
+    private final String[] styles = {"plastic", "flat", "flat-square"};
+
     @Test
     public void testBadgeStatus() throws Exception {
         // Create an instance of JobBadgeAction
         JobBadgeAction action = new JobBadgeAction(successfulAction.project);
 
         String link = "https://jenkins.io";
-        String status = "my-status";
-        String subject = "my-subject";
-        String style = "plastic";
-        String color = "green";
-        //        OR maybe we can do this for color  ---> String color = "\"#44cc11\"";
-        String config = "win32build";
-        String animatedOverlayColor = "blue";
+        String status = "my-status-" + random.nextInt();
+        String subject = "my-subject-" + random.nextInt();
+        String style = styles[random.nextInt(styles.length)];
+        String expectedStyle;
+        String unexpectedStyle;
+        switch (style) {
+            case "plastic":
+                expectedStyle = "<stop offset=\".1\"";
+                unexpectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
+                break;
+            case "flat":
+                expectedStyle = "<linearGradient id=\"a\" x2=\"0\" y2=\"100%\">";
+                unexpectedStyle = "<stop offset=\".1\"";
+                break;
+            case "flat-square":
+                expectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
+                unexpectedStyle = "fill-opacity=\".3\">" + subject + "</text>";
+                break;
+            default:
+                expectedStyle = "not-a-valid-style";
+                unexpectedStyle = "never-should-be-used";
+                break;
+        }
 
         // Get the Jenkins URL
-        String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/" + "badge/icon";
-        System.out.println(jenkinsUrl);
-        String badgeUrl = jenkinsUrl + "?subject=" + subject + "&status=" + status + "&link=" + link;
-        System.out.println(badgeUrl);
-        //        Modify the badge URL to include the build number, style, color, config, and animated overlay color
-        //        badgeUrl = badgeUrl + "&build=last" + "&style=" + style + "&color=" + color + "&config=" + config +
-        // "&animatedOverlayColor=" + animatedOverlayColor; // "&style=plastic"
-
-        //        String badgeUrl = jenkinsUrl + "?subject=" + subject + "&status=" + status + "&link=" + link;
-        badgeUrl = badgeUrl + "&build=1&color=green&config=win32build&animatedOverlayColor=blue"; // "&style=plastic"
+        // icon.svg reaches one branch, icon another, and adding "/1/" reaches a third branch
+        String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/badge/icon.svg";
+        String badgeUrl = jenkinsUrl + "?subject=" + subject;
+        badgeUrl = badgeUrl + "&status=" + status;
+        badgeUrl = badgeUrl + "&link=" + link;
+        badgeUrl = badgeUrl + "&style=" + style;
+        // Null build reaches one branch
+        // badgeUrl = badgeUrl + "&build=1";
+        badgeUrl = badgeUrl + "&color=orange";
+        badgeUrl = badgeUrl + "&config=my-config";
+        badgeUrl = badgeUrl + "&animatedOverlayColor=yellow";
 
         // Check the badge for a job that has been built and run
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
@@ -98,22 +117,8 @@ public class JobBadgeActionTest {
             assertThat(result, containsString(link));
             assertThat(result, containsString(status));
             assertThat(result, containsString(subject));
-            assertThat(result, containsString(style));
-            assertThat(result, containsString(color)); // Not able to parse through the json response to string that is why error
-            assertThat(result, containsString(config));
-            assertThat(result, containsString(animatedOverlayColor));
-            if (result.contains(BUILD_AND_RUN_MARKER)) {
-                // Assert for passing status
-                assertThat(result, containsString(BUILD_AND_RUN_MARKER));
-                assertThat(result, not(containsString(BUILD_NOT_RUN_MARKER)));
-                // fail("contains build and run marker");
-            } else if (result.contains(BUILD_NOT_RUN_MARKER)) {
-                // Assert for failing status
-                assertThat(result, not(containsString(BUILD_AND_RUN_MARKER)));
-                assertThat(result, containsString(BUILD_NOT_RUN_MARKER));
-                //            } else {
-                //                fail("No marker found in " + result);
-            }
+            assertThat("For style " + style, result, containsString(expectedStyle));
+            assertThat("For style " + style, result, not(containsString(unexpectedStyle)));
         }
     }
 
