@@ -151,6 +151,7 @@ public class JobBadgeActionTest {
     public void testGetUrlEncodedFullName() {
         assertThat(notBuiltAction.getUrlEncodedFullName(), is(NOT_BUILT_JOB_NAME));
         assertThat(successfulAction.getUrlEncodedFullName(), is(SUCCESSFUL_JOB_NAME));
+        assertThat(new JobBadgeAction(null).getUrlEncodedFullName(), is("null-project-no-url-encoded-fullName"));
     }
 
     @Test
