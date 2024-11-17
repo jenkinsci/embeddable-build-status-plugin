@@ -42,10 +42,12 @@ public class JobBadgeActionTest {
     @ClassRule
     public static JenkinsRule j = new JenkinsRule();
 
-    private static final String NOT_BUILT_JOB_NAME = "not-built-job";
+    private static final Random random = new Random();
+
+    private static final String NOT_BUILT_JOB_NAME = "not-built-job-" + random.nextInt(10000);
     private static JobBadgeAction notBuiltAction;
 
-    private static final String SUCCESSFUL_JOB_NAME = "successful-job";
+    private static final String SUCCESSFUL_JOB_NAME = "successful-job-" + random.nextInt(10000);
     private static JobBadgeAction successfulAction;
 
     public JobBadgeActionTest() {}
@@ -62,17 +64,38 @@ public class JobBadgeActionTest {
         notBuiltAction = new JobBadgeAction(notBuiltJob);
     }
 
-    private final Random random = new Random();
-    private final String[] styles = {"plastic", "flat", "flat-square"};
+    @Test
+    public void testBadgeStatusIcon() throws Exception {
+        checkBadgeStatus("icon");
+    }
 
     @Test
-    public void testBadgeStatus() throws Exception {
+    public void testBadgeStatusIconSvg() throws Exception {
+        checkBadgeStatus("icon.svg");
+    }
+
+    @Test
+    public void testBadgeStatusIconWithBuild() throws Exception {
+        checkBadgeStatus("icon", 1);
+    }
+
+    @Test
+    public void testBadgeStatusIconSvgWithBuild() throws Exception {
+        checkBadgeStatus("icon.svg", 1);
+    }
+
+    private void checkBadgeStatus(String lastComponent) throws Exception {
+        checkBadgeStatus(lastComponent, null);
+    }
+
+    private void checkBadgeStatus(String lastComponent, Integer build) throws Exception {
         // Create an instance of JobBadgeAction
         JobBadgeAction action = new JobBadgeAction(successfulAction.project);
 
         String link = "https://jenkins.io";
         String status = "my-status-" + random.nextInt();
         String subject = "my-subject-" + random.nextInt();
+        String[] styles = {"plastic", "flat", "flat-square"};
         String style = styles[random.nextInt(styles.length)];
         String expectedStyle;
         String unexpectedStyle;
@@ -96,14 +119,16 @@ public class JobBadgeActionTest {
         }
 
         // Get the Jenkins URL
-        // icon.svg reaches one branch, icon another, and adding "/1/" reaches a third branch
-        String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/badge/icon.svg";
+        String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/badge/" + lastComponent;
         String badgeUrl = jenkinsUrl + "?subject=" + subject;
+        if (build != null) {
+            badgeUrl = badgeUrl + "&build=" + build;
+        }
         badgeUrl = badgeUrl + "&status=" + status;
         badgeUrl = badgeUrl + "&link=" + link;
         badgeUrl = badgeUrl + "&style=" + style;
-        // Null build reaches one branch
-        // badgeUrl = badgeUrl + "&build=1";
+
+        // Constant strings below do not affect result
         badgeUrl = badgeUrl + "&color=orange";
         badgeUrl = badgeUrl + "&config=my-config";
         badgeUrl = badgeUrl + "&animatedOverlayColor=yellow";
