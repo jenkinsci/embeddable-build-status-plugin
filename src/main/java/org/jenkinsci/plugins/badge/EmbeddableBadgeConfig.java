@@ -4,14 +4,18 @@
  */
 package org.jenkinsci.plugins.badge;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
 public class EmbeddableBadgeConfig implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
+
     private final Map<String, String> colors = new HashMap<>() {
+        @Serial
         private static final long serialVersionUID = 1L;
 
         {
