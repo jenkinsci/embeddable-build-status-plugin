@@ -162,7 +162,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
         Run<?, ?> run = null;
 
         if (project != null && build != null) {
-            // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the
+            // as the user might have ViewStatus permission only (e.g. as anonymous) we get the
             // project impersonate and check for permission after getting the project
             try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 for (String token : build.split(",")) {
