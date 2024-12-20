@@ -131,4 +131,39 @@ public class PublicBuildStatusActionTest {
     private boolean isWindows() {
         return File.pathSeparatorChar == ';';
     }
+
+    @Test
+    public void doText_shouldReturnMissingQueryParameterWhenJobIsNull() throws IOException {
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        String result = action.doText(null, null, null, "123");
+        assertThat(result, is("Missing query parameter: job"));
+    }
+
+    @Test
+    public void doText_shouldReturnProjectIconWhenJobHasNotRun() throws IOException {
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        String result = action.doText(null, null, job.getName(), null);
+        assertThat(result, is(job.getIconColor().getDescription()));
+        assertThat(result, is("Not built"));
+    }
+
+    @Test
+    public void doText_shouldReturnProjectIconColorDescription() throws Exception {
+        Run<?, ?> build = job.scheduleBuild2(0).get();
+        j.assertBuildStatusSuccess(build);
+        String result =
+                new PublicBuildStatusAction().doText(null, null, job.getName(), String.valueOf(build.getNumber()));
+        assertThat(result, is(job.getIconColor().getDescription()));
+        assertThat(result, is("Success"));
+    }
+
+    @Test
+    public void doText_shouldReturnRunIconColorDescription() throws Exception {
+        Run<?, ?> build = job.scheduleBuild2(0).get();
+        j.assertBuildStatusSuccess(build);
+        String result =
+                new PublicBuildStatusAction().doText(null, null, job.getName(), String.valueOf(build.getNumber()));
+        assertThat(result, is(build.getIconColor().getDescription()));
+        assertThat(result, is("Success"));
+    }
 }
