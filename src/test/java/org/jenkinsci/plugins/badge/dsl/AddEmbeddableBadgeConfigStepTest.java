@@ -18,7 +18,8 @@ class AddEmbeddableBadgeConfigStepTest {
     private static Run run = mock(Run.class);
     private static StepContext context = mock(StepContext.class);
     private static AddEmbeddableBadgeConfigStep step = new AddEmbeddableBadgeConfigStep("testId");
-    private static AddEmbeddableBadgeConfigStep.Execution execution = new AddEmbeddableBadgeConfigStep.Execution(step.badgeConfig, context);
+    private static AddEmbeddableBadgeConfigStep.Execution execution =
+            new AddEmbeddableBadgeConfigStep.Execution(step.badgeConfig, context);
 
     @BeforeEach
     void setUp() {
@@ -27,6 +28,7 @@ class AddEmbeddableBadgeConfigStepTest {
         step = new AddEmbeddableBadgeConfigStep("testId");
         execution = new AddEmbeddableBadgeConfigStep.Execution(step.badgeConfig, context);
     }
+
     @Test
     void testConstructorAndGetID() {
         assertEquals("testId", step.getID());
