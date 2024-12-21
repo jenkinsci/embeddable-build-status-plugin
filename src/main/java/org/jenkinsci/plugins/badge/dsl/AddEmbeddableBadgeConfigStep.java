@@ -25,6 +25,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 public class AddEmbeddableBadgeConfigStep extends Step {
 
+    /* Package protected for automated tests */
     final EmbeddableBadgeConfig badgeConfig;
 
     @DataBoundConstructor
