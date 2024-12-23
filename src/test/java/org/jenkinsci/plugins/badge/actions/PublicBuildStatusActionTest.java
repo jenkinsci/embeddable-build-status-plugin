@@ -140,12 +140,21 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
+    public void doText_shouldReturnProjectIconWhenJobHasNotRun() throws IOException {
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        String result = action.doText(null, null, job.getName(), null);
+        assertThat(result, is(job.getIconColor().getDescription()));
+        assertThat(result, is("Not built"));
+    }
+
+    @Test
     public void doText_shouldReturnProjectIconColorDescription() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
         String result =
                 new PublicBuildStatusAction().doText(null, null, job.getName(), String.valueOf(build.getNumber()));
         assertThat(result, is(job.getIconColor().getDescription()));
+        assertThat(result, is("Success"));
     }
 
     @Test
@@ -155,5 +164,54 @@ public class PublicBuildStatusActionTest {
         String result =
                 new PublicBuildStatusAction().doText(null, null, job.getName(), String.valueOf(build.getNumber()));
         assertThat(result, is(build.getIconColor().getDescription()));
+        assertThat(result, is("Success"));
+    }
+
+    @Test
+    public void doIconShouldReturnCorrectResponseForNullJob() throws Exception {
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            String url = j.getURL().toString() + "buildStatus/icon";
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
+            String result = json.getContentAsString();
+            assertThat(result, is(not(nullValue())));
+        }
+    }
+
+    @Test
+    public void doIconDotSvgShouldReturnCorrectResponseForNullJob() throws Exception {
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            String url = j.getURL().toString() + "buildStatus/icon.svg";
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
+            String result = json.getContentAsString();
+            assertThat(result, is(not(nullValue())));
+        }
+    }
+
+    @Test
+    public void doIconShouldReturnCorrectResponseForValidJob() throws Exception {
+        Run<?, ?> build = job.scheduleBuild2(0).get();
+        j.assertBuildStatusSuccess(build);
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            String url = j.getURL().toString() + "buildStatus/icon?job=" + job.getName();
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
+            String result = json.getContentAsString();
+            assertThat(result, is(not(nullValue())));
+        }
+    }
+
+    @Test
+    public void doIconDotSvgShouldReturnCorrectResponseForValidJob() throws Exception {
+        Run<?, ?> build = job.scheduleBuild2(0).get();
+        j.assertBuildStatusSuccess(build);
+        PublicBuildStatusAction action = new PublicBuildStatusAction();
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            String url = j.getURL().toString() + "buildStatus/icon.svg?job=" + job.getName();
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
+            String result = json.getContentAsString();
+            assertThat(result, is(not(nullValue())));
+        }
     }
 }
