@@ -6,18 +6,37 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import hudson.ExtensionList;
+import hudson.model.BallColor;
 import hudson.model.FreeStyleProject;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import org.jenkinsci.plugins.badge.IconRequestHandler;
+import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.kohsuke.stapler.HttpResponse;
+import org.kohsuke.stapler.HttpResponses;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
+import org.mockito.MockedStatic;
 
 public class PublicBuildStatusActionTest {
 
@@ -213,6 +232,125 @@ public class PublicBuildStatusActionTest {
             JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
             String result = json.getContentAsString();
             assertThat(result, containsString(PASSING_MARKER));
+        }
+    }
+
+    @Test
+    public void testDoText_WithMultipleJobSelectors() throws Exception {
+        // Setup
+        StaplerRequest2 req = mock(StaplerRequest2.class);
+        StaplerResponse2 rsp = mock(StaplerResponse2.class);
+        JobSelectorExtensionPoint firstSelector = mock(JobSelectorExtensionPoint.class);
+        JobSelectorExtensionPoint secondSelector = mock(JobSelectorExtensionPoint.class);
+
+        // Using raw type with @SuppressWarnings to avoid generics issues
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        Job secondJob = mock(Job.class);
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        Run mockRun = mock(Run.class);
+
+        ExtensionList<JobSelectorExtensionPoint> extensionList = mock(ExtensionList.class);
+        when(extensionList.iterator())
+                .thenReturn(Arrays.asList(firstSelector, secondSelector).iterator());
+
+        // Mock job's properties
+        when(secondJob.getIconColor()).thenReturn(BallColor.BLUE);
+        when(secondJob.getLastCompletedBuild()).thenReturn(mockRun);
+        when(mockRun.getIconColor()).thenReturn(BallColor.BLUE);
+
+        try (MockedStatic<ExtensionList> mockedExtList = mockStatic(ExtensionList.class)) {
+            mockedExtList
+                    .when(() -> ExtensionList.lookup(JobSelectorExtensionPoint.class))
+                    .thenReturn(extensionList);
+
+            when(firstSelector.select("testJob")).thenReturn(null);
+            when(secondSelector.select("testJob")).thenReturn(secondJob);
+            when(secondJob.hasPermission(PublicBuildStatusAction.VIEW_STATUS)).thenReturn(true);
+
+            PublicBuildStatusAction action = new PublicBuildStatusAction();
+
+            // Execute
+            String result = action.doText(req, rsp, "testJob", null);
+
+            // Verify
+            assertNotNull(result);
+            assertEquals(BallColor.BLUE.getDescription(), result); // Use the description of BallColor.BLUE
+            verify(firstSelector).select("testJob");
+            verify(secondSelector).select("testJob");
+        }
+    }
+
+    @Test
+    public void testDoText_WhenProjectIsNullOrNoPermission() throws Exception {
+        // Setup
+        StaplerRequest2 req = mock(StaplerRequest2.class);
+        StaplerResponse2 rsp = mock(StaplerResponse2.class);
+        JobSelectorExtensionPoint jobSelector = mock(JobSelectorExtensionPoint.class);
+
+        ExtensionList<JobSelectorExtensionPoint> extensionList = mock(ExtensionList.class);
+        when(extensionList.iterator()).thenReturn(Arrays.asList(jobSelector).iterator());
+
+        try (MockedStatic<ExtensionList> mockedExtList = mockStatic(ExtensionList.class)) {
+            mockedExtList
+                    .when(() -> ExtensionList.lookup(JobSelectorExtensionPoint.class))
+                    .thenReturn(extensionList);
+
+            PublicBuildStatusAction action = new PublicBuildStatusAction();
+
+            // Case 1: p == null → should throw HttpResponses.notFound()
+            when(jobSelector.select("unknownJob")).thenReturn(null);
+            assertThrows(HttpResponses.HttpResponseException.class, () -> action.doText(req, rsp, "unknownJob", null));
+
+            // Case 2: !p.hasPermission(VIEW_STATUS) → should throw HttpResponses.notFound()
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            Job mockJob = mock(Job.class);
+            when(jobSelector.select("testJob")).thenReturn(mockJob);
+            when(mockJob.hasPermission(PublicBuildStatusAction.VIEW_STATUS)).thenReturn(false);
+
+            assertThrows(HttpResponses.HttpResponseException.class, () -> action.doText(req, rsp, "testJob", null));
+        }
+    }
+
+    @Test
+    public void testDoIcon_WhenProjectIsNotFoundOrNoPermission() throws Exception {
+        // Setup
+        StaplerRequest2 req = mock(StaplerRequest2.class);
+        StaplerResponse2 rsp = mock(StaplerResponse2.class);
+        JobSelectorExtensionPoint jobSelector = mock(JobSelectorExtensionPoint.class);
+        IconRequestHandler iconHandler = mock(IconRequestHandler.class);
+
+        ExtensionList extensionList = mock(ExtensionList.class);
+        when(extensionList.iterator()).thenReturn(Arrays.asList(jobSelector).iterator());
+
+        try (MockedStatic<ExtensionList> mockedExtList = mockStatic(ExtensionList.class)) {
+            mockedExtList
+                    .when(() -> ExtensionList.lookup(JobSelectorExtensionPoint.class))
+                    .thenReturn(extensionList);
+
+            PublicBuildStatusAction action = new PublicBuildStatusAction();
+
+            // Test case where job exists but user lacks VIEW_STATUS permission
+            Job mockJob = mock(Job.class);
+            when(jobSelector.select("testJob")).thenReturn(mockJob);
+            when(mockJob.hasPermission(PublicBuildStatusAction.VIEW_STATUS)).thenReturn(false);
+
+            // This should trigger the return null case in getProject() since throwErrorWhenNotFound is false
+            HttpResponse response = action.doIcon(
+                    req,
+                    rsp,
+                    "testJob", // job name
+                    null, // build
+                    "style",
+                    "subject",
+                    "status",
+                    "color",
+                    "animatedColor",
+                    "config",
+                    "link");
+
+            // Verify we got a response (since null project should still return a response)
+            assertThat(response, is(not(nullValue())));
         }
     }
 }
