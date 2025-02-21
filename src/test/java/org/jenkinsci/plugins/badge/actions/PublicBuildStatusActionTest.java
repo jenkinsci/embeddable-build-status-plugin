@@ -6,6 +6,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import hudson.Functions;
 import hudson.model.FreeStyleProject;
 import hudson.model.Run;
 import hudson.tasks.BatchFile;
@@ -45,7 +46,7 @@ public class PublicBuildStatusActionTest {
         // Assure the job can pass on Windows and Unix
         job.getBuildersList()
                 .add(
-                        isWindows()
+                        Functions.isWindows()
                                 ? new BatchFile("echo hello from a batch file")
                                 : new Shell("echo hello from a shell"));
         String statusUrl = j.getURL().toString() + "buildStatus/icon";
@@ -135,9 +136,12 @@ public class PublicBuildStatusActionTest {
 
     @Test
     public void doText_shouldReturnMissingQueryParameterWhenJobIsNull() throws IOException {
-        PublicBuildStatusAction action = new PublicBuildStatusAction();
-        String result = action.doText(null, null, null, "123");
-        assertThat(result, is("Missing query parameter: job"));
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            String url = j.getURL().toString() + "buildStatus/text";
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
+            String result = json.getContentAsString();
+            assertThat(result, is("Missing query parameter: job"));
+        }
     }
 
     @Test
@@ -152,20 +156,13 @@ public class PublicBuildStatusActionTest {
     public void doText_shouldReturnProjectIconColorDescription() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
-        String result =
-                new PublicBuildStatusAction().doText(null, null, job.getName(), String.valueOf(build.getNumber()));
-        assertThat(result, is(job.getIconColor().getDescription()));
-        assertThat(result, is("Success"));
-    }
-
-    @Test
-    public void doText_shouldReturnRunIconColorDescription() throws Exception {
-        Run<?, ?> build = job.scheduleBuild2(0).get();
-        j.assertBuildStatusSuccess(build);
-        String result =
-                new PublicBuildStatusAction().doText(null, null, job.getName(), String.valueOf(build.getNumber()));
-        assertThat(result, is(build.getIconColor().getDescription()));
-        assertThat(result, is("Success"));
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            String url = j.getURL().toString() + "buildStatus/text?job=" + job.getName();
+            JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
+            String result = json.getContentAsString();
+            assertThat(result, is(build.getIconColor().getDescription()));
+            assertThat(result, is("Success"));
+        }
     }
 
     @Test
