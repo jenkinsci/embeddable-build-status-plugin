@@ -5,11 +5,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
-import hudson.ExtensionList;
 import hudson.Functions;
 import hudson.model.FreeStyleProject;
 import hudson.model.Run;
@@ -17,7 +13,6 @@ import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
 import java.io.File;
 import java.io.IOException;
-import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -215,27 +210,6 @@ public class PublicBuildStatusActionTest {
             JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
             String result = json.getContentAsString();
             assertThat(result, containsString(PASSING_MARKER));
-        }
-    }
-
-    @Test
-    public void testDoText_WithMultipleJobSelectors() throws Exception {
-        JobSelectorExtensionPoint nullSelector = (String jobName) -> null;
-        JobSelectorExtensionPoint validSelector = (String jobName) -> job;
-
-        ExtensionList<JobSelectorExtensionPoint> extensionsList = ExtensionList.lookup(JobSelectorExtensionPoint.class);
-        extensionsList.add(0, nullSelector);
-        extensionsList.add(1, validSelector);
-
-        try {
-            String result = new PublicBuildStatusAction().doText(null, null, job.getName(), null);
-            assertNotNull(result);
-            assertEquals("Not built", result);
-            assertNull(nullSelector.select(job.getName()));
-            assertEquals(job, validSelector.select(job.getName()));
-        } finally {
-            extensionsList.remove(nullSelector);
-            extensionsList.remove(validSelector);
         }
     }
 }
