@@ -32,15 +32,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import hudson.model.FreeStyleProject;
 import hudson.model.Result;
 import java.util.Random;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class JobBadgeActionTest {
+@WithJenkins
+class JobBadgeActionTest {
 
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
+    private static JenkinsRule j;
 
     private static final Random random = new Random();
 
@@ -50,10 +50,9 @@ public class JobBadgeActionTest {
     private static final String SUCCESSFUL_JOB_NAME = "successful-job-" + random.nextInt(10000);
     private static JobBadgeAction successfulAction;
 
-    public JobBadgeActionTest() {}
-
-    @BeforeClass
-    public static void createAction() throws Exception {
+    @BeforeAll
+    static void createAction(JenkinsRule rule) throws Exception {
+        j = rule;
         /* Build a job for assertions on successful jobs */
         FreeStyleProject successfulJob = j.createFreeStyleProject(SUCCESSFUL_JOB_NAME);
         j.buildAndAssertStatus(Result.SUCCESS, successfulJob);
@@ -65,22 +64,22 @@ public class JobBadgeActionTest {
     }
 
     @Test
-    public void testBadgeStatusIcon() throws Exception {
+    void testBadgeStatusIcon() throws Exception {
         checkBadgeStatus("icon");
     }
 
     @Test
-    public void testBadgeStatusIconSvg() throws Exception {
+    void testBadgeStatusIconSvg() throws Exception {
         checkBadgeStatus("icon.svg");
     }
 
     @Test
-    public void testBadgeStatusIconWithBuild() throws Exception {
+    void testBadgeStatusIconWithBuild() throws Exception {
         checkBadgeStatus("icon", 1);
     }
 
     @Test
-    public void testBadgeStatusIconSvgWithBuild() throws Exception {
+    void testBadgeStatusIconSvgWithBuild() throws Exception {
         checkBadgeStatus("icon.svg", 1);
     }
 
@@ -98,25 +97,25 @@ public class JobBadgeActionTest {
         String[] styles = {"plastic", "flat", "flat-square"};
         String style = styles[random.nextInt(styles.length)];
         String expectedStyle;
-        String unexpectedStyle;
-        switch (style) {
-            case "plastic":
-                expectedStyle = "<stop offset=\".1\"";
-                unexpectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
-                break;
-            case "flat":
-                expectedStyle = "<linearGradient id=\"a\" x2=\"0\" y2=\"100%\">";
-                unexpectedStyle = "<stop offset=\".1\"";
-                break;
-            case "flat-square":
-                expectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
-                unexpectedStyle = "fill-opacity=\".3\">" + subject + "</text>";
-                break;
-            default:
-                expectedStyle = "not-a-valid-style";
-                unexpectedStyle = "never-should-be-used";
-                break;
-        }
+        String unexpectedStyle =
+                switch (style) {
+                    case "plastic" -> {
+                        expectedStyle = "<stop offset=\".1\"";
+                        yield " fill=\"white\" fill-opacity=\"0.1\"/>";
+                    }
+                    case "flat" -> {
+                        expectedStyle = "<linearGradient id=\"a\" x2=\"0\" y2=\"100%\">";
+                        yield "<stop offset=\".1\"";
+                    }
+                    case "flat-square" -> {
+                        expectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
+                        yield "fill-opacity=\".3\">" + subject + "</text>";
+                    }
+                    default -> {
+                        expectedStyle = "not-a-valid-style";
+                        yield "never-should-be-used";
+                    }
+                };
 
         // Get the Jenkins URL
         String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/badge/" + lastComponent;
@@ -148,44 +147,44 @@ public class JobBadgeActionTest {
     }
 
     @Test
-    public void testGetIconFileName() {
+    void testGetIconFileName() {
         assertThat(notBuiltAction.getIconFileName(), is(nullValue()));
         assertThat(successfulAction.getIconFileName(), is(nullValue()));
     }
 
     @Test
-    public void testGetIconClassName() {
+    void testGetIconClassName() {
         assertThat(notBuiltAction.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
         assertThat(successfulAction.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
     }
 
     @Test
-    public void testGetDisplayName() {
+    void testGetDisplayName() {
         assertThat(notBuiltAction.getDisplayName(), is("Embeddable Build Status"));
         assertThat(successfulAction.getDisplayName(), is("Embeddable Build Status"));
     }
 
     @Test
-    public void testGetUrlName() {
+    void testGetUrlName() {
         assertThat(notBuiltAction.getUrlName(), is("badge"));
         assertThat(successfulAction.getUrlName(), is("badge"));
     }
 
     @Test
-    public void testGetUrl() {
+    void testGetUrl() {
         assertThat(notBuiltAction.getUrl(), is(""));
         assertThat(successfulAction.getUrl(), is(""));
     }
 
     @Test
-    public void testGetUrlEncodedFullName() {
+    void testGetUrlEncodedFullName() {
         assertThat(notBuiltAction.getUrlEncodedFullName(), is(NOT_BUILT_JOB_NAME));
         assertThat(successfulAction.getUrlEncodedFullName(), is(SUCCESSFUL_JOB_NAME));
         assertThat(new JobBadgeAction(null).getUrlEncodedFullName(), is("null-project-no-url-encoded-fullName"));
     }
 
     @Test
-    public void testDoText() {
+    void testDoText() {
         assertThat(notBuiltAction.doText(), is("Not built"));
         assertThat(successfulAction.doText(), is("Success"));
     }

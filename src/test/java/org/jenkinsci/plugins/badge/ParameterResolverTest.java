@@ -16,6 +16,7 @@ import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.mockito.Mockito;
 
 class ParameterResolverTest {
+
     private ParameterResolver resolver;
 
     @BeforeEach
@@ -35,20 +36,20 @@ class ParameterResolverTest {
     }
 
     @Test
-    public void shouldResolveNullParameter() {
+    void shouldResolveNullParameter() {
         String resolvedParameter = resolver.resolve(Mockito.mock(Actionable.class), null);
         assertThat(resolvedParameter, is(nullValue()));
     }
 
     @Test
-    public void shouldResolveEmptyParameter() {
+    void shouldResolveEmptyParameter() {
         String resolvedParameter = resolver.resolve(Mockito.mock(Actionable.class), "");
         assertThat(resolvedParameter, is(""));
     }
 
     @Test
     @WithJenkins
-    public void shouldResolveSpecialParameters(JenkinsRule r) throws Exception {
+    void shouldResolveSpecialParameters(JenkinsRule r) throws Exception {
         FreeStyleProject p = r.createFreeStyleProject();
         p.setDescription("Project description is ignored");
 

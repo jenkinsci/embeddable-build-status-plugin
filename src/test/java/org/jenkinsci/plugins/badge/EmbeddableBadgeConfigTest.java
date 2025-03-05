@@ -4,13 +4,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class EmbeddableBadgeConfigTest {
+class EmbeddableBadgeConfigTest {
+
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         String id = "testId-constructor";
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig(id);
         assertThat(embeddableBadgeConfig.getID(), is(id));
@@ -22,7 +23,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testGetAnimatedOverlayColorBlueForRunning() {
+    void testGetAnimatedOverlayColorBlueForRunning() {
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-running-blue");
         embeddableBadgeConfig.setStatus("running");
         assertThat(embeddableBadgeConfig.getAnimatedOverlayColor(), is("blue"));
@@ -30,14 +31,14 @@ public class EmbeddableBadgeConfigTest {
 
     @ParameterizedTest
     @CsvSource({"failing,red", "passing,brightgreen", "unstable,yellow", "aborted,aborted", "running,blue"})
-    public void testGetColor(String status, String expected) {
+    void testGetColor(String status, String expected) {
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-status-" + status);
         embeddableBadgeConfig.setStatus(status);
         assertThat(embeddableBadgeConfig.getColor(), is(expected));
     }
 
     @Test
-    public void testSetSubject() {
+    void testSetSubject() {
         String subject = "Test Subject";
         EmbeddableBadgeConfig embeddableBadgeConfig = new EmbeddableBadgeConfig("testId-subject");
         embeddableBadgeConfig.setSubject(subject);
@@ -45,7 +46,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testSetValidLink() {
+    void testSetValidLink() {
         String link = "https://jenkins.io";
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-valid-link");
         config.setLink(link);
@@ -53,7 +54,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testSetEmptyLink() {
+    void testSetEmptyLink() {
         String link = "";
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-empty-link");
         config.setLink(link);
@@ -61,7 +62,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testSetValidDefaultColor() {
+    void testSetValidDefaultColor() {
         String color = "red";
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-valid-default-color");
         config.setColor(color);
@@ -69,7 +70,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testSetValidCustomColor() {
+    void testSetValidCustomColor() {
         String color = "#ff00ff"; // Magenta
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-valid-custom-color");
         config.setColor(color);
@@ -77,7 +78,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testSetEmptyColor() {
+    void testSetEmptyColor() {
         String color = "";
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-empty-color");
         config.setColor(color);
@@ -85,7 +86,7 @@ public class EmbeddableBadgeConfigTest {
     }
 
     @Test
-    public void testSetNullColor() {
+    void testSetNullColor() {
         EmbeddableBadgeConfig config = new EmbeddableBadgeConfig("test-null-color");
         config.setColor(null);
         assertThat(config.getColor(), is(nullValue()));

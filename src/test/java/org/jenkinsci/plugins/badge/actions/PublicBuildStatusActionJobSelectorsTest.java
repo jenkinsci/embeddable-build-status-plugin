@@ -11,28 +11,26 @@ import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
 import java.io.IOException;
 import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class PublicBuildStatusActionJobSelectorsTest {
+@WithJenkins
+class PublicBuildStatusActionJobSelectorsTest {
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
-
-    @Rule
-    public TestName name = new TestName();
-
+    private JenkinsRule j;
     private FreeStyleProject job;
 
-    @Before
-    public void createJob() throws IOException {
+    @BeforeEach
+    void createJob(JenkinsRule j, TestInfo info) throws IOException {
+        this.j = j;
         // Give each job a name based on the name of the test method
         // Simplifies debugging and failure diagnosis
         // Also avoids any caching from reusing job name
-        job = j.createFreeStyleProject("job-" + name.getMethodName());
+        job = j.createFreeStyleProject(
+                "job-" + info.getTestMethod().orElseThrow().getName());
         // Assure the job can pass on Windows and Unix
         job.getBuildersList()
                 .add(
@@ -42,7 +40,7 @@ public class PublicBuildStatusActionJobSelectorsTest {
     }
 
     @Test
-    public void testDoText_WithMultipleJobSelectors() throws Exception {
+    void testDoText_WithMultipleJobSelectors() throws Exception {
         JobSelectorExtensionPoint nullSelector = (String jobName) -> null;
         JobSelectorExtensionPoint validSelector = (String jobName) -> job;
 
@@ -55,7 +53,7 @@ public class PublicBuildStatusActionJobSelectorsTest {
     }
 
     @Test
-    public void testDoText_WithMultipleJobSelectorsAfterRun() throws Exception {
+    void testDoText_WithMultipleJobSelectorsAfterRun() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
 

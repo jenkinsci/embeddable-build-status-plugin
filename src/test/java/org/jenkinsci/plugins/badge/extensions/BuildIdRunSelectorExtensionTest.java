@@ -17,7 +17,6 @@ class BuildIdRunSelectorExtensionTest {
 
     @BeforeEach
     void setUp() {
-
         extension = new BuildIdRunSelectorExtension();
         mockProject = Mockito.mock(Job.class);
         mockRun = Mockito.mock(Run.class);
