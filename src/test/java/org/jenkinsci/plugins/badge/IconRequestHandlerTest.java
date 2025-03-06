@@ -9,24 +9,28 @@ import hudson.model.Job;
 import hudson.model.Run;
 import java.lang.reflect.Field;
 import org.jenkinsci.plugins.badge.actions.EmbeddableBadgeConfigsAction;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-public class IconRequestHandlerTest {
+@WithJenkins
+class IconRequestHandlerTest {
 
-    @ClassRule
-    public static JenkinsRule jenkinsRule = new JenkinsRule();
+    @SuppressWarnings("unused")
+    private static JenkinsRule jenkinsRule;
 
-    private ParameterResolver parameterResolver;
-    private IconRequestHandler iconRequestHandler = new IconRequestHandler();
+    private final IconRequestHandler iconRequestHandler = new IconRequestHandler();
 
-    public IconRequestHandlerTest() {}
+    @BeforeAll
+    static void beforeAll(JenkinsRule rule) {
+        jenkinsRule = rule;
+    }
 
     @Test
-    public void handleIconRequest() throws Exception {
+    void handleIconRequest() throws Exception {
         ImageResolver mockIconResolver = Mockito.mock(ImageResolver.class);
         StatusImage mockedStatusImage = new StatusImage();
         when(mockIconResolver.getImage(
@@ -43,7 +47,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForJob() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForJob() throws NoSuchFieldException, IllegalAccessException {
         ImageResolver mockIconResolver = Mockito.mock(ImageResolver.class);
         StatusImage mockedStatusImage = new StatusImage();
         ParameterResolver mockParameterResolver = mock(ParameterResolver.class);
@@ -75,7 +79,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForJob1() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForJob1() throws NoSuchFieldException, IllegalAccessException {
         ImageResolver mockIconResolver = Mockito.mock(ImageResolver.class);
         StatusImage mockedStatusImage = new StatusImage();
         ParameterResolver mockParameterResolver = mock(ParameterResolver.class);
@@ -96,7 +100,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForJob2() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForJob2() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -137,7 +141,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForJob3() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForJob3() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -177,7 +181,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForJob4() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForJob4() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -221,7 +225,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForJob5() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForJob5() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -266,7 +270,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForRun() throws IllegalAccessException, NoSuchFieldException {
+    void handleIconRequestForRun() throws IllegalAccessException, NoSuchFieldException {
         ImageResolver mockIconResolver = Mockito.mock(ImageResolver.class);
         StatusImage mockedStatusImage = new StatusImage();
         ParameterResolver mockParameterResolver = mock(ParameterResolver.class);
@@ -298,7 +302,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForRun1() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForRun1() throws NoSuchFieldException, IllegalAccessException {
         ImageResolver mockIconResolver = Mockito.mock(ImageResolver.class);
         StatusImage mockedStatusImage = new StatusImage();
         ParameterResolver mockParameterResolver = mock(ParameterResolver.class);
@@ -319,7 +323,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForRun2() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForRun2() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -359,7 +363,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForRun3() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForRun3() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -399,7 +403,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForRun4() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForRun4() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 
@@ -443,7 +447,7 @@ public class IconRequestHandlerTest {
     }
 
     @Test
-    public void handleIconRequestForRun5() throws NoSuchFieldException, IllegalAccessException {
+    void handleIconRequestForRun5() throws NoSuchFieldException, IllegalAccessException {
         try (MockedStatic<EmbeddableBadgeConfigsAction> embeddableBadgeConfigsActionMockedStatic =
                 Mockito.mockStatic(EmbeddableBadgeConfigsAction.class)) {
 

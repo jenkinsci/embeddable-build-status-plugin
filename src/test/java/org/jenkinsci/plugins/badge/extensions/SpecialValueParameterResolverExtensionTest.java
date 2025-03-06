@@ -14,13 +14,11 @@ import org.mockito.Mockito;
 class SpecialValueParameterResolverExtensionTest {
 
     private SpecialValueParameterResolverExtension extension;
-    private Job mockProject;
     private Run mockRun;
 
     @BeforeEach
     void setUp() {
         extension = new SpecialValueParameterResolverExtension();
-        mockProject = Mockito.mock(Job.class);
 
         mockRun = Mockito.mock(Run.class);
 

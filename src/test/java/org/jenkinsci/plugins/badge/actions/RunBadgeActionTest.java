@@ -41,7 +41,7 @@ class RunBadgeActionTest {
         try (MockedStatic<Stapler> mockedStatic = Mockito.mockStatic(Stapler.class)) {
             StaplerRequest2 staplerRequest = Mockito.mock(StaplerRequest2.class);
             Mockito.when(staplerRequest.getRequestURL()).thenReturn(new StringBuffer("http://jenkins.io/"));
-            mockedStatic.when(() -> Stapler.getCurrentRequest2()).thenReturn(staplerRequest);
+            mockedStatic.when(Stapler::getCurrentRequest2).thenReturn(staplerRequest);
 
             assertThat(runBadgeAction.getUrl(), is("http://jenkins.io/"));
         }
@@ -52,7 +52,7 @@ class RunBadgeActionTest {
         try (MockedStatic<Stapler> mockedStatic = Mockito.mockStatic(Stapler.class)) {
             StaplerRequest2 staplerRequest = Mockito.mock(StaplerRequest2.class);
             Mockito.when(staplerRequest.getRequestURL()).thenReturn(new StringBuffer("http://jenkins.io/badge/"));
-            mockedStatic.when(() -> Stapler.getCurrentRequest2()).thenReturn(staplerRequest);
+            mockedStatic.when(Stapler::getCurrentRequest2).thenReturn(staplerRequest);
 
             assertThat(runBadgeAction.getUrl(), is("http://jenkins.io/"));
         }

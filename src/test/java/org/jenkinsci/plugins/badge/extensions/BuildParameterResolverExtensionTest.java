@@ -9,10 +9,12 @@ import hudson.model.ParametersAction;
 import hudson.model.Run;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-public class BuildParameterResolverExtensionTest {
+@ExtendWith(MockitoExtension.class)
+class BuildParameterResolverExtensionTest {
 
     @Mock
     private Run<?, ?> runMock;
@@ -24,7 +26,6 @@ public class BuildParameterResolverExtensionTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         resolver = new BuildParameterResolverExtension();
     }
 

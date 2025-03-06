@@ -5,7 +5,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import hudson.ExtensionList;
 import hudson.Functions;
@@ -22,31 +22,29 @@ import java.io.IOException;
 import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
 import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
 
-public class PublicBuildStatusActionSecurityTest {
+@WithJenkins
+class PublicBuildStatusActionSecurityTest {
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
-
-    @Rule
-    public TestName name = new TestName();
-
+    private JenkinsRule j;
     private FreeStyleProject job;
 
-    @Before
-    public void createJob() throws IOException {
+    @BeforeEach
+    void createJob(JenkinsRule j, TestInfo info) throws IOException {
+        this.j = j;
         // Give each job a name based on the name of the test method
         // Simplifies debugging and failure diagnosis
         // Also avoids any caching from reusing job name
-        job = j.createFreeStyleProject("job-" + name.getMethodName());
+        job = j.createFreeStyleProject(
+                "job-" + info.getTestMethod().orElseThrow().getName());
         // Assure the job can pass on Windows and Unix
         job.getBuildersList()
                 .add(
@@ -55,9 +53,8 @@ public class PublicBuildStatusActionSecurityTest {
                                 : new Shell("echo hello from a shell"));
     }
 
-    @Before
-    public void setupSecurity() {
-        String username = "alice";
+    @BeforeEach
+    void setupSecurity() {
         JenkinsRule.DummySecurityRealm securityRealm = j.createDummySecurityRealm();
         MockAuthorizationStrategy authStrategy = new MockAuthorizationStrategy()
                 .grant(Jenkins.READ, Item.READ)
@@ -78,7 +75,7 @@ public class PublicBuildStatusActionSecurityTest {
     }
 
     @Test
-    public void testDoText_whenJobHasNoPermissions() throws Exception {
+    void testDoText_whenJobHasNoPermissions() {
         JobSelectorExtensionPoint jobSelector = (String jobName) -> job;
         ExtensionList.lookup(JobSelectorExtensionPoint.class).add(0, jobSelector);
 
@@ -91,7 +88,7 @@ public class PublicBuildStatusActionSecurityTest {
     }
 
     @Test
-    public void testGetRun_whenNotRunAndJobHasNoPermissions() throws Exception {
+    void testGetRun_whenNotRunAndJobHasNoPermissions() {
         RunSelectorExtensionPoint runSelector = (Job myJob, String selector, Run reference) -> null;
         ExtensionList.lookup(RunSelectorExtensionPoint.class).add(0, runSelector);
 
@@ -103,7 +100,7 @@ public class PublicBuildStatusActionSecurityTest {
     }
 
     @Test
-    public void testGetRun_whenJobHasNoPermissions() throws Exception {
+    void testGetRun_whenJobHasNoPermissions() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
 
@@ -119,7 +116,7 @@ public class PublicBuildStatusActionSecurityTest {
     }
 
     @Test
-    public void testGetRun_whenJobHasNoPermissionsReturnsNull() throws Exception {
+    void testGetRun_whenJobHasNoPermissionsReturnsNull() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
 
@@ -132,7 +129,7 @@ public class PublicBuildStatusActionSecurityTest {
     }
 
     @Test
-    public void testDoIcon_WhenJobHasNoPermissions() throws Exception {
+    void testDoIcon_WhenJobHasNoPermissions() throws Exception {
         JobSelectorExtensionPoint jobSelector = (String jobName) -> job;
         ExtensionList.lookup(JobSelectorExtensionPoint.class).add(0, jobSelector);
 

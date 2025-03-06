@@ -30,19 +30,26 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class StatusImageTest {
+@WithJenkins
+class StatusImageTest {
 
-    @ClassRule
-    public static JenkinsRule jenkinsRule = new JenkinsRule();
+    private static final String SVG_CONTENT_TYPE = "image/svg+xml;charset=utf-8";
 
-    public StatusImageTest() {}
+    @SuppressWarnings("unused")
+    private static JenkinsRule jenkinsRule;
+
+    @BeforeAll
+    static void beforeAll(JenkinsRule rule) {
+        jenkinsRule = rule;
+    }
 
     @Test
-    public void testMeasureText() throws Exception {
+    void testMeasureText() throws Exception {
         StatusImage statusImage = new StatusImage();
         assertThat(statusImage.measureText("W"), is(9)); // 11 in Verdana
         assertThat(statusImage.measureText("M"), is(9));
@@ -59,10 +66,8 @@ public class StatusImageTest {
                 is(330)); // 338 in Verdana
     }
 
-    private static final String SVG_CONTENT_TYPE = "image/svg+xml;charset=utf-8";
-
     @Test
-    public void testConstructorExamplePage() throws Exception {
+    void testConstructorExamplePage() throws Exception {
         String subject = "Custom Subject";
         String status = "Any State";
         String colorName = "darkturquoise";
@@ -79,7 +84,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorFailingBuildPlasticStyle() throws Exception {
+    void testConstructorFailingBuildPlasticStyle() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "red";
@@ -97,7 +102,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorFailingBuildPlasticStyleAnimatedNumericColor() throws Exception {
+    void testConstructorFailingBuildPlasticStyleAnimatedNumericColor() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "red";
@@ -116,7 +121,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorFailingBuildPlasticStyleNumericColorAnimatedNumericColor() throws Exception {
+    void testConstructorFailingBuildPlasticStyleNumericColorAnimatedNumericColor() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "ff0000";
@@ -135,7 +140,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorFailingBuildPlasticStyleAnimatedColor() throws Exception {
+    void testConstructorFailingBuildPlasticStyleAnimatedColor() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "red";
@@ -154,7 +159,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorFailingBuildPlasticStyleNumericColor() throws Exception {
+    void testConstructorFailingBuildPlasticStyleNumericColor() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "ff0000";
@@ -172,7 +177,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorPassingBuildPlasticStyle() throws Exception {
+    void testConstructorPassingBuildPlasticStyle() throws Exception {
         String subject = "build";
         String status = "passing";
         String colorName = "brightgreen";
@@ -190,7 +195,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorFailingBuildFlatSquareStyle() throws Exception {
+    void testConstructorFailingBuildFlatSquareStyle() throws Exception {
         String subject = "build";
         String status = "failing";
         String colorName = "red";
@@ -208,7 +213,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorPassingBuildFlatSquareStyle() throws Exception {
+    void testConstructorPassingBuildFlatSquareStyle() throws Exception {
         String subject = "build";
         String status = "passing";
         String colorName = "brightgreen";
@@ -226,7 +231,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructor() throws Exception {
+    void testConstructor() throws Exception {
         String subject = "build";
         String status = "not run";
         String colorName = "lightgrey";
@@ -245,7 +250,7 @@ public class StatusImageTest {
     // private static final String PNG_CONTENT_TYPE = "image/png";
 
     @Test
-    public void testConstructorPassingBuild32x32BallStyle() throws Exception {
+    void testConstructorPassingBuild32x32BallStyle() throws Exception {
         String fileName = "images/32x32/blue.png";
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
@@ -254,7 +259,7 @@ public class StatusImageTest {
     }
 
     @Test
-    public void testConstructorPassingBuild16x16BallStyle() throws Exception {
+    void testConstructorPassingBuild16x16BallStyle() throws Exception {
         String fileName = "images/16x16/blue.png";
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));

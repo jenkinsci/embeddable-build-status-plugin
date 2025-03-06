@@ -13,22 +13,19 @@ import hudson.tasks.BatchFile;
 import hudson.tasks.Shell;
 import java.io.File;
 import java.io.IOException;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class PublicBuildStatusActionTest {
+@WithJenkins
+class PublicBuildStatusActionTest {
 
     // JenkinsRule startup cost is high on Windows
-    // Use a ClassRule to create one JenkinsRule used by all tests
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
-
-    @Rule
-    public TestName name = new TestName();
+    // Use a static field to create one JenkinsRule used by all tests
+    private static JenkinsRule j;
 
     private static final String SUCCESS_MARKER = "fill=\"#44cc11\"";
     private static final String NOT_RUN_MARKER = "fill=\"#9f9f9f\"";
@@ -37,12 +34,18 @@ public class PublicBuildStatusActionTest {
     private FreeStyleProject job;
     private String jobStatusUrl;
 
-    @Before
-    public void createJob() throws IOException {
+    @BeforeAll
+    static void beforeAll(JenkinsRule rule) {
+        j = rule;
+    }
+
+    @BeforeEach
+    void createJob(TestInfo info) throws IOException {
         // Give each job a name based on the name of the test method
         // Simplifies debugging and failure diagnosis
         // Also avoids any caching from reusing job name
-        job = j.createFreeStyleProject("job-" + name.getMethodName());
+        job = j.createFreeStyleProject(
+                "job-" + info.getTestMethod().orElseThrow().getName());
         // Assure the job can pass on Windows and Unix
         job.getBuildersList()
                 .add(
@@ -54,7 +57,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void testDoIconJobBefore() throws Exception {
+    void testDoIconJobBefore() throws Exception {
         // Check job status icon is "not run" before job runs
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
             JenkinsRule.JSONWebResponse json = webClient.getJSON(jobStatusUrl);
@@ -66,7 +69,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void testDoIconBuildBefore() throws Exception {
+    void testDoIconBuildBefore() throws Exception {
         String buildStatusUrl = jobStatusUrl + "&build=123";
 
         // Check build status icon is "not run" before job runs
@@ -80,7 +83,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void testDoIconJobAfter() throws Exception {
+    void testDoIconJobAfter() throws Exception {
         // Run the job, assert that it was successful
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
@@ -96,7 +99,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void testDoIconBuildAfter() throws Exception {
+    void testDoIconBuildAfter() throws Exception {
         // Run the job, assert that it was successful
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
@@ -113,19 +116,19 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void testGetUrlName() throws IOException {
+    void testGetUrlName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
         assertThat(action.getUrlName(), is("buildStatus"));
     }
 
     @Test
-    public void testGetIconFileName() throws IOException {
+    void testGetIconFileName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
         assertThat(action.getIconFileName(), is(nullValue()));
     }
 
     @Test
-    public void testGetDisplayName() throws IOException {
+    void testGetDisplayName() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
         assertThat(action.getDisplayName(), is(nullValue()));
     }
@@ -135,7 +138,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doText_shouldReturnMissingQueryParameterWhenJobIsNull() throws IOException {
+    void doText_shouldReturnMissingQueryParameterWhenJobIsNull() throws IOException {
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
             String url = j.getURL().toString() + "buildStatus/text";
             JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
@@ -145,7 +148,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doText_shouldReturnProjectIconWhenJobHasNotRun() throws IOException {
+    void doText_shouldReturnProjectIconWhenJobHasNotRun() throws IOException {
         PublicBuildStatusAction action = new PublicBuildStatusAction();
         String result = action.doText(null, null, job.getName(), null);
         assertThat(result, is(job.getIconColor().getDescription()));
@@ -153,7 +156,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doText_shouldReturnProjectIconColorDescription() throws Exception {
+    void doText_shouldReturnProjectIconColorDescription() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
@@ -166,7 +169,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doIconShouldReturnCorrectResponseForNullJob() throws Exception {
+    void doIconShouldReturnCorrectResponseForNullJob() throws Exception {
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
             String url = j.getURL().toString() + "buildStatus/icon";
             JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
@@ -178,7 +181,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doIconDotSvgShouldReturnCorrectResponseForNullJob() throws Exception {
+    void doIconDotSvgShouldReturnCorrectResponseForNullJob() throws Exception {
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
             String url = j.getURL().toString() + "buildStatus/icon.svg";
             JenkinsRule.JSONWebResponse json = webClient.getJSON(url);
@@ -190,7 +193,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doIconShouldReturnCorrectResponseForValidJob() throws Exception {
+    void doIconShouldReturnCorrectResponseForValidJob() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
@@ -202,7 +205,7 @@ public class PublicBuildStatusActionTest {
     }
 
     @Test
-    public void doIconDotSvgShouldReturnCorrectResponseForValidJob() throws Exception {
+    void doIconDotSvgShouldReturnCorrectResponseForValidJob() throws Exception {
         Run<?, ?> build = job.scheduleBuild2(0).get();
         j.assertBuildStatusSuccess(build);
         try (JenkinsRule.WebClient webClient = j.createWebClient()) {
