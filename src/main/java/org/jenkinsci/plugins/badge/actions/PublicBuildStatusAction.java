@@ -5,7 +5,6 @@
  */
 package org.jenkinsci.plugins.badge.actions;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.model.Item;
@@ -155,9 +154,6 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
         return p;
     }
 
-    @SuppressFBWarnings(
-            value = "NP_LOAD_OF_KNOWN_NULL_VALUE",
-            justification = "'run' is only null for the first enclosing for(token) run")
     public static Run<?, ?> getRun(Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
         Run<?, ?> run = null;
 
