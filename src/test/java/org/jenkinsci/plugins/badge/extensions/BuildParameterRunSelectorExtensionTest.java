@@ -178,8 +178,7 @@ class BuildParameterRunSelectorExtensionTest {
         when(mockParametersAction2.getParameter(paramName)).thenReturn(matchingParameterValue);
 
         Run actualRun = extension.select(mockProject, "last:${" + rule + "}", null);
-        // It should have skipped the first run due to non-matching parameter
-        // and found the second run which does match
+        // It should have skipped the first run due to non-matching parameter and found the second run which does match
         assertThat(actualRun, is(mockRun2));
     }
 
@@ -273,8 +272,7 @@ class BuildParameterRunSelectorExtensionTest {
 
         // For an invalid rule, all runs should be considered without parameter matching
         Run actualRun = extension.select(mockProject, "last:" + invalidRule, null);
-        // We should get the first run because the invalid rule doesn't force parameter
-        // matching
+        // We should get the first run because the invalid rule doesn't force parameter matching
         assertThat(actualRun, is(mockRun));
     }
 
@@ -307,8 +305,7 @@ class BuildParameterRunSelectorExtensionTest {
 
     @Test
     void shouldHandleRunWithNullResult() {
-        // For the "lastFailed" case, the implementation first checks
-        // job.getLastFailedBuild()
+        // For the "lastFailed" case, the implementation first checks job.getLastFailedBuild()
         // So we need to mock this behavior
         when(mockProject.getLastFailedBuild()).thenReturn(mockRun);
 
@@ -376,8 +373,7 @@ class BuildParameterRunSelectorExtensionTest {
 
     @Test
     void shouldHandleInvalidParameterRule() {
-        // For an invalid parameter rule, we need to ensure it's actually in the ${}
-        // format
+        // For an invalid parameter rule, we need to ensure it's actually in the ${} format
         // but with invalid content inside that doesn't match params.x=y pattern
         String invalidRule = "someInvalidContent";
 
@@ -389,8 +385,7 @@ class BuildParameterRunSelectorExtensionTest {
 
     @Test
     void shouldHandleCompletedBuildCriteria() {
-        // For firstCompleted, we need to set up the lastCompletedBuild mock since
-        // that's what
+        // For firstCompleted, we need to set up the lastCompletedBuild mock since that's what
         // the actual implementation of BuildParameterRunSelectorExtension is using
         when(mockProject.getLastCompletedBuild()).thenReturn(mockRun);
         Run actualRun = extension.select(mockProject, "lastCompleted", null);
@@ -576,8 +571,7 @@ class BuildParameterRunSelectorExtensionTest {
         when(run2.getResult()).thenReturn(Result.UNSTABLE); // Unstable result
         when(run3.getResult()).thenReturn(Result.SUCCESS); // Success result
 
-        // Test finding different specific types - but use the project.getLastXXX
-        // methods
+        // Test finding different specific types - but use the project.getLastXXX methods
         when(mockProject.getLastUnstableBuild()).thenReturn(run2);
         when(mockProject.getLastSuccessfulBuild()).thenReturn(run3);
 
