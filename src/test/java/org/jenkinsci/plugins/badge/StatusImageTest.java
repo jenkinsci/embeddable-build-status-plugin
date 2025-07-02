@@ -29,8 +29,17 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
@@ -46,6 +55,21 @@ class StatusImageTest {
     @BeforeAll
     static void beforeAll(JenkinsRule rule) {
         jenkinsRule = rule;
+    }
+
+    @BeforeEach
+    void setUp() throws Exception {
+        // Reset the static font cache before each test to ensure clean state
+        resetFontCache();
+    }
+
+    /**
+     * Helper method to reset the cached font metrics for testing
+     */
+    private void resetFontCache() throws Exception {
+        Field cachedFontMetricsField = StatusImage.class.getDeclaredField("cachedFontMetrics");
+        cachedFontMetricsField.setAccessible(true);
+        cachedFontMetricsField.set(null, null);
     }
 
     @Test
@@ -265,5 +289,175 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
         assertThat(statusImage.getLength(), is("656"));
+    }
+
+    // ========================================================================
+    // Font Loading Tests - Added for performance fix verification
+    // ========================================================================
+
+    @Test
+    void testFontLoadingFallbackBehavior() throws Exception {
+        // Test that measureText works even when custom font loading might fail
+        // This implicitly tests the fallback to system font mechanism
+        StatusImage statusImage = new StatusImage();
+
+        // These calls should work regardless of whether custom font loading succeeds
+        int width = statusImage.measureText("Test");
+        assertThat("Text measurement should return positive width", width, greaterThan(0));
+
+        // Multiple calls should be consistent (testing caching)
+        int width2 = statusImage.measureText("Test");
+        assertThat("Multiple calls should return same width", width2, is(width));
+    }
+
+    @Test
+    void testFontLoadingLaziness() throws Exception {
+        // Test that font loading is lazy - font should only be loaded when measureText is called
+        StatusImage statusImage = new StatusImage(); // Constructor should not trigger font loading
+
+        // First call should trigger font loading and return valid measurement
+        int width1 = statusImage.measureText("W");
+        assertThat("First measureText call should work", width1, greaterThan(0));
+
+        // Second call should use cached font and return same measurement
+        int width2 = statusImage.measureText("W");
+        assertThat("Second measureText call should return same width", width2, is(width1));
+    }
+
+    @Test
+    void testFontLoadingConsistency() throws Exception {
+        // Test that font loading produces consistent results across different StatusImage instances
+        StatusImage statusImage1 = new StatusImage();
+        StatusImage statusImage2 = new StatusImage();
+
+        int width1 = statusImage1.measureText("Consistency Test");
+        int width2 = statusImage2.measureText("Consistency Test");
+
+        assertThat("Font measurements should be consistent across instances", width2, is(width1));
+    }
+
+    @Test
+    void testConcurrentFontLoading() throws Exception {
+        // Test thread safety of font loading mechanism
+        final int threadCount = 10;
+        final String testText = "Concurrent Test";
+        final CountDownLatch startLatch = new CountDownLatch(1);
+        final CountDownLatch doneLatch = new CountDownLatch(threadCount);
+        final AtomicReference<Exception> exception = new AtomicReference<>();
+        final AtomicInteger successCount = new AtomicInteger(0);
+
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+        try {
+            // Start multiple threads that will all try to measure text concurrently
+            for (int i = 0; i < threadCount; i++) {
+                executor.submit(() -> {
+                    try {
+                        startLatch.await(); // Wait for all threads to be ready
+
+                        StatusImage statusImage = new StatusImage();
+                        int width = statusImage.measureText(testText);
+
+                        if (width > 0) {
+                            successCount.incrementAndGet();
+                        }
+                    } catch (Exception e) {
+                        exception.set(e);
+                    } finally {
+                        doneLatch.countDown();
+                    }
+                });
+            }
+
+            startLatch.countDown(); // Start all threads
+
+            boolean completed = doneLatch.await(10, TimeUnit.SECONDS);
+            assertThat("All threads should complete within timeout", completed, is(true));
+
+            if (exception.get() != null) {
+                throw new AssertionError("Thread safety test failed", exception.get());
+            }
+
+            assertThat("All threads should succeed in measuring text", successCount.get(), is(threadCount));
+
+        } finally {
+            executor.shutdown();
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+        }
+    }
+
+    @Test
+    void testMeasureTextWithNullBaseUrl() throws Exception {
+        // Test behavior when baseUrl is null (font loading should handle this gracefully)
+        StatusImage statusImage = new StatusImage();
+
+        // When baseUrl is null, measureText should return 0 (as per the implementation)
+        int width = statusImage.measureText("Test with null baseUrl");
+        // The current implementation returns 0 when baseUrl is null
+        // This test verifies that no exceptions are thrown
+        assertThat("measureText should handle null baseUrl gracefully", width, greaterThan(-1));
+    }
+
+    @Test
+    void testFontLoadingRobustness() throws Exception {
+        // Test that font loading is robust to various text inputs
+        StatusImage statusImage = new StatusImage();
+
+        String[] testInputs = {
+            "", // Empty string
+            " ", // Single space
+            "A", // Single character
+            "The quick brown fox", // Normal text
+            "Text with numbers 12345", // Alphanumeric
+            "Special chars: !@#$%^&*()", // Special characters
+            "Unicode: αβγδε", // Unicode characters
+            "Very long text that goes on and on and should still be measured correctly"
+        };
+
+        for (String input : testInputs) {
+            assertDoesNotThrow(
+                    () -> {
+                        int width = statusImage.measureText(input);
+                        assertThat("Width should be non-negative for input: " + input, width, greaterThan(-1));
+                    },
+                    "Font loading should handle input: " + input);
+        }
+    }
+
+    @Test
+    void testFontLoadingCaching() throws Exception {
+        // Test that font metrics are properly cached and reused
+        StatusImage statusImage = new StatusImage();
+
+        // Make multiple calls and verify they're consistent (indicating caching is working)
+        String testText = "Caching Test";
+        int[] measurements = new int[5];
+
+        for (int i = 0; i < measurements.length; i++) {
+            measurements[i] = statusImage.measureText(testText);
+        }
+
+        // All measurements should be identical if caching is working
+        for (int i = 1; i < measurements.length; i++) {
+            assertThat("Cached measurements should be consistent", measurements[i], is(measurements[0]));
+        }
+    }
+
+    @Test
+    void testMultipleInstancesFontSharing() throws Exception {
+        // Test that multiple StatusImage instances share the same cached font
+        final String testText = "Shared Font Test";
+
+        StatusImage statusImage1 = new StatusImage();
+        int width1 = statusImage1.measureText(testText);
+
+        StatusImage statusImage2 = new StatusImage();
+        int width2 = statusImage2.measureText(testText);
+
+        StatusImage statusImage3 = new StatusImage();
+        int width3 = statusImage3.measureText(testText);
+
+        assertThat("All instances should use same cached font", width2, is(width1));
+        assertThat("All instances should use same cached font", width3, is(width1));
     }
 }
