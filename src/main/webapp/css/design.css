@@ -14,9 +14,10 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: radial-gradient(at 50% 100%, var(--red), transparent 70%),
-                    radial-gradient(at 20% 100%, var(--blue), transparent 80%),
-                    radial-gradient(at 70% 100%, var(--yellow), transparent 80%);
+        background-color: var(--card-background);
+        background-image: radial-gradient(at 50% 100%, var(--light-red), transparent 70%),
+                    radial-gradient(at 20% 100%, var(--light-blue), transparent 80%),
+                    radial-gradient(at 70% 100%, var(--light-yellow), transparent 80%);
         z-index: -1;
         opacity: 0.1;
     }
@@ -90,11 +91,10 @@
 
     div {
         display: flex;
-        /*color: var(--text-color-secondary);*/
         margin-right: 10px;
         width: 360px;
-        max-width: 360px;
-        overflow: scroll;
+        max-width: 380px;
+        overflow: hidden;
         mask-image: linear-gradient(90deg, white calc(100% - 20px), transparent);
     }
 }

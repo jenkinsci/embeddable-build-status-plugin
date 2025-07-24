@@ -69,7 +69,7 @@
                 </select>
               </div>
             </div>
-            <l:copyButton text="" />
+            <l:copyButton label="Copy" />
           </div>
         </div>
       </div>
