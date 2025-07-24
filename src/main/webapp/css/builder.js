@@ -51,12 +51,13 @@ function generateUrl() {
     if (document.startViewTransition) {
         document.startViewTransition(() => {
             imagePreview.src = url;
+            imageUrlInput.value = urls[type.value];
         });
     } else {
         imagePreview.src = url;
+        imageUrlInput.value = urls[type.value];
     }
 
-    imageUrlInput.value = urls[type.value];
     copyButton.setAttribute('text', urls[type.value]);
 }
 
