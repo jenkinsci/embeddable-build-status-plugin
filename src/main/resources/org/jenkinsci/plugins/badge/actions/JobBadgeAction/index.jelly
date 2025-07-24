@@ -31,7 +31,7 @@
         <div class="ebs-builder__controls">
           <f:entry title="Style">
             <div class="jenkins-select">
-              <select class="ebs-input" name="style">
+              <select class="jenkins-select__input ebs-input" name="style">
                 <option value="flat">Flat</option>
                 <option value="flat-square">Flat Square</option>
                 <option value="plastic">Plastic</option>
@@ -39,10 +39,10 @@
             </div>
           </f:entry>
           <f:entry title="Subject">
-            <input name="subject" class="ebs-input" />
+            <input name="subject" class="jenkins-input ebs-input" placeholder="Optional" />
           </f:entry>
           <f:entry title="Status">
-            <input name="status" class="ebs-input" />
+            <input name="status" class="jenkins-input ebs-input" placeholder="Optional" />
           </f:entry>
           <span class="jenkins-checkbox">
             <input type="checkbox" name="secure" id="secure" />

@@ -20,6 +20,15 @@
         z-index: -1;
         opacity: 0.1;
     }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: var(--jenkins-border--subtle);
+        border-radius: inherit;
+        pointer-events: none;
+    }
 }
 
 .ebs-builder__preview {
@@ -58,6 +67,8 @@
     }
 
     .ebs-input {
+        appearance: none;
+        outline: none;
         background: transparent !important;
         border: none;
         min-height: 0;
@@ -89,24 +100,6 @@
 }
 
 .ebs-input {
-    appearance: none;
-    outline: none;
-    padding: 0.7rem 0.75rem;
+    padding: 0.75rem;
     background: var(--button-background);
-    border: 2px solid color-mix(in srgb, var(--button-background) 25%, transparent);
-    border-radius: 0.6rem;
-    width: 100%;
-    font-size: inherit;
-    box-shadow: 0 0 0 10px transparent;
-    transition: var(--standard-transition);
-
-    &:hover {
-        background: var(--button-background--hover);
-    }
-
-    &:active, &:focus {
-        background: var(--button-background--hover);
-        border-color: transparent;
-        box-shadow: 0 0 0 5px hsl(from var(--button-background) h s l / 50%);
-    }
 }
