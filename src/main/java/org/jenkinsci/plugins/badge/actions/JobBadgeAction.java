@@ -125,14 +125,19 @@ public class JobBadgeAction implements Action, IconSpec {
     public String getColorVariable() {
         String colorName = project.getIconColor().getIconName();
 
-        if (colorName.equals("blue")) {
-            colorName = "green";
-        } else if (colorName.equals("aborted")
-                || colorName.equals("disabled")
-                || colorName.equals("notbuilt")) {
-            colorName = "text-color-secondary";
+        if (colorName.contains("-anime")) {
+            return "light-blue";
         }
 
-        return colorName;
+        switch (colorName) {
+            case "blue":
+                return "light-green";
+            case "aborted":
+            case "disabled":
+            case "notbuilt":
+                return "text-color-secondary";
+            default:
+                return "light-" + colorName;
+        }
     }
 }

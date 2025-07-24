@@ -46,9 +46,14 @@ public class ImageResolver {
         }
     };
 
+    // TODO - tidy this up
     @Restricted(NoExternalUse.class)
     public static String getStatus(BallColor color) {
         String colorName = color.getIconName();
+
+        if (colorName.contains("anime")) {
+            return "running";
+        }
 
         if (colorName.equals("blue")) {
             colorName = "brightgreen";

@@ -28,9 +28,9 @@
            data-public-badge-url="${publicBadge}"
            data-text-url="${textUrl}"
            data-public-text-url="${publicText}"
-           style="--status: var(--light-${it.colorVariable})">
+           style="--status: var(--${it.colorVariable})">
         <div class="ebs-builder__controls">
-          <f:entry title="Style">
+          <f:entry title="${%Style}">
             <div class="jenkins-select">
               <select class="jenkins-select__input ebs-input" name="style">
                 <option value="flat">Flat</option>
@@ -39,11 +39,11 @@
               </select>
             </div>
           </f:entry>
-          <f:entry title="Subject">
+          <f:entry title="${%Subject}">
             <input name="subject" class="jenkins-input ebs-input" placeholder="build" />
           </f:entry>
           <div>
-            <f:entry title="Status">
+            <f:entry title="${%Status}">
               <input name="status" class="jenkins-input ebs-input" placeholder="${it.status}" />
             </f:entry>
           </div>

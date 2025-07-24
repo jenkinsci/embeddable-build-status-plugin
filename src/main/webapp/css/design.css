@@ -64,6 +64,8 @@
     align-items: center;
     justify-content: space-between;
     font-weight: 450;
+    padding-inline: 0.875rem;
+    padding-bottom: 0.25rem;
 
     .jenkins-form-label {
         visibility: collapse;
@@ -81,7 +83,7 @@
         background: transparent !important;
         border: none;
         min-height: 0;
-        padding: 0.75rem 2rem 0.75rem 1rem;
+        padding: 0.75rem 2rem 0.75rem 0;
         width: unset !important;
         cursor: pointer;
         box-shadow: none !important;
