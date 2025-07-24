@@ -39,10 +39,10 @@
             </div>
           </f:entry>
           <f:entry title="Subject">
-            <input name="subject" class="jenkins-input ebs-input" placeholder="Optional" />
+            <input name="subject" class="jenkins-input ebs-input" placeholder="build" />
           </f:entry>
           <f:entry title="Status">
-            <input name="status" class="jenkins-input ebs-input" placeholder="Optional" />
+            <input name="status" class="jenkins-input ebs-input" placeholder="passing" />
           </f:entry>
           <span class="jenkins-checkbox">
             <input type="checkbox" name="secure" id="secure" />
@@ -69,7 +69,7 @@
                 </select>
               </div>
             </div>
-            <l:copyButton label="Copy" />
+            <l:copyButton label="" />
           </div>
         </div>
       </div>

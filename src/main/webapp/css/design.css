@@ -3,12 +3,10 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background: color-mix(in srgb, var(--button-background) 25%, transparent);
     border-radius: 1rem;
     overflow: hidden;
     padding: var(--section-padding);
     height: 400px;
-    font-size: 0.9rem;
 
     &::before {
         content: "";
@@ -55,7 +53,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: inherit;
-    font-weight: 500;
+    font-weight: 450;
 
     .jenkins-form-label {
         visibility: collapse;
