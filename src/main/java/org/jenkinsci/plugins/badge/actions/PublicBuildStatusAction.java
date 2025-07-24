@@ -5,7 +5,6 @@
  */
 package org.jenkinsci.plugins.badge.actions;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.model.Item;
@@ -25,8 +24,8 @@ import org.jenkinsci.plugins.badge.extensionpoints.JobSelectorExtensionPoint;
 import org.jenkinsci.plugins.badge.extensionpoints.RunSelectorExtensionPoint;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.WebMethod;
 
 /**
@@ -65,8 +64,8 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
 
     @WebMethod(name = "icon")
     public HttpResponse doIcon(
-            StaplerRequest req,
-            StaplerResponse rsp,
+            StaplerRequest2 req,
+            StaplerResponse2 rsp,
             @QueryParameter String job,
             @QueryParameter String build,
             @QueryParameter String style,
@@ -94,8 +93,8 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
 
     @WebMethod(name = "icon.svg")
     public HttpResponse doIconDotSvg(
-            StaplerRequest req,
-            StaplerResponse rsp,
+            StaplerRequest2 req,
+            StaplerResponse2 rsp,
             @QueryParameter String job,
             @QueryParameter String build,
             @QueryParameter String style,
@@ -109,7 +108,7 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
     }
 
     public String doText(
-            StaplerRequest req, StaplerResponse rsp, @QueryParameter String job, @QueryParameter String build) {
+            StaplerRequest2 req, StaplerResponse2 rsp, @QueryParameter String job, @QueryParameter String build) {
         if (job == null) {
             return "Missing query parameter: job";
         }
@@ -155,14 +154,11 @@ public class PublicBuildStatusAction implements UnprotectedRootAction {
         return p;
     }
 
-    @SuppressFBWarnings(
-            value = "NP_LOAD_OF_KNOWN_NULL_VALUE",
-            justification = "'run' is only null for the first enclosing for(token) run")
     public static Run<?, ?> getRun(Job<?, ?> project, String build, Boolean throwErrorWhenNotFound) {
         Run<?, ?> run = null;
 
         if (project != null && build != null) {
-            // as the user might have ViewStatus permission only (e.g. as anonymous) we get get the
+            // as the user might have ViewStatus permission only (e.g. as anonymous) we get the
             // project impersonate and check for permission after getting the project
             try (ACLContext ctx = ACL.as2(ACL.SYSTEM2)) {
                 for (String token : build.split(",")) {

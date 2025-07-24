@@ -17,8 +17,7 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
     @Override
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
-            if (actionable instanceof Run<?, ?>) {
-                Run<?, ?> run = (Run<?, ?>) actionable;
+            if (actionable instanceof Run<?, ?> run) {
                 /* try to match any custom value:
                     ${buildId}
                     ${buildNumber}
@@ -36,8 +35,8 @@ public class SpecialValueParameterResolverExtension implements ParameterResolver
                         .replace("displayName", run.getDisplayName())
                         .replace("startTime", run.getTimestampString());
 
-            } else if (actionable instanceof Job<?, ?>) {
-                parameter = resolve(((Job<?, ?>) actionable).getLastBuild(), parameter);
+            } else if (actionable instanceof Job<?, ?> job) {
+                parameter = resolve(job.getLastBuild(), parameter);
             }
         }
         return parameter;

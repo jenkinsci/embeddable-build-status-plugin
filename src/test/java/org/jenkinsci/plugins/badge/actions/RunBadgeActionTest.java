@@ -8,7 +8,7 @@ import hudson.model.Run;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -37,13 +37,24 @@ class RunBadgeActionTest {
     }
 
     @Test
-    void getUrl() {
+    void getUrlWithoutBadge() {
         try (MockedStatic<Stapler> mockedStatic = Mockito.mockStatic(Stapler.class)) {
-            StaplerRequest staplerRequest = Mockito.mock(StaplerRequest.class);
-            Mockito.when(staplerRequest.getReferer()).thenReturn("referer");
-            mockedStatic.when(() -> Stapler.getCurrentRequest()).thenReturn(staplerRequest);
+            StaplerRequest2 staplerRequest = Mockito.mock(StaplerRequest2.class);
+            Mockito.when(staplerRequest.getRequestURL()).thenReturn(new StringBuffer("http://jenkins.io/"));
+            mockedStatic.when(Stapler::getCurrentRequest2).thenReturn(staplerRequest);
 
-            assertThat(runBadgeAction.getUrl(), is("referer"));
+            assertThat(runBadgeAction.getUrl(), is("http://jenkins.io/"));
+        }
+    }
+
+    @Test
+    void getUrlWithBadge() {
+        try (MockedStatic<Stapler> mockedStatic = Mockito.mockStatic(Stapler.class)) {
+            StaplerRequest2 staplerRequest = Mockito.mock(StaplerRequest2.class);
+            Mockito.when(staplerRequest.getRequestURL()).thenReturn(new StringBuffer("http://jenkins.io/badge/"));
+            mockedStatic.when(Stapler::getCurrentRequest2).thenReturn(staplerRequest);
+
+            assertThat(runBadgeAction.getUrl(), is("http://jenkins.io/"));
         }
     }
 

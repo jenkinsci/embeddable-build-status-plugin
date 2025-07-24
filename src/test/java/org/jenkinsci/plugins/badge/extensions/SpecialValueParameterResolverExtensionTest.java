@@ -2,6 +2,7 @@ package org.jenkinsci.plugins.badge.extensions;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 import hudson.model.Job;
@@ -13,13 +14,11 @@ import org.mockito.Mockito;
 class SpecialValueParameterResolverExtensionTest {
 
     private SpecialValueParameterResolverExtension extension;
-    private Job mockProject;
     private Run mockRun;
 
     @BeforeEach
     void setUp() {
         extension = new SpecialValueParameterResolverExtension();
-        mockProject = Mockito.mock(Job.class);
 
         mockRun = Mockito.mock(Run.class);
 
@@ -72,5 +71,32 @@ class SpecialValueParameterResolverExtensionTest {
         String actualParameter =
                 extension.resolve(mockRun, "buildId buildNumber duration startTime displayName description");
         assertThat(actualParameter, is("1234 1234 23:35 23:35 display name run description"));
+    }
+
+    @Test
+    void resolveEmptyStringParameter() {
+        String actualParameter = extension.resolve(mockRun, "");
+        assertThat(actualParameter, is(""));
+    }
+
+    @Test
+    void resolveWithNullParameter() {
+        String actualParameter = extension.resolve(mockRun, null);
+        assertThat(actualParameter, is(nullValue()));
+    }
+
+    @Test
+    void unknownParameterShouldNotBeResolved() {
+        String actualParameter = extension.resolve(mockRun, "unknown");
+        assertThat(actualParameter, is("unknown"));
+    }
+
+    @Test
+    void testResolveWhenJobHasNoLastBuild() {
+        Job<?, ?> job = Mockito.mock(Job.class);
+        when(job.getLastBuild()).thenReturn(null);
+
+        String parameter = "${buildId}${buildNumber}";
+        assertThat(extension.resolve(job, parameter), is(parameter));
     }
 }

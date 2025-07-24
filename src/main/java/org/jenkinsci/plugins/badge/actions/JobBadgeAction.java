@@ -15,7 +15,7 @@ import org.jenkinsci.plugins.badge.*;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.WebMethod;
 
 /**
@@ -52,11 +52,13 @@ public class JobBadgeAction implements Action, IconSpec {
     public String getUrl() {
         /* Needed for the jelly syntax hints page */
         String url = "";
-        StaplerRequest req = Stapler.getCurrentRequest();
-        if (req != null) {
-            url = req.getReferer();
-            if (url == null) {
-                url = "null-referer";
+        StaplerRequest2 req = Stapler.getCurrentRequest2();
+        if (req != null && req.getRequestURL() != null) {
+            url = req.getRequestURL().toString();
+            int badgeIndex = url.lastIndexOf("badge/");
+
+            if (badgeIndex != -1) {
+                url = url.substring(0, badgeIndex);
             }
         }
         return url;

@@ -5,51 +5,51 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import hudson.model.Run;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class RunBadgeActionJenkinsRuleTest {
+@WithJenkins
+class RunBadgeActionJenkinsRuleTest {
 
-    @ClassRule
-    public static JenkinsRule j = new JenkinsRule();
-
+    private static JenkinsRule j;
     private static RunBadgeAction action;
 
-    @BeforeClass
-    public static void createAction() throws Exception {
+    @BeforeAll
+    static void createAction(JenkinsRule rule) throws Exception {
+        j = rule;
         Run<?, ?> run = j.buildAndAssertSuccess(j.createFreeStyleProject());
         action = new RunBadgeAction(run);
     }
 
     @Test
-    public void getIconFileName() {
+    void getIconFileName() {
         assertThat(action.getIconFileName(), is(nullValue()));
     }
 
     @Test
-    public void getIconClassName() {
+    void getIconClassName() {
         assertThat(action.getIconClassName(), is("symbol-shield-outline plugin-ionicons-api"));
     }
 
     @Test
-    public void getDisplayName() {
+    void getDisplayName() {
         assertThat(action.getDisplayName(), is("Embeddable Build Status"));
     }
 
     @Test
-    public void getUrlName() {
+    void getUrlName() {
         assertThat(action.getUrlName(), is("badge"));
     }
 
     @Test
-    public void getUrlEncodedFullName() {
+    void getUrlEncodedFullName() {
         assertThat(action.getUrlEncodedFullName(), is("test0"));
     }
 
     @Test
-    public void doText() {
+    void doText() {
         assertThat(action.doText(), is("Success"));
     }
 }

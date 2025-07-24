@@ -18,7 +18,7 @@
         <t:help href="https://plugins.jenkins.io/embeddable-build-status/" />
       </l:app-bar>
 
-      <div class="jenkins-description">
+      <div class="jenkins-page-description">
         Jenkins exposes the current status of your build as an image in a fixed URL. You can put this URL into other sites (such as GitHub README) so that people can see the current state of the build.
       </div>
 

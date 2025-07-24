@@ -19,7 +19,6 @@ class BuildParameterRunSelectorExtensionTest {
 
     @BeforeEach
     void setUp() {
-
         extension = new BuildParameterRunSelectorExtension();
         mockProject = Mockito.mock(Job.class);
         mockRun = Mockito.mock(Run.class);

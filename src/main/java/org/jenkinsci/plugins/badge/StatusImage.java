@@ -5,9 +5,10 @@
  */
 package org.jenkinsci.plugins.badge;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 
 import hudson.PluginWrapper;
+import jakarta.servlet.ServletException;
 import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -22,13 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.kohsuke.stapler.HttpResponse;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 
 /**
  * Status image as an {@link HttpResponse}, with proper cache handling.
@@ -240,7 +240,7 @@ class StatusImage implements HttpResponse {
     }
 
     @Override
-    public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node)
+    public void generateResponse(StaplerRequest2 req, StaplerResponse2 rsp, Object node)
             throws IOException, ServletException {
         String v = req.getHeader("If-None-Match");
         if (etag.equals(v)) {
