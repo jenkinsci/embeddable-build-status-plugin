@@ -74,7 +74,7 @@
                 </select>
               </div>
 
-              <span class="jenkins-checkbox">
+              <span class="jenkins-checkbox" tooltip="Exposes the badge to users having at least 'Read' permission on the job">
                 <input type="checkbox" name="secure" id="secure" />
                 <label for="secure">Secure</label>
               </span>

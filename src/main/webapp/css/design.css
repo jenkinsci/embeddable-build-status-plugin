@@ -51,6 +51,7 @@
     img {
         height: 30px;
         view-transition-name: badge;
+        filter: drop-shadow(0 10px 10px color-mix(in srgb, var(--text-color) 10%, transparent));
     }
 }
 
@@ -105,4 +106,5 @@
         cursor: text;
         width: 100%;
     }
+}
 }
