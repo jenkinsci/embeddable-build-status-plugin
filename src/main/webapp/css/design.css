@@ -50,6 +50,7 @@
 
     img {
         height: 30px;
+        view-transition-name: badge;
     }
 }
 

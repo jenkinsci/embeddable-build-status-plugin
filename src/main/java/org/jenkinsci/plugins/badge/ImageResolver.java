@@ -57,10 +57,6 @@ public class ImageResolver {
 
         if (colorName.equals("blue")) {
             colorName = "brightgreen";
-        } else if (colorName.equals("aborted")
-                || colorName.equals("disabled")
-                || colorName.equals("notbuilt")) {
-            colorName = "lightgrey";
         }
 
         return statuses.get(colorName);

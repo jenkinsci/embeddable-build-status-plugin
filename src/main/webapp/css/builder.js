@@ -48,7 +48,14 @@ function generateUrl() {
         'text': textUrl
     }
 
-    imagePreview.src = url;
+    if (document.startViewTransition) {
+        document.startViewTransition(() => {
+            imagePreview.src = url;
+        });
+    } else {
+        imagePreview.src = url;
+    }
+
     imageUrlInput.value = urls[type.value];
     copyButton.setAttribute('text', urls[type.value]);
 }
