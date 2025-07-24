@@ -5,28 +5,39 @@
     justify-content: space-evenly;
     border-radius: 1rem;
     overflow: hidden;
-    padding: var(--section-padding);
-    height: 400px;
+    padding: calc(var(--section-padding) * 2) var(--section-padding) var(--section-padding) var(--section-padding);
+
+    @media (max-width: 1000px) {
+        flex-direction: column-reverse;
+        gap: 2rem;
+    }
 
     &::before {
         content: "";
         position: absolute;
         inset: 0;
         background-color: var(--card-background);
-        background-image: radial-gradient(at 50% 100%, var(--light-red), transparent 70%),
+        background-image:
+                    radial-gradient(at 50% 100%, var(--light-red), transparent 70%),
                     radial-gradient(at 20% 100%, var(--light-blue), transparent 80%),
-                    radial-gradient(at 70% 100%, var(--light-yellow), transparent 80%);
+                    radial-gradient(at 70% 100%, var(--light-orange), transparent 80%),
+                    radial-gradient(at 50% 0%, var(--status), transparent 75%);
         z-index: -1;
-        opacity: 0.1;
+        opacity: 0.075;
     }
 
     &::after {
         content: "";
         position: absolute;
         inset: 0;
-        border: var(--jenkins-border--subtle);
+        border: var(--jenkins-border);
         border-radius: inherit;
         pointer-events: none;
+    }
+
+    & > div {
+        width: 100%;
+        max-width: 360px;
     }
 }
 
@@ -35,24 +46,23 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 75px;
-    width: 360px;
+    gap: 3.125rem;
 
     img {
-        scale: 150%;
+        height: 30px;
     }
 }
 
 .ebs-copy-container {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .ebs-copy-container__controls {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: inherit;
     font-weight: 450;
 
     .jenkins-form-label {
@@ -71,33 +81,25 @@
         background: transparent !important;
         border: none;
         min-height: 0;
-        padding: 0.75rem 2.5rem 0.75rem 1rem;
+        padding: 0.75rem 2rem 0.75rem 1rem;
         width: unset !important;
-        font-size: inherit;
         cursor: pointer;
         box-shadow: none !important;
+        field-sizing: content;
     }
 }
 
-.ebs-builder__controls {
-    width: 360px;
-}
+.jenkins-quote {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
 
-.jenkins-copy-button {
-    padding: 1rem;
-    font-size: inherit;
-
-    div {
-        display: flex;
-        margin-right: 10px;
-        width: 360px;
-        max-width: 380px;
-        overflow: hidden;
-        mask-image: linear-gradient(90deg, white calc(100% - 20px), transparent);
+    input {
+        background: none;
+        border: none;
+        margin: -0.75rem;
+        padding: 0.75rem 0 0.75rem 0.75rem;
+        cursor: text;
+        width: 100%;
     }
-}
-
-.ebs-input {
-    padding: 0.75rem;
-    background: var(--button-background);
 }

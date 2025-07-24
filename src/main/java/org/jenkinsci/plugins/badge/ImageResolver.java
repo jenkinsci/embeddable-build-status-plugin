@@ -24,12 +24,15 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.model.BallColor;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ImageResolver {
-    private final Map<String, String> statuses = new HashMap<>() {
+    public static final Map<String, String> statuses = new HashMap<>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -42,6 +45,21 @@ public class ImageResolver {
             put("notbuilt", "not run");
         }
     };
+
+    @Restricted(NoExternalUse.class)
+    public static String getStatus(BallColor color) {
+        String colorName = color.getIconName();
+
+        if (colorName.equals("blue")) {
+            colorName = "brightgreen";
+        } else if (colorName.equals("aborted")
+                || colorName.equals("disabled")
+                || colorName.equals("notbuilt")) {
+            colorName = "lightgrey";
+        }
+
+        return statuses.get(colorName);
+    }
 
     public StatusImage getImage(
             BallColor color,

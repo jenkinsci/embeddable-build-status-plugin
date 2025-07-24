@@ -6,12 +6,15 @@
 package org.jenkinsci.plugins.badge.actions;
 
 import hudson.model.Action;
+import hudson.model.BallColor;
 import hudson.model.Job;
 import hudson.model.Run;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import org.jenkins.ui.icon.IconSpec;
 import org.jenkinsci.plugins.badge.*;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
@@ -111,5 +114,25 @@ public class JobBadgeAction implements Action, IconSpec {
 
     public String doText() {
         return project.getIconColor().getDescription();
+    }
+
+    @Restricted(NoExternalUse.class)
+    public String getStatus() {
+        return ImageResolver.getStatus(project.getIconColor());
+    }
+
+    @Restricted(NoExternalUse.class)
+    public String getColorVariable() {
+        String colorName = project.getIconColor().getIconName();
+
+        if (colorName.equals("blue")) {
+            colorName = "green";
+        } else if (colorName.equals("aborted")
+                || colorName.equals("disabled")
+                || colorName.equals("notbuilt")) {
+            colorName = "text-color-secondary";
+        }
+
+        return colorName;
     }
 }

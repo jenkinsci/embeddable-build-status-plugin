@@ -5,9 +5,7 @@ const subject = document.querySelector("input[name='subject']");
 const status = document.querySelector("input[name='status']");
 const imagePreview = document.querySelector("#image-preview");
 const copyButton = document.querySelector(".jenkins-copy-button");
-
-const div = document.createElement("div");
-copyButton.insertBefore(div, copyButton.firstChild);
+const imageUrlInput = document.querySelector(".jenkins-quote input");
 
 [type, style, subject, status].forEach(element => {
     element.addEventListener('change', () => {
@@ -51,7 +49,7 @@ function generateUrl() {
     }
 
     imagePreview.src = url;
-    div.textContent = urls[type.value];
+    imageUrlInput.value = urls[type.value];
     copyButton.setAttribute('text', urls[type.value]);
 }
 

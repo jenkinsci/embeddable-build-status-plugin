@@ -27,7 +27,8 @@
            data-badge-url="${badgeUrl}"
            data-public-badge-url="${publicBadge}"
            data-text-url="${textUrl}"
-           data-public-text-url="${publicText}">
+           data-public-text-url="${publicText}"
+           style="--status: var(--light-${it.colorVariable})">
         <div class="ebs-builder__controls">
           <f:entry title="Style">
             <div class="jenkins-select">
@@ -41,13 +42,11 @@
           <f:entry title="Subject">
             <input name="subject" class="jenkins-input ebs-input" placeholder="build" />
           </f:entry>
-          <f:entry title="Status">
-            <input name="status" class="jenkins-input ebs-input" placeholder="passing" />
-          </f:entry>
-          <span class="jenkins-checkbox">
-            <input type="checkbox" name="secure" id="secure" />
-            <label for="secure">Secure</label>
-          </span>
+          <div>
+            <f:entry title="Status">
+              <input name="status" class="jenkins-input ebs-input" placeholder="${it.status}" />
+            </f:entry>
+          </div>
         </div>
         <div class="ebs-builder__preview">
           <img id="image-preview" alt="Badge" />
@@ -68,8 +67,16 @@
                   <option value="text">Plain text</option>
                 </select>
               </div>
+
+              <span class="jenkins-checkbox">
+                <input type="checkbox" name="secure" id="secure" />
+                <label for="secure">Secure</label>
+              </span>
             </div>
-            <l:copyButton label="" />
+            <div class="jenkins-quote jenkins-quote--monospace">
+              <input readonly="true" />
+              <l:copyButton iconOnly="true" />
+            </div>
           </div>
         </div>
       </div>
