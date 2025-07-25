@@ -20,7 +20,7 @@
         background-image:
                     radial-gradient(at 50% 100%, var(--light-red), transparent 70%),
                     radial-gradient(at 20% 100%, var(--light-blue), transparent 80%),
-                    radial-gradient(at 70% 100%, var(--light-orange), transparent 80%),
+                    radial-gradient(at 80% 100%, var(--light-orange), transparent 80%),
                     radial-gradient(at 50% 0%, var(--status), transparent 75%);
         z-index: -1;
         opacity: 0.075;
