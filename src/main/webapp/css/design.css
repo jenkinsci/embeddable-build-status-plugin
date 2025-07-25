@@ -88,15 +88,11 @@
     }
 
     .ebs-input {
-        appearance: none;
-        outline: none;
         background: transparent !important;
+        box-shadow: none !important;
         border: none;
         min-height: 0;
         padding: 0.75rem 2rem 0.75rem 0;
-        width: unset !important;
-        cursor: pointer;
-        box-shadow: none !important;
         field-sizing: content;
     }
 }
