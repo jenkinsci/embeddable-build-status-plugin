@@ -60,7 +60,7 @@
             <div class="ebs-copy-container__controls">
               <label for="type" class="jenkins-visually-hidden">Type</label>
               <div class="jenkins-select">
-                <select class="ebs-input" id="type" name="type">
+                <select class="jenkins-select__input ebs-input" id="type" name="type">
                   <option value="markdown">Markdown</option>
                   <option value="image">Image</option>
                   <option value="html">HTML</option>
