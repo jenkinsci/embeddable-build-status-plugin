@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    border-radius: 1rem;
+    border-radius: var(--form-input-border-radius);
     overflow: hidden;
     padding: calc(var(--section-padding) * 2) var(--section-padding) var(--section-padding) var(--section-padding);
 
@@ -38,6 +38,14 @@
     & > div {
         width: 100%;
         max-width: 360px;
+
+        &:last-of-type {
+            max-width: 460px;
+        }
+
+        @media (max-width: 1000px) {
+            max-width: unset !important;
+        }
     }
 }
 
@@ -51,7 +59,7 @@
     img {
         height: 30px;
         view-transition-name: badge;
-        filter: drop-shadow(0 10px 10px color-mix(in srgb, var(--text-color) 10%, transparent));
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.1));
     }
 }
 
