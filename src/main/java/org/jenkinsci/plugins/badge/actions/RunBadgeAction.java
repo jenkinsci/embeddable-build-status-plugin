@@ -105,7 +105,7 @@ public class RunBadgeAction implements Action, IconSpec {
     public String doText() {
         return run.getIconColor().getDescription();
     }
-    
+
     @Restricted(NoExternalUse.class)
     public String getStatus() {
         return ImageResolver.getStatus(run.getIconColor());

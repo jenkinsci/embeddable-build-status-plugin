@@ -24,12 +24,11 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.model.BallColor;
-import org.kohsuke.accmod.Restricted;
-import org.kohsuke.accmod.restrictions.NoExternalUse;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 public class ImageResolver {
     public static final Map<String, String> statuses = new HashMap<>() {

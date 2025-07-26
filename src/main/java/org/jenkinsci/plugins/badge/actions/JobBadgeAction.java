@@ -6,7 +6,6 @@
 package org.jenkinsci.plugins.badge.actions;
 
 import hudson.model.Action;
-import hudson.model.BallColor;
 import hudson.model.Job;
 import hudson.model.Run;
 import java.net.URLEncoder;
