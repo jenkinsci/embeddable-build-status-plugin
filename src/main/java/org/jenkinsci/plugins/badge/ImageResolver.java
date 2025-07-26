@@ -25,23 +25,35 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.model.BallColor;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 public class ImageResolver {
-    private final Map<String, String> statuses = new HashMap<>() {
-        private static final long serialVersionUID = 1L;
+    public static final Map<String, String> statuses = Map.of(
+            "red", "failing",
+            "brightgreen", "passing",
+            "yellow", "unstable",
+            "aborted", "aborted",
+            "blue", "running",
+            "disabled", "disabled",
+            "notbuilt", "not run");
 
-        {
-            put("red", "failing");
-            put("brightgreen", "passing");
-            put("yellow", "unstable");
-            put("aborted", "aborted");
-            put("blue", "running");
-            put("disabled", "disabled");
-            put("notbuilt", "not run");
+    // TODO - tidy this up
+    @Restricted(NoExternalUse.class)
+    public static String getStatus(BallColor color) {
+        String colorName = color.getIconName();
+
+        if (colorName.contains("anime")) {
+            return "running";
         }
-    };
+
+        if (colorName.equals("blue")) {
+            colorName = "brightgreen";
+        }
+
+        return statuses.get(colorName);
+    }
 
     public StatusImage getImage(
             BallColor color,
