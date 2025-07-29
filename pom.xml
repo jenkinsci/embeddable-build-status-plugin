@@ -88,38 +88,4 @@
       <url>https://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.openrewrite.maven</groupId>
-        <artifactId>rewrite-maven-plugin</artifactId>
-        <version>6.15.0</version>
-        <configuration>
-          <activeRecipes>
-            <recipe>org.openrewrite.apache.commons.lang.UpgradeApacheCommonsLang_2_3</recipe>
-            <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
-          </activeRecipes>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.openrewrite.recipe</groupId>
-            <artifactId>rewrite-apache</artifactId>
-            <version>1.7.0</version>
-          </dependency>
-          <dependency>
-            <groupId>org.openrewrite.recipe</groupId>
-            <artifactId>rewrite-migrate-java</artifactId>
-            <version>3.14.1</version>
-          </dependency>
-          <dependency>
-            <groupId>org.openrewrite.recipe</groupId>
-            <artifactId>rewrite-static-analysis</artifactId>
-            <version>1.19.0</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>
