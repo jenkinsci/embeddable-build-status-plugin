@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,20 +59,15 @@ class StatusImage implements HttpResponse {
     private final String length;
     private String contentType = null;
 
-    private final Map<String, String> colors = new HashMap<>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("red", "#e05d44");
-            put("brightgreen", "#44cc11");
-            put("green", "#97CA00");
-            put("yellowgreen", "#a4a61d");
-            put("yellow", "#dfb317");
-            put("orange", "#fe7d37");
-            put("lightgrey", "#9f9f9f");
-            put("blue", "#007ec6");
-        }
-    };
+    private static final Map<String, String> COLORS = Map.of(
+            "red", "#e05d44",
+            "brightgreen", "#44cc11",
+            "green", "#97CA00",
+            "yellowgreen", "#a4a61d",
+            "yellow", "#dfb317",
+            "orange", "#fe7d37",
+            "lightgrey", "#9f9f9f",
+            "blue", "#007ec6");
 
     StatusImage() {
         etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
@@ -128,7 +122,7 @@ class StatusImage implements HttpResponse {
 
             if (animatedColorName != null) {
                 animatedSnippet = new URL(baseUrl, "status/animatedOverlay.svg.snippet");
-                animatedColor = colors.get(animatedColorName.toLowerCase());
+                animatedColor = COLORS.get(animatedColorName.toLowerCase());
                 if (animatedColor == null) {
                     if (colorName.matches("-?[0-9a-fA-F]+")) {
                         animatedColor = "#" + animatedColorName;
@@ -144,7 +138,7 @@ class StatusImage implements HttpResponse {
                 widths[1] += 4;
             }
 
-            String color = colors.get(colorName.toLowerCase());
+            String color = COLORS.get(colorName.toLowerCase());
             if (color == null) {
                 if (colorName.matches("-?[0-9a-fA-F]+")) {
                     color = "#" + colorName;
