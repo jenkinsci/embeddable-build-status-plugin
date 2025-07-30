@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
 import org.jenkinsci.plugins.badge.extensionpoints.ParameterResolverExtensionPoint;
 
 public class ParameterResolver {
-    private static Pattern parameterPattern = Pattern.compile("\\$\\{([^\\{\\}\\s]+)\\}");
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("\\$\\{([^\\{\\}\\s]+)\\}");
 
     public String resolve(Actionable actionable, String parameter) {
         if (parameter != null) {
-            Matcher matcher = parameterPattern.matcher(parameter);
+            Matcher matcher = PARAMETER_PATTERN.matcher(parameter);
             while (matcher.find()) {
                 String resolvedMatch = null;
                 for (ParameterResolverExtensionPoint resolver :
@@ -35,7 +35,7 @@ public class ParameterResolver {
                 } else {
                     parameter = matcher.replaceFirst("$1");
                 }
-                matcher = parameterPattern.matcher(parameter);
+                matcher = PARAMETER_PATTERN.matcher(parameter);
             }
         }
         return parameter;

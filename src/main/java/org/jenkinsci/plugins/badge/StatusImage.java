@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
@@ -58,7 +58,7 @@ class StatusImage implements HttpResponse {
     private final String etag;
 
     private final String length;
-    private String contentType = null;
+    private String contentType;
 
     private final Map<String, String> colors = new HashMap<>() {
         private static final long serialVersionUID = 1L;
@@ -96,20 +96,20 @@ class StatusImage implements HttpResponse {
             throws IOException {
         // escape URL parameters
         if (subject != null) {
-            subject = StringEscapeUtils.escapeHtml(subject);
+            subject = StringEscapeUtils.escapeHtml4(subject);
         }
         if (status != null) {
-            status = StringEscapeUtils.escapeHtml(status);
+            status = StringEscapeUtils.escapeHtml4(status);
         }
         if (animatedColorName != null) {
-            animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
+            animatedColorName = StringEscapeUtils.escapeHtml4(animatedColorName);
         }
         if (colorName != null) {
-            colorName = StringEscapeUtils.escapeHtml(colorName);
+            colorName = StringEscapeUtils.escapeHtml4(colorName);
         }
         if (link != null) {
             // double-escape because concatenating into an attribute effectively removes one level of quoting
-            link = StringEscapeUtils.escapeHtml(StringEscapeUtils.escapeHtml(link));
+            link = StringEscapeUtils.escapeHtml4(StringEscapeUtils.escapeHtml4(link));
         }
 
         if (baseUrl != null) {
@@ -175,7 +175,7 @@ class StatusImage implements HttpResponse {
                 try {
                     URL url = new URL(link);
                     final String protocol = url.getProtocol();
-                    if (protocol.equals("http") || protocol.equals("https")) {
+                    if ("http".equals(protocol) || "https".equals(protocol)) {
                         linkCode = "<svg onclick=\"window.open(&quot;"
                                 + link
                                 + "&quot;);\" style=\"cursor: pointer;\" xmlns";

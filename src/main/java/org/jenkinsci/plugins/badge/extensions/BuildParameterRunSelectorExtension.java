@@ -48,7 +48,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
 
     private Run findSpecific(Job job, Run run, String what, String specific) {
         if (run == null) {
-            if (what.equals("first")) {
+            if ("first".equals(what)) {
                 run = findSpecific(job, job.getFirstBuild(), what, specific);
             } else {
                 if (specific != null) {
@@ -82,7 +82,7 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
             }
         } else {
             do {
-                if (what.equals("first")) {
+                if ("first".equals(what)) {
                     run = run.getNextBuild();
                 } else {
                     run = run.getPreviousBuild();
@@ -100,12 +100,12 @@ public class BuildParameterRunSelectorExtension implements InternalRunSelectorEx
                             boolean isUnsuccessful = !isSuccessful;
                             boolean isStable = isSuccessful;
 
-                            doBreak = (specific.equals("Completed") && isCompleted)
-                                    || (specific.equals("Successful") && isCompleted && isSuccessful)
-                                    || (specific.equals("Failed") && isCompleted && isFailed)
-                                    || (specific.equals("Unstable") && isCompleted && isUnstable)
-                                    || (specific.equals("Unsuccessful") && isCompleted && isUnsuccessful)
-                                    || (specific.equals("Stable") && isCompleted && isStable);
+                            doBreak = ("Completed".equals(specific) && isCompleted)
+                                    || ("Successful".equals(specific) && isCompleted && isSuccessful)
+                                    || ("Failed".equals(specific) && isCompleted && isFailed)
+                                    || ("Unstable".equals(specific) && isCompleted && isUnstable)
+                                    || ("Unsuccessful".equals(specific) && isCompleted && isUnsuccessful)
+                                    || ("Stable".equals(specific) && isCompleted && isStable);
                         }
                     }
 

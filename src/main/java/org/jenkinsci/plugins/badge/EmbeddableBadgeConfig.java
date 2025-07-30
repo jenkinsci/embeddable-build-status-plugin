@@ -28,11 +28,11 @@ public class EmbeddableBadgeConfig implements Serializable {
     };
 
     private final String id;
-    private String subject = null;
-    private String status = null;
-    private String color = null;
-    private String animatedOverlayColor = null;
-    private String link = null;
+    private String subject;
+    private String status;
+    private String color;
+    private String animatedOverlayColor;
+    private String link;
 
     public EmbeddableBadgeConfig(String id) {
         this.id = id;
@@ -74,7 +74,7 @@ public class EmbeddableBadgeConfig implements Serializable {
 
     public String getAnimatedOverlayColor() {
         if (this.animatedOverlayColor == null && this.color == null) {
-            if (this.status != null && this.status.equals("running")) {
+            if ("running".equals(this.status)) {
                 return "blue";
             }
         }
