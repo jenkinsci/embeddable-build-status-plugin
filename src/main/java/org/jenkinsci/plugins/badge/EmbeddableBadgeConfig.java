@@ -6,7 +6,6 @@ package org.jenkinsci.plugins.badge;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
@@ -14,25 +13,19 @@ public class EmbeddableBadgeConfig implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final Map<String, String> colors = new HashMap<>() {
-        @Serial
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("failing", "red");
-            put("passing", "brightgreen");
-            put("unstable", "yellow");
-            put("aborted", "aborted");
-            put("running", "blue");
-        }
-    };
+    private static final Map<String, String> COLORS = Map.of(
+            "failing", "red",
+            "passing", "brightgreen",
+            "unstable", "yellow",
+            "aborted", "aborted",
+            "running", "blue");
 
     private final String id;
-    private String subject = null;
-    private String status = null;
-    private String color = null;
-    private String animatedOverlayColor = null;
-    private String link = null;
+    private String subject;
+    private String status;
+    private String color;
+    private String animatedOverlayColor;
+    private String link;
 
     public EmbeddableBadgeConfig(String id) {
         this.id = id;
@@ -62,7 +55,7 @@ public class EmbeddableBadgeConfig implements Serializable {
 
     public String getColor() {
         if (color == null) {
-            return colors.get(status);
+            return status != null ? COLORS.get(status) : null;
         }
         return color;
     }
@@ -74,7 +67,7 @@ public class EmbeddableBadgeConfig implements Serializable {
 
     public String getAnimatedOverlayColor() {
         if (this.animatedOverlayColor == null && this.color == null) {
-            if (this.status != null && this.status.equals("running")) {
+            if ("running".equals(this.status)) {
                 return "blue";
             }
         }
