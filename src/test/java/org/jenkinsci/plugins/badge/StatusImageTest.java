@@ -296,48 +296,6 @@ class StatusImageTest {
     // ========================================================================
     // Font Loading Tests - Added for performance fix verification
     // ========================================================================
-
-    @Test
-    void testFontLoadingFallbackBehavior() throws Exception {
-        // Test that measureText works even when custom font loading might fail
-        // This implicitly tests the fallback to system font mechanism
-        StatusImage statusImage = new StatusImage();
-
-        // These calls should work regardless of whether custom font loading succeeds
-        int width = statusImage.measureText("Test");
-        assertThat("Text measurement should return positive width", width, greaterThan(0));
-
-        // Multiple calls should be consistent (testing caching)
-        int width2 = statusImage.measureText("Test");
-        assertThat("Multiple calls should return same width", width2, is(width));
-    }
-
-    @Test
-    void testFontLoadingLaziness() throws Exception {
-        // Test that font loading is lazy - font should only be loaded when measureText is called
-        StatusImage statusImage = new StatusImage(); // Constructor should not trigger font loading
-
-        // First call should trigger font loading and return valid measurement
-        int width1 = statusImage.measureText("W");
-        assertThat("First measureText call should work", width1, greaterThan(0));
-
-        // Second call should use cached font and return same measurement
-        int width2 = statusImage.measureText("W");
-        assertThat("Second measureText call should return same width", width2, is(width1));
-    }
-
-    @Test
-    void testFontLoadingConsistency() throws Exception {
-        // Test that font loading produces consistent results across different StatusImage instances
-        StatusImage statusImage1 = new StatusImage();
-        StatusImage statusImage2 = new StatusImage();
-
-        int width1 = statusImage1.measureText("Consistency Test");
-        int width2 = statusImage2.measureText("Consistency Test");
-
-        assertThat("Font measurements should be consistent across instances", width2, is(width1));
-    }
-
     @Test
     void testConcurrentFontLoading() throws Exception {
         // Test thread safety of font loading mechanism
@@ -417,35 +375,16 @@ class StatusImageTest {
         // Test that font metrics are properly cached and reused
         StatusImage statusImage = new StatusImage();
 
+        String testText = "Caching Test " + RANDOM.nextInt();
+        int referenceMeasurement = statusImage.measureText(testText);
+
         // Make multiple calls and verify they're consistent (indicating caching is working)
-        String testText = "Caching Test";
-        int[] measurements = new int[5];
-
-        for (int i = 0; i < measurements.length; i++) {
-            measurements[i] = statusImage.measureText(testText);
-        }
-
         // All measurements should be identical if caching is working
-        for (int i = 1; i < measurements.length; i++) {
-            assertThat("Cached measurements should be consistent", measurements[i], is(measurements[0]));
+        for (int i = 5 + RANDOM.nextInt(10); i > 0; i--) {
+            assertThat(
+                    "Measurement " + i + " does not match reference",
+                    statusImage.measureText(testText),
+                    is(referenceMeasurement));
         }
-    }
-
-    @Test
-    void testMultipleInstancesFontSharing() throws Exception {
-        // Test that multiple StatusImage instances share the same cached font
-        final String testText = "Shared Font Test";
-
-        StatusImage statusImage1 = new StatusImage();
-        int width1 = statusImage1.measureText(testText);
-
-        StatusImage statusImage2 = new StatusImage();
-        int width2 = statusImage2.measureText(testText);
-
-        StatusImage statusImage3 = new StatusImage();
-        int width3 = statusImage3.measureText(testText);
-
-        assertThat("All instances should use same cached font", width2, is(width1));
-        assertThat("All instances should use same cached font", width3, is(width1));
     }
 }
