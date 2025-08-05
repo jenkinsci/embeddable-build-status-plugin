@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.lang.reflect.Field;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,6 +49,7 @@ import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 class StatusImageTest {
 
     private static final String SVG_CONTENT_TYPE = "image/svg+xml;charset=utf-8";
+    private static final Random RANDOM = new Random();
 
     @SuppressWarnings("unused")
     private static JenkinsRule jenkinsRule;
@@ -340,7 +342,7 @@ class StatusImageTest {
     void testConcurrentFontLoading() throws Exception {
         // Test thread safety of font loading mechanism
         final int threadCount = 10;
-        final String testText = "Concurrent Test";
+        final String testText = "Concurrent Test " + RANDOM.nextInt();
         final CountDownLatch startLatch = new CountDownLatch(1);
         final CountDownLatch doneLatch = new CountDownLatch(threadCount);
         final AtomicReference<Exception> exception = new AtomicReference<>();
