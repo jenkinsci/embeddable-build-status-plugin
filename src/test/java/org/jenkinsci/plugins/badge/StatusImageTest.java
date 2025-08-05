@@ -299,7 +299,7 @@ class StatusImageTest {
     @Test
     void testConcurrentFontLoading() throws Exception {
         // Test thread safety of font loading mechanism
-        final int threadCount = 10;
+        final int threadCount = 10 + RANDOM.nextInt(10);
         final String testText = "Concurrent Test " + RANDOM.nextInt();
         final int textWidth = new StatusImage().measureText(testText);
         assertThat(textWidth, is(greaterThan(5 * testText.length())));
@@ -317,9 +317,7 @@ class StatusImageTest {
                     try {
                         startLatch.await(); // Wait for all threads to be ready
 
-                        StatusImage statusImage = new StatusImage();
-                        int width = statusImage.measureText(testText);
-                        assertThat(width, is(textWidth));
+                        assertThat(new StatusImage().measureText(testText), is(textWidth));
                         successCount.incrementAndGet();
                     } catch (Exception e) {
                         exception.set(e);
