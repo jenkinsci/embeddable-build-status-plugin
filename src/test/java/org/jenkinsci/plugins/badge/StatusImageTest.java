@@ -301,6 +301,8 @@ class StatusImageTest {
         // Test thread safety of font loading mechanism
         final int threadCount = 10;
         final String testText = "Concurrent Test " + RANDOM.nextInt();
+        final int textWidth = new StatusImage().measureText(testText);
+        assertThat(textWidth, is(greaterThan(5 * testText.length())));
         final CountDownLatch startLatch = new CountDownLatch(1);
         final CountDownLatch doneLatch = new CountDownLatch(threadCount);
         final AtomicReference<Exception> exception = new AtomicReference<>();
@@ -317,10 +319,8 @@ class StatusImageTest {
 
                         StatusImage statusImage = new StatusImage();
                         int width = statusImage.measureText(testText);
-
-                        if (width > 0) {
-                            successCount.incrementAndGet();
-                        }
+                        assertThat(width, is(textWidth));
+                        successCount.incrementAndGet();
                     } catch (Exception e) {
                         exception.set(e);
                     } finally {
@@ -333,9 +333,7 @@ class StatusImageTest {
 
             boolean completed = doneLatch.await(10, TimeUnit.SECONDS);
             assertThat("All threads should complete within timeout", completed, is(true));
-
             assertThat("Exception thrown during thread test", exception.get(), is(nullValue()));
-
             assertThat("All threads should succeed in measuring text", successCount.get(), is(threadCount));
 
         } finally {
@@ -367,24 +365,6 @@ class StatusImageTest {
         for (String input : testInputs) {
             int width = statusImage.measureText(input);
             assertThat("Insufficient width for input: " + input, width, greaterThan(input.length() * 5));
-        }
-    }
-
-    @Test
-    void testFontLoadingCaching() throws Exception {
-        // Test that font metrics are properly cached and reused
-        StatusImage statusImage = new StatusImage();
-
-        String testText = "Caching Test " + RANDOM.nextInt();
-        int referenceMeasurement = statusImage.measureText(testText);
-
-        // Make multiple calls and verify they're consistent (indicating caching is working)
-        // All measurements should be identical if caching is working
-        for (int i = 5 + RANDOM.nextInt(10); i > 0; i--) {
-            assertThat(
-                    "Measurement " + i + " does not match reference",
-                    statusImage.measureText(testText),
-                    is(referenceMeasurement));
         }
     }
 }
