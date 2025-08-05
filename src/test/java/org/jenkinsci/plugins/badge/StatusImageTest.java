@@ -106,7 +106,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
     }
 
     @Test
@@ -124,7 +124,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -143,7 +143,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -162,7 +162,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -181,7 +181,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -199,7 +199,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -217,7 +217,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -235,7 +235,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -253,7 +253,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -270,7 +270,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
     }
 
     // private static final String PNG_CONTENT_TYPE = "image/png";
@@ -281,7 +281,7 @@ class StatusImageTest {
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("1656"));
+        assertThat(Integer.valueOf(statusImage.getLength()), is(1656));
     }
 
     @Test
@@ -290,7 +290,7 @@ class StatusImageTest {
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("656"));
+        assertThat(Integer.valueOf(statusImage.getLength()), is(656));
     }
 
     // ========================================================================
