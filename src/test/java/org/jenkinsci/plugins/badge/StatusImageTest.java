@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.lang.reflect.Field;
 import java.util.Random;
@@ -376,9 +376,7 @@ class StatusImageTest {
             boolean completed = doneLatch.await(10, TimeUnit.SECONDS);
             assertThat("All threads should complete within timeout", completed, is(true));
 
-            if (exception.get() != null) {
-                throw new AssertionError("Thread safety test failed", exception.get());
-            }
+            assertThat("Exception thrown during thread test", exception.get(), is(nullValue()));
 
             assertThat("All threads should succeed in measuring text", successCount.get(), is(threadCount));
 
@@ -389,40 +387,28 @@ class StatusImageTest {
     }
 
     @Test
-    void testMeasureTextWithNullBaseUrl() throws Exception {
-        // Test behavior when baseUrl is null (font loading should handle this gracefully)
-        StatusImage statusImage = new StatusImage();
-
-        // When baseUrl is null, measureText should return 0 (as per the implementation)
-        int width = statusImage.measureText("Test with null baseUrl");
-        // The current implementation returns 0 when baseUrl is null
-        // This test verifies that no exceptions are thrown
-        assertThat("measureText should handle null baseUrl gracefully", width, greaterThan(-1));
-    }
-
-    @Test
     void testFontLoadingRobustness() throws Exception {
         // Test that font loading is robust to various text inputs
         StatusImage statusImage = new StatusImage();
 
+        assertThat("Unexpected empty string width", statusImage.measureText(""), is(0));
+        assertThat("Unexpected single space string width", statusImage.measureText(" "), is(3));
+        assertThat("Unexpected single 'i' string width", statusImage.measureText("i"), is(3));
+
         String[] testInputs = {
-            "", // Empty string
-            " ", // Single space
             "A", // Single character
+            "M", // Single character
+            "W", // Single character
             "The quick brown fox", // Normal text
-            "Text with numbers 12345", // Alphanumeric
+            "Text with numbers " + RANDOM.nextInt(), // Alphanumeric
             "Special chars: !@#$%^&*()", // Special characters
             "Unicode: αβγδε", // Unicode characters
-            "Very long text that goes on and on and should still be measured correctly"
+            "Very long text that goes on and on and should still be measured correctly " + RANDOM.nextDouble()
         };
 
         for (String input : testInputs) {
-            assertDoesNotThrow(
-                    () -> {
-                        int width = statusImage.measureText(input);
-                        assertThat("Width should be non-negative for input: " + input, width, greaterThan(-1));
-                    },
-                    "Font loading should handle input: " + input);
+            int width = statusImage.measureText(input);
+            assertThat("Insufficient width for input: " + input, width, greaterThan(input.length() * 5));
         }
     }
 
