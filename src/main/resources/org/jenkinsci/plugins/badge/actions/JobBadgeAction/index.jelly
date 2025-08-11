@@ -11,6 +11,7 @@
   <l:layout title="${%Embeddable Build Status Icon}" type="one-column">
     <l:header>
       <link rel='stylesheet' href='${app.rootUrl}/plugin/embeddable-build-status/css/design.css' type='text/css'/>
+      <script src='${app.rootUrl}/plugin/embeddable-build-status/js/badge-click-handler.js' type='text/javascript'></script>
     </l:header>
     <l:main-panel>
       <h1>${%Embeddable Build Status Icon}</h1>

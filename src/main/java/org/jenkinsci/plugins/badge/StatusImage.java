@@ -170,9 +170,9 @@ class StatusImage implements HttpResponse {
                     URL url = new URL(link);
                     final String protocol = url.getProtocol();
                     if ("http".equals(protocol) || "https".equals(protocol)) {
-                        linkCode = "<svg onclick=\"window.open(&quot;"
+                        linkCode = "<svg class=\"jenkins-badge-clickable\" data-jenkins-link-url=\""
                                 + link
-                                + "&quot;);\" style=\"cursor: pointer;\" xmlns";
+                                + "\" style=\"cursor: pointer;\" xmlns";
                     } else {
                         LOGGER.log(Level.FINE, "Invalid link protocol: {0}", protocol);
                     }
