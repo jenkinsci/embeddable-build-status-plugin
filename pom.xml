@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>5.14</version>
+    <version>5.22</version>
     <relativePath />
   </parent>
 
@@ -32,12 +32,15 @@
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
+    <hpi.bundledArtifacts />
+    <hpi.strictBundledArtifacts>true</hpi.strictBundledArtifacts>
     <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
-    <jenkins.baseline>2.479</jenkins.baseline>
-    <jenkins.version>${jenkins.baseline}.1</jenkins.version>
+    <jenkins.baseline>2.492</jenkins.baseline>
+    <jenkins.version>${jenkins.baseline}.3</jenkins.version>
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.threshold>Low</spotbugs.threshold>
     <spotless.check.skip>false</spotless.check.skip>
+    <ban-junit4-imports.skip>false</ban-junit4-imports.skip>
   </properties>
 
   <dependencyManagement>
@@ -45,13 +48,17 @@
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom-${jenkins.baseline}.x</artifactId>
-        <version>4710.v016f0a_07e34d</version>
+        <version>5252.va_0266944a_b_42</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>commons-text-api</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.jenkins.plugins</groupId>
       <artifactId>ionicons-api</artifactId>

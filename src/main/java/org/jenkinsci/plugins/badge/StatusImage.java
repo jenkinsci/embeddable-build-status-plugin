@@ -19,13 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
@@ -58,22 +57,17 @@ class StatusImage implements HttpResponse {
     private final String etag;
 
     private final String length;
-    private String contentType = null;
+    private String contentType;
 
-    private final Map<String, String> colors = new HashMap<>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("red", "#e05d44");
-            put("brightgreen", "#44cc11");
-            put("green", "#97CA00");
-            put("yellowgreen", "#a4a61d");
-            put("yellow", "#dfb317");
-            put("orange", "#fe7d37");
-            put("lightgrey", "#9f9f9f");
-            put("blue", "#007ec6");
-        }
-    };
+    private static final Map<String, String> COLORS = Map.of(
+            "red", "#e05d44",
+            "brightgreen", "#44cc11",
+            "green", "#97CA00",
+            "yellowgreen", "#a4a61d",
+            "yellow", "#dfb317",
+            "orange", "#fe7d37",
+            "lightgrey", "#9f9f9f",
+            "blue", "#007ec6");
 
     StatusImage() {
         etag = '"' + Jenkins.RESOURCE_PATH + '/' + "empty" + '"';
@@ -96,20 +90,20 @@ class StatusImage implements HttpResponse {
             throws IOException {
         // escape URL parameters
         if (subject != null) {
-            subject = StringEscapeUtils.escapeHtml(subject);
+            subject = StringEscapeUtils.escapeHtml4(subject);
         }
         if (status != null) {
-            status = StringEscapeUtils.escapeHtml(status);
+            status = StringEscapeUtils.escapeHtml4(status);
         }
         if (animatedColorName != null) {
-            animatedColorName = StringEscapeUtils.escapeHtml(animatedColorName);
+            animatedColorName = StringEscapeUtils.escapeHtml4(animatedColorName);
         }
         if (colorName != null) {
-            colorName = StringEscapeUtils.escapeHtml(colorName);
+            colorName = StringEscapeUtils.escapeHtml4(colorName);
         }
         if (link != null) {
             // double-escape because concatenating into an attribute effectively removes one level of quoting
-            link = StringEscapeUtils.escapeHtml(StringEscapeUtils.escapeHtml(link));
+            link = StringEscapeUtils.escapeHtml4(StringEscapeUtils.escapeHtml4(link));
         }
 
         if (baseUrl != null) {
@@ -128,7 +122,7 @@ class StatusImage implements HttpResponse {
 
             if (animatedColorName != null) {
                 animatedSnippet = new URL(baseUrl, "status/animatedOverlay.svg.snippet");
-                animatedColor = colors.get(animatedColorName.toLowerCase());
+                animatedColor = COLORS.get(animatedColorName.toLowerCase());
                 if (animatedColor == null) {
                     if (colorName.matches("-?[0-9a-fA-F]+")) {
                         animatedColor = "#" + animatedColorName;
@@ -144,7 +138,7 @@ class StatusImage implements HttpResponse {
                 widths[1] += 4;
             }
 
-            String color = colors.get(colorName.toLowerCase());
+            String color = COLORS.get(colorName.toLowerCase());
             if (color == null) {
                 if (colorName.matches("-?[0-9a-fA-F]+")) {
                     color = "#" + colorName;
@@ -175,7 +169,7 @@ class StatusImage implements HttpResponse {
                 try {
                     URL url = new URL(link);
                     final String protocol = url.getProtocol();
-                    if (protocol.equals("http") || protocol.equals("https")) {
+                    if ("http".equals(protocol) || "https".equals(protocol)) {
                         linkCode = "<svg onclick=\"window.open(&quot;"
                                 + link
                                 + "&quot;);\" style=\"cursor: pointer;\" xmlns";
@@ -211,32 +205,46 @@ class StatusImage implements HttpResponse {
         }
     }
 
-    private static final FontMetrics DEFAULT_FONT_METRICS;
+    private static volatile FontMetrics cachedFontMetrics;
+    private static final Object fontLoadLock = new Object();
+    private static final String FONT_NAME = "fonts/Bitstream-Vera-Sans-Roman.ttf";
 
-    static {
-        Font defaultFont = null;
-        final String FONT_NAME = "fonts/Bitstream-Vera-Sans-Roman.ttf";
-        try {
-            URL fontURL = new URL(baseUrl, FONT_NAME);
-            try (InputStream fontStream = fontURL.openStream()) {
-                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-                defaultFont = defaultFont.deriveFont(11f);
-            } catch (FontFormatException ex) {
-                Logger.getLogger(StatusImage.class.getName())
-                        .log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+    private static FontMetrics getDefaultFontMetrics() {
+        if (cachedFontMetrics == null) {
+            synchronized (fontLoadLock) {
+                if (cachedFontMetrics == null) {
+                    Font defaultFont = null;
+                    try {
+                        if (baseUrl != null) {
+                            URL fontURL = new URL(baseUrl, FONT_NAME);
+                            try (InputStream fontStream = fontURL.openStream()) {
+                                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+                                defaultFont = defaultFont.deriveFont(11f);
+                            } catch (FontFormatException ex) {
+                                LOGGER.log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
+                            } catch (IOException ex) {
+                                LOGGER.log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+                            }
+                        }
+                    } catch (MalformedURLException ex) {
+                        LOGGER.log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
+                    }
+
+                    // Fallback to system default font if custom font loading fails
+                    if (defaultFont == null) {
+                        defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
+                    }
+
+                    Canvas canvas = new Canvas();
+                    cachedFontMetrics = canvas.getFontMetrics(defaultFont);
+                }
             }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(StatusImage.class.getName())
-                    .log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
         }
-        Canvas canvas = new Canvas();
-        DEFAULT_FONT_METRICS = canvas.getFontMetrics(defaultFont);
+        return cachedFontMetrics;
     }
 
     public int measureText(String text) throws IOException {
-        return baseUrl != null ? DEFAULT_FONT_METRICS.stringWidth(text) : 0;
+        return baseUrl != null ? getDefaultFontMetrics().stringWidth(text) : 0;
     }
 
     @Override

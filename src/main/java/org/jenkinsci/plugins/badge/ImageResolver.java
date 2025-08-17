@@ -25,23 +25,17 @@ package org.jenkinsci.plugins.badge;
 
 import hudson.model.BallColor;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ImageResolver {
-    private final Map<String, String> statuses = new HashMap<>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("red", "failing");
-            put("brightgreen", "passing");
-            put("yellow", "unstable");
-            put("aborted", "aborted");
-            put("blue", "running");
-            put("disabled", "disabled");
-            put("notbuilt", "not run");
-        }
-    };
+    private static final Map<String, String> STATUSES = Map.of(
+            "red", "failing",
+            "brightgreen", "passing",
+            "yellow", "unstable",
+            "aborted", "aborted",
+            "blue", "running",
+            "disabled", "disabled",
+            "notbuilt", "not run");
 
     public StatusImage getImage(
             BallColor color,
@@ -57,7 +51,7 @@ public class ImageResolver {
         // check if "ball" is requested
         if (style != null) {
             String[] styleParts = style.split("-");
-            if (styleParts.length == 2 && styleParts[0].equals("ball")) {
+            if (styleParts.length == 2 && "ball".equals(styleParts[0])) {
                 String url = color.getImageOf(styleParts[1]);
                 if (url == null) {
                     url = color.getImageOf("32x32");
@@ -78,14 +72,14 @@ public class ImageResolver {
             statusAnimatedOverlayColorName = "blue";
         }
 
-        if (statusColorName.equals("blue")) {
+        if ("blue".equals(statusColorName)) {
             statusColorName = "brightgreen";
         }
 
         if (colorName == null) {
-            if (statusColorName.equals("aborted")
-                    || statusColorName.equals("disabled")
-                    || statusColorName.equals("notbuilt")) {
+            if ("aborted".equals(statusColorName)
+                    || "disabled".equals(statusColorName)
+                    || "notbuilt".equals(statusColorName)) {
                 colorName = "lightgrey";
             } else {
                 colorName = statusColorName;
@@ -101,7 +95,7 @@ public class ImageResolver {
         }
 
         if (status == null) {
-            status = statuses.get(
+            status = STATUSES.get(
                     statusAnimatedOverlayColorName != null ? statusAnimatedOverlayColorName : statusColorName);
             if (status == null) {
                 status = "unknown";
