@@ -592,7 +592,7 @@ class BuildParameterRunSelectorExtensionTest {
     }
 
     @Test
-    void shouldMatchParameterValueWithSpecificPattern() {
+    void shouldMatchParameterValueWithSpecificPattern() throws Exception {
         // Test the parameter matching pattern
         String paramName = "branch";
         String paramValue = "master";
@@ -607,18 +607,12 @@ class BuildParameterRunSelectorExtensionTest {
         when(parameterValue.getValue()).thenReturn(paramValue);
 
         // Call the method directly through reflection to test just that method
-        try {
-            java.lang.reflect.Method method = BuildParameterRunSelectorExtension.class.getDeclaredMethod(
-                    "matchRule", Job.class, Run.class, String.class);
-            method.setAccessible(true);
-            BuildParameterRunSelectorExtension extension = new BuildParameterRunSelectorExtension();
-            Boolean result =
-                    (Boolean) method.invoke(extension, mockProject, mockRun, "params." + paramName + "=" + paramValue);
-            assertThat(result, is(true));
-        } catch (Exception e) {
-            // Just log the exception and fail the test
-            System.err.println("Failed to invoke matchRule method: " + e.getMessage());
-            assertThat("Test should not fail with exception", false);
-        }
+        java.lang.reflect.Method method = BuildParameterRunSelectorExtension.class.getDeclaredMethod(
+                "matchRule", Job.class, Run.class, String.class);
+        method.setAccessible(true);
+        BuildParameterRunSelectorExtension extension = new BuildParameterRunSelectorExtension();
+        Boolean result =
+                (Boolean) method.invoke(extension, mockProject, mockRun, "params." + paramName + "=" + paramValue);
+        assertThat(result, is(true));
     }
 }
