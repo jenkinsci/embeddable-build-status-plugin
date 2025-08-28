@@ -33,7 +33,7 @@ function generateUrl() {
 
     let url = badgeUrl;
     if (searchParams.toString()) {
-        url += '?' + searchParams.toString();
+        url += (url.includes('?') ? '&' : '?') + searchParams.toString();
     }
 
     const urls = {
