@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:t="/lib/hudson">
-  <l:layout title="${%Embeddable Build Status}" type="one-column">
+  <l:layout title="${%Embeddable Build Status} - ${it.project.displayName}" type="one-column">
     <j:set var="fullJobName" value="${it.urlEncodedFullName}"/>
     <j:set var="jobUrl"      value="${it.url}"/>
     <j:set var="badgeUrl"    value="${jobUrl}badge/icon"/>
@@ -19,7 +19,7 @@
       </l:app-bar>
 
       <div class="jenkins-page-description">
-        Jenkins exposes the current status of your build as an image in a fixed URL. You can put this URL into other sites (such as a GitHub README) so that people can see the current state of the build.
+        ${%description}
       </div>
 
       <div class="ebs-builder"
