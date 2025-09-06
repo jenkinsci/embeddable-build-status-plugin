@@ -29,9 +29,11 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -364,5 +366,208 @@ class StatusImageTest {
             int width = statusImage.measureText(input);
             assertThat("Insufficient width for input: " + input, width, greaterThan(input.length() * 5));
         }
+    }
+
+    // ========================================================================
+    // CSP Compliance Tests - Added for inline event handler removal
+    // ========================================================================
+
+    @Test
+    void testStatusImageWithValidLinkHasCSPCompliantAttributes() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "flat";
+        String link = "https://example.com/build";
+
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        String svgContent = getPayloadAsString(statusImage);
+
+        // Verify CSP-compliant attributes are present
+        assertThat(
+                "SVG should have jenkins-badge-clickable class",
+                svgContent,
+                containsString("class=\"jenkins-badge-clickable\""));
+        assertThat(
+                "SVG should have data-jenkins-link-url attribute",
+                svgContent,
+                containsString("data-jenkins-link-url=\"" + link + "\""));
+        assertThat("SVG should have cursor pointer style", svgContent, containsString("style=\"cursor: pointer;\""));
+
+        // Verify no inline event handlers
+        assertThat("SVG should not contain onclick attribute", svgContent, not(containsString("onclick")));
+        assertThat("SVG should not contain window.open call", svgContent, not(containsString("window.open")));
+    }
+
+    @Test
+    void testStatusImageWithHttpLinkHasCSPCompliantAttributes() throws Exception {
+        String subject = "test";
+        String status = "failing";
+        String colorName = "red";
+        String animatedColorName = null;
+        String style = "plastic";
+        String link = "http://insecure.example.com/build";
+
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        String svgContent = getPayloadAsString(statusImage);
+
+        // Verify CSP-compliant attributes are present for HTTP links too
+        assertThat(
+                "SVG should have jenkins-badge-clickable class for HTTP links",
+                svgContent,
+                containsString("class=\"jenkins-badge-clickable\""));
+        assertThat(
+                "SVG should have data-jenkins-link-url attribute for HTTP links",
+                svgContent,
+                containsString("data-jenkins-link-url=\"" + link + "\""));
+
+        // Verify no inline event handlers
+        assertThat(
+                "SVG should not contain onclick attribute for HTTP links", svgContent, not(containsString("onclick")));
+    }
+
+    @Test
+    void testStatusImageWithNullLinkHasNoCSPAttributes() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "flat";
+        String link = null;
+
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        String svgContent = getPayloadAsString(statusImage);
+
+        // Verify no CSP attributes when no link provided
+        assertThat(
+                "SVG should not have jenkins-badge-clickable class when no link",
+                svgContent,
+                not(containsString("jenkins-badge-clickable")));
+        assertThat(
+                "SVG should not have data-jenkins-link-url attribute when no link",
+                svgContent,
+                not(containsString("data-jenkins-link-url")));
+        assertThat(
+                "SVG should not have cursor pointer style when no link",
+                svgContent,
+                not(containsString("cursor: pointer")));
+
+        // Verify no inline event handlers
+        assertThat("SVG should not contain onclick attribute when no link", svgContent, not(containsString("onclick")));
+    }
+
+    @Test
+    void testStatusImageWithInvalidProtocolHasNoCSPAttributes() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "flat";
+        String link = "javascript:alert('xss')";
+
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        String svgContent = getPayloadAsString(statusImage);
+
+        // Verify no CSP attributes when invalid protocol provided
+        assertThat(
+                "SVG should not have jenkins-badge-clickable class for invalid protocol",
+                svgContent,
+                not(containsString("jenkins-badge-clickable")));
+        assertThat(
+                "SVG should not have data-jenkins-link-url attribute for invalid protocol",
+                svgContent,
+                not(containsString("data-jenkins-link-url")));
+        assertThat(
+                "SVG should not have cursor pointer style for invalid protocol",
+                svgContent,
+                not(containsString("cursor: pointer")));
+
+        // Verify no inline event handlers
+        assertThat(
+                "SVG should not contain onclick attribute for invalid protocol",
+                svgContent,
+                not(containsString("onclick")));
+    }
+
+    @Test
+    void testStatusImageWithMalformedLinkHasNoCSPAttributes() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "flat";
+        String link = "not-a-valid-url";
+
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        String svgContent = getPayloadAsString(statusImage);
+
+        // Verify no CSP attributes when malformed URL provided
+        assertThat(
+                "SVG should not have jenkins-badge-clickable class for malformed URL",
+                svgContent,
+                not(containsString("jenkins-badge-clickable")));
+        assertThat(
+                "SVG should not have data-jenkins-link-url attribute for malformed URL",
+                svgContent,
+                not(containsString("data-jenkins-link-url")));
+        assertThat(
+                "SVG should not have cursor pointer style for malformed URL",
+                svgContent,
+                not(containsString("cursor: pointer")));
+
+        // Verify no inline event handlers
+        assertThat(
+                "SVG should not contain onclick attribute for malformed URL",
+                svgContent,
+                not(containsString("onclick")));
+    }
+
+    @Test
+    void testStatusImageWithLinkEscapesHtmlProperly() throws Exception {
+        String subject = "build";
+        String status = "passing";
+        String colorName = "brightgreen";
+        String animatedColorName = null;
+        String style = "flat";
+        String link = "https://example.com/path?param=\"value\"&other=<test>";
+
+        StatusImage statusImage = new StatusImage(subject, status, colorName, animatedColorName, style, link);
+        String svgContent = getPayloadAsString(statusImage);
+
+        // Verify HTML escaping is preserved in the link attribute (double-escaped as per StatusImage.java line 106)
+        assertThat(
+                "SVG should have properly escaped link URL",
+                svgContent,
+                containsString(
+                        "data-jenkins-link-url=\"https://example.com/path?param=&amp;quot;value&amp;quot;&amp;amp;other=&amp;lt;test&amp;gt;\""));
+
+        // Verify CSP-compliant attributes are still present
+        assertThat(
+                "SVG should still have jenkins-badge-clickable class with special characters",
+                svgContent,
+                containsString("class=\"jenkins-badge-clickable\""));
+
+        // Verify no inline event handlers
+        assertThat(
+                "SVG should not contain onclick attribute with special characters",
+                svgContent,
+                not(containsString("onclick")));
+    }
+
+    /**
+     * Helper method to access the payload for testing
+     */
+    private byte[] getPayload(StatusImage statusImage) throws Exception {
+        Field payloadField = StatusImage.class.getDeclaredField("payload");
+        payloadField.setAccessible(true);
+        return (byte[]) payloadField.get(statusImage);
+    }
+
+    /**
+     * Test helper method to get payload content
+     */
+    private String getPayloadAsString(StatusImage statusImage) throws Exception {
+        return new String(getPayload(statusImage), StandardCharsets.UTF_8);
     }
 }
