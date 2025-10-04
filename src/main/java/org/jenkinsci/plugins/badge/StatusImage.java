@@ -205,32 +205,46 @@ class StatusImage implements HttpResponse {
         }
     }
 
-    private static final FontMetrics DEFAULT_FONT_METRICS;
+    private static volatile FontMetrics cachedFontMetrics;
+    private static final Object fontLoadLock = new Object();
+    private static final String FONT_NAME = "fonts/Bitstream-Vera-Sans-Roman.ttf";
 
-    static {
-        Font defaultFont = null;
-        final String FONT_NAME = "fonts/Bitstream-Vera-Sans-Roman.ttf";
-        try {
-            URL fontURL = new URL(baseUrl, FONT_NAME);
-            try (InputStream fontStream = fontURL.openStream()) {
-                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-                defaultFont = defaultFont.deriveFont(11f);
-            } catch (FontFormatException ex) {
-                Logger.getLogger(StatusImage.class.getName())
-                        .log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(StatusImage.class.getName()).log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+    private static FontMetrics getDefaultFontMetrics() {
+        if (cachedFontMetrics == null) {
+            synchronized (fontLoadLock) {
+                if (cachedFontMetrics == null) {
+                    Font defaultFont = null;
+                    try {
+                        if (baseUrl != null) {
+                            URL fontURL = new URL(baseUrl, FONT_NAME);
+                            try (InputStream fontStream = fontURL.openStream()) {
+                                defaultFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+                                defaultFont = defaultFont.deriveFont(11f);
+                            } catch (FontFormatException ex) {
+                                LOGGER.log(Level.SEVERE, "Font format exception " + FONT_NAME, ex);
+                            } catch (IOException ex) {
+                                LOGGER.log(Level.SEVERE, "IOException reading " + FONT_NAME, ex);
+                            }
+                        }
+                    } catch (MalformedURLException ex) {
+                        LOGGER.log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
+                    }
+
+                    // Fallback to system default font if custom font loading fails
+                    if (defaultFont == null) {
+                        defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
+                    }
+
+                    Canvas canvas = new Canvas();
+                    cachedFontMetrics = canvas.getFontMetrics(defaultFont);
+                }
             }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(StatusImage.class.getName())
-                    .log(Level.SEVERE, "Malformed URL on static font " + FONT_NAME, ex);
         }
-        Canvas canvas = new Canvas();
-        DEFAULT_FONT_METRICS = canvas.getFontMetrics(defaultFont);
+        return cachedFontMetrics;
     }
 
     public int measureText(String text) throws IOException {
-        return baseUrl != null ? DEFAULT_FONT_METRICS.stringWidth(text) : 0;
+        return baseUrl != null ? getDefaultFontMetrics().stringWidth(text) : 0;
     }
 
     @Override
