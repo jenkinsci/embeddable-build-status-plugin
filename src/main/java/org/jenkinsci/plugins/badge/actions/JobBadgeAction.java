@@ -12,6 +12,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import org.jenkins.ui.icon.IconSpec;
 import org.jenkinsci.plugins.badge.*;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
@@ -111,5 +113,30 @@ public class JobBadgeAction implements Action, IconSpec {
 
     public String doText() {
         return project.getIconColor().getDescription();
+    }
+
+    @Restricted(NoExternalUse.class)
+    public String getStatus() {
+        return ImageResolver.getStatus(project.getIconColor());
+    }
+
+    @Restricted(NoExternalUse.class)
+    public String getColorVariable() {
+        String colorName = project.getIconColor().getIconName();
+
+        if (colorName.contains("-anime")) {
+            return "light-blue";
+        }
+
+        switch (colorName) {
+            case "blue":
+                return "light-green";
+            case "aborted":
+            case "disabled":
+            case "notbuilt":
+                return "text-color-secondary";
+            default:
+                return "light-" + colorName;
+        }
     }
 }
