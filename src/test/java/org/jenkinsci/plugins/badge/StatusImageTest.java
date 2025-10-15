@@ -29,8 +29,18 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.nullValue;
 
+import java.lang.reflect.Field;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
@@ -39,6 +49,7 @@ import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 class StatusImageTest {
 
     private static final String SVG_CONTENT_TYPE = "image/svg+xml;charset=utf-8";
+    private static final Random RANDOM = new Random();
 
     @SuppressWarnings("unused")
     private static JenkinsRule jenkinsRule;
@@ -46,6 +57,21 @@ class StatusImageTest {
     @BeforeAll
     static void beforeAll(JenkinsRule rule) {
         jenkinsRule = rule;
+    }
+
+    @BeforeEach
+    void setUp() throws Exception {
+        // Reset the static font cache before each test to ensure clean state
+        resetFontCache();
+    }
+
+    /**
+     * Helper method to reset the cached font metrics for testing
+     */
+    private void resetFontCache() throws Exception {
+        Field cachedFontMetricsField = StatusImage.class.getDeclaredField("cachedFontMetrics");
+        cachedFontMetricsField.setAccessible(true);
+        cachedFontMetricsField.set(null, null);
     }
 
     @Test
@@ -80,7 +106,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(920), lessThan(960)));
     }
 
     @Test
@@ -98,7 +124,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -117,7 +143,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -136,7 +162,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -155,7 +181,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(animatedColorName));
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(1237), lessThan(1297)));
     }
 
     @Test
@@ -173,7 +199,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -191,7 +217,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(973), lessThan(1033)));
     }
 
     @Test
@@ -209,7 +235,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -227,7 +253,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(style));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(510), lessThan(540)));
     }
 
     @Test
@@ -244,7 +270,7 @@ class StatusImageTest {
         assertThat(statusImage.getEtag(), containsString(colorName));
         assertThat(statusImage.getEtag(), containsString("null"));
         assertThat(statusImage.getContentType(), is(SVG_CONTENT_TYPE));
-        assertThat(Integer.parseInt(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
+        assertThat(Integer.valueOf(statusImage.getLength()), allOf(greaterThan(875), lessThan(925)));
     }
 
     // private static final String PNG_CONTENT_TYPE = "image/png";
@@ -255,7 +281,7 @@ class StatusImageTest {
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("1656"));
+        assertThat(Integer.valueOf(statusImage.getLength()), is(1656));
     }
 
     @Test
@@ -264,6 +290,79 @@ class StatusImageTest {
         StatusImage statusImage = new StatusImage(fileName);
         assertThat(statusImage.getEtag(), containsString(fileName));
         // assertThat(statusImage.getContentType(), is(PNG_CONTENT_TYPE));
-        assertThat(statusImage.getLength(), is("656"));
+        assertThat(Integer.valueOf(statusImage.getLength()), is(656));
+    }
+
+    // ========================================================================
+    // Font Loading Tests - Added for performance fix verification
+    // ========================================================================
+    @Test
+    void testConcurrentFontLoading() throws Exception {
+        // Test thread safety of font loading mechanism
+        final int threadCount = 10 + RANDOM.nextInt(10);
+        final String testText = "Concurrent Test " + RANDOM.nextInt();
+        final int textWidth = new StatusImage().measureText(testText);
+        assertThat(textWidth, is(greaterThan(5 * testText.length())));
+        final CountDownLatch startLatch = new CountDownLatch(1);
+        final CountDownLatch doneLatch = new CountDownLatch(threadCount);
+        final AtomicReference<Exception> exception = new AtomicReference<>();
+        final AtomicInteger successCount = new AtomicInteger(0);
+
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+        try {
+            // Start multiple threads that will all try to measure text concurrently
+            for (int i = 0; i < threadCount; i++) {
+                executor.submit(() -> {
+                    try {
+                        startLatch.await(); // Wait for all threads to be ready
+
+                        assertThat(new StatusImage().measureText(testText), is(textWidth));
+                        successCount.incrementAndGet();
+                    } catch (Exception e) {
+                        exception.set(e);
+                    } finally {
+                        doneLatch.countDown();
+                    }
+                });
+            }
+
+            startLatch.countDown(); // Start all threads
+
+            boolean completed = doneLatch.await(10, TimeUnit.SECONDS);
+            assertThat("All threads should complete within timeout", completed, is(true));
+            assertThat("Exception thrown during thread test", exception.get(), is(nullValue()));
+            assertThat("All threads should succeed in measuring text", successCount.get(), is(threadCount));
+
+        } finally {
+            executor.shutdown();
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+        }
+    }
+
+    @Test
+    void testFontLoadingRobustness() throws Exception {
+        // Test that font loading is robust to various text inputs
+        StatusImage statusImage = new StatusImage();
+
+        assertThat("Unexpected empty string width", statusImage.measureText(""), is(0));
+        assertThat("Unexpected single space string width", statusImage.measureText(" "), is(3));
+        assertThat("Unexpected single 'i' string width", statusImage.measureText("i"), is(3));
+
+        String[] testInputs = {
+            "A", // Single character
+            "M", // Single character
+            "W", // Single character
+            "The quick brown fox", // Normal text
+            "Text with numbers " + RANDOM.nextInt(), // Alphanumeric
+            "Special chars: !@#$%^&*()", // Special characters
+            "Unicode: αβγδε", // Unicode characters
+            "Very long text that goes on and on and should still be measured correctly " + RANDOM.nextDouble()
+        };
+
+        for (String input : testInputs) {
+            int width = statusImage.measureText(input);
+            assertThat("Insufficient width for input: " + input, width, greaterThan(input.length() * 5));
+        }
     }
 }
