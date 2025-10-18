@@ -26,6 +26,8 @@ package org.jenkinsci.plugins.badge;
 import hudson.model.BallColor;
 import java.io.IOException;
 import java.util.Map;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 public class ImageResolver {
     private static final Map<String, String> STATUSES = Map.of(
@@ -36,6 +38,21 @@ public class ImageResolver {
             "blue", "running",
             "disabled", "disabled",
             "notbuilt", "not run");
+
+    @Restricted(NoExternalUse.class)
+    public static String getStatus(BallColor color) {
+        String colorName = color.getIconName();
+
+        if (colorName.contains("anime")) {
+            return "running";
+        }
+
+        if (colorName.equals("blue")) {
+            colorName = "brightgreen";
+        }
+
+        return STATUSES.get(colorName);
+    }
 
     public StatusImage getImage(
             BallColor color,

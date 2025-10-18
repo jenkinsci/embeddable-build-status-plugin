@@ -14,12 +14,14 @@
 This plugin provides customizable badges (similar to [shields.io](https://shields.io)) to any website.
 A [text variant](#text-variant) is also available that returns the build status as text.
 
+![Screenshot](src/doc/screenshot.png)
+
 For each variant there are two URLs available for inclusion:
 - **protected** exposes the badge to users having at least `Read` permission on the job:
 
   Example: \
-  `http://<jenkinsroot>/path/to/job/badge/icon?...` <small>(for jobs)</small> \
-  `http://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?...` <small></small>(for builds)
+  `https://<jenkinsroot>/path/to/job/badge/icon?...` <small>(for jobs)</small> \
+  `https://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?...` <small></small>(for builds)
 
   If you omit any query parameter the default badge for the job/build will be returned:
 
@@ -27,7 +29,7 @@ For each variant there are two URLs available for inclusion:
 
 - **unprotected**  exposes the badge to users having at least `ViewStatus` permission on the job
 
-  Example: `http://<jenkinsroot>/buildStatus?...`
+  Example: `https://<jenkinsroot>/buildStatus?...`
 
   To select a specific job and build use the query parameters [job](#job) and [build](#build)
 
@@ -217,9 +219,9 @@ pipeline {
 
 You can use the `config` query parameter to reference the `win32build` id:
 
-`http://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?config=win32build`
+`https://<jenkinsroot>/path/to/job/<buildNumber>/badge/icon?config=win32build`
 
-`http://<jenkinsroot>/buildStatus/icon?job=...&build=...&config=win32build`
+`https://<jenkinsroot>/buildStatus/icon?job=...&build=...&config=win32build`
 
 ![Passing](src/doc/config_example_1.svg "Passing")
 ![Failing](src/doc/config_example_2.svg "Failing")

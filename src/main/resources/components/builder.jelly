@@ -1,0 +1,91 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:t="/lib/hudson">
+  <l:layout title="${%Embeddable Build Status} - ${it.project.displayName}" type="one-column">
+    <j:set var="fullJobName" value="${it.urlEncodedFullName}"/>
+    <j:set var="jobUrl"      value="${it.url}"/>
+    <j:set var="badgeUrl"    value="${jobUrl}badge/icon"/>
+    <j:set var="textUrl"     value="${jobUrl}badge/text"/>
+    <j:set var="publicBadge" value="${app.rootUrl}buildStatus/icon?job=${fullJobName}"/>
+    <j:set var="publicText"  value="${app.rootUrl}buildStatus/text?job=${fullJobName}"/>
+
+    <l:header>
+      <script src="${app.rootUrl}/plugin/embeddable-build-status/css/builder.js" type="text/javascript" defer="true" />
+      <link rel='stylesheet' href='${app.rootUrl}/plugin/embeddable-build-status/css/design.css' type='text/css'/>
+    </l:header>
+
+    <l:main-panel>
+      <l:app-bar title="${%Embeddable Build Status}">
+        <t:help href="https://plugins.jenkins.io/embeddable-build-status/" />
+      </l:app-bar>
+
+      <div class="jenkins-page-description">
+        ${%description}
+      </div>
+
+      <div class="ebs-builder"
+           data-job-url="${jobUrl}"
+           data-badge-url="${badgeUrl}"
+           data-public-badge-url="${publicBadge}"
+           data-text-url="${textUrl}"
+           data-public-text-url="${publicText}"
+           style="--status: var(--${it.colorVariable})">
+        <div class="ebs-builder__controls">
+          <f:entry title="${%Style}">
+            <div class="jenkins-select">
+              <select class="jenkins-select__input ebs-input" name="style">
+                <option value="flat">Flat</option>
+                <option value="flat-square">Flat Square</option>
+                <option value="plastic">Plastic</option>
+              </select>
+            </div>
+          </f:entry>
+          <f:entry title="${%Subject}">
+            <input name="subject"
+                   class="jenkins-input ebs-input"
+                   maxlength="25"
+                   placeholder="build" />
+          </f:entry>
+          <div>
+            <f:entry title="${%Status}">
+              <input name="status"
+                     class="jenkins-input ebs-input"
+                     maxlength="25"
+                     placeholder="${it.status}" />
+            </f:entry>
+          </div>
+        </div>
+        <div class="ebs-builder__preview">
+          <img id="image-preview" alt="Badge" src="icon" />
+          <div class="ebs-copy-container">
+            <div class="ebs-copy-container__controls">
+              <label for="type" class="jenkins-visually-hidden">Type</label>
+              <div class="jenkins-select">
+                <select class="jenkins-select__input ebs-input" id="type" name="type">
+                  <option value="markdown">Markdown</option>
+                  <option value="image">Image</option>
+                  <option value="html">HTML</option>
+                  <option value="asciidoc">Asciidoc</option>
+                  <option value="confluence">Confluence</option>
+                  <option value="xwiki">XWiki</option>
+                  <option value="rdoc">RDoc</option>
+                  <option value="textile">Textile</option>
+                  <option value="bitbucket">Bitbucket</option>
+                  <option value="text">Plain text</option>
+                </select>
+              </div>
+
+              <span class="jenkins-checkbox" tooltip="${%protectedTooltip}">
+                <input type="checkbox" name="protected" id="protected" checked="true" />
+                <label for="protected">Protected</label>
+              </span>
+            </div>
+            <div class="jenkins-quote jenkins-quote--monospace">
+              <input readonly="true" />
+              <l:copyButton iconOnly="true" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>

@@ -1,10 +1,118 @@
-h2 {
-    margin-bottom: 1px;
-    margin-top: 1em;
+.ebs-builder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: var(--form-input-border-radius);
+    overflow: hidden;
+    padding: calc(var(--section-padding) * 2) var(--section-padding) var(--section-padding) var(--section-padding);
+
+    @media (max-width: 1000px) {
+        flex-direction: column-reverse;
+        gap: 2rem;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: var(--card-background);
+        background-image:
+                    radial-gradient(at 50% 100%, var(--light-red), transparent 70%),
+                    radial-gradient(at 20% 100%, var(--light-blue), transparent 80%),
+                    radial-gradient(at 80% 100%, var(--light-orange), transparent 80%),
+                    radial-gradient(at 50% 0%, var(--status), transparent 75%);
+        z-index: -1;
+        opacity: 0.075;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: var(--jenkins-border);
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    & > div {
+        width: 100%;
+        max-width: 360px;
+
+        &:last-of-type {
+            max-width: 460px;
+        }
+
+        @media (max-width: 1000px) {
+            max-width: unset !important;
+        }
+    }
 }
 
-h3.help-format {
-    border-bottom: 1px solid grey;
-    margin-bottom: 1px;
-    margin-top: 1em;
+.ebs-builder__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2.5rem;
+
+    img {
+        height: 30px;
+        view-transition-name: badge;
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.1));
+    }
+}
+
+.ebs-copy-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.ebs-copy-container__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 450;
+    padding-inline: 0.875rem;
+    padding-bottom: 0.25rem;
+
+    .jenkins-form-label {
+        visibility: collapse;
+        margin: 0;
+    }
+
+    .jenkins-select {
+        width: unset !important;
+        box-shadow: none;
+    }
+
+    .ebs-input {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none;
+        min-height: 0;
+        padding: 0.75rem 2rem 0.75rem 0;
+        field-sizing: content;
+    }
+}
+
+.jenkins-quote {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
+
+    input {
+        background: none;
+        border: none;
+        margin: -0.75rem;
+        padding: 0.75rem 0 0.75rem 0.75rem;
+        cursor: text;
+        width: 100%;
+        view-transition-name: input;
+    }
+}
+
+::view-transition-group(input) {
+    animation-duration: 0.15s;
 }
