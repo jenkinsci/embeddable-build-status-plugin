@@ -74,9 +74,9 @@
                 </select>
               </div>
 
-              <span class="jenkins-checkbox" tooltip="${%secureTooltip}">
-                <input type="checkbox" name="secure" id="secure" />
-                <label for="secure">Secure</label>
+              <span class="jenkins-checkbox" tooltip="${%protectedTooltip}">
+                <input type="checkbox" name="protected" id="protected" />
+                <label for="protected">Protected</label>
               </span>
             </div>
             <div class="jenkins-quote jenkins-quote--monospace">

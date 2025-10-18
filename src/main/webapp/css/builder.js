@@ -3,20 +3,20 @@ const type = document.querySelector("select[name='type']");
 const style = document.querySelector("select[name='style']");
 const subject = document.querySelector("input[name='subject']");
 const status = document.querySelector("input[name='status']");
-const secureCheckbox = document.querySelector("input[name='secure']");
+const protectedCheckbox = document.querySelector("input[name='protected']");
 const imagePreview = document.querySelector("#image-preview");
 const copyButton = document.querySelector(".jenkins-copy-button");
 const imageUrlInput = document.querySelector(".jenkins-quote input");
 
-[type, style, subject, status, secureCheckbox].forEach(element => {
+[type, style, subject, status, protectedCheckbox].forEach(element => {
     element.addEventListener('change', () => {
         generateUrl();
     })
 })
 
 function generateUrl() {
-    const badgeUrl = secureCheckbox.checked ? builder.dataset.publicBadgeUrl : builder.dataset.badgeUrl;
-    const textUrl = secureCheckbox.checked ? builder.dataset.publicTextUrl : builder.dataset.textUrl;
+    const badgeUrl = protectedCheckbox.checked ? builder.dataset.badgeUrl : builder.dataset.publicBadgeUrl;
+    const textUrl = protectedCheckbox.checked ? builder.dataset.textUrl : builder.dataset.publicTextUrl;
     const jobUrl = builder.dataset.jobUrl;
 
     const searchParams = new URLSearchParams();
