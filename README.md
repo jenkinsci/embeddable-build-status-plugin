@@ -14,7 +14,7 @@
 This plugin provides customizable badges (similar to [shields.io](https://shields.io)) to any website.
 A [text variant](#text-variant) is also available that returns the build status as text.
 
-![Screenshot](doc/images/screenshot.png)
+![Screenshot](docs/images/screenshot.png)
 
 For each variant there are two URLs available for inclusion:
 - **protected** exposes the badge to users having at least `Read` permission on the job:
