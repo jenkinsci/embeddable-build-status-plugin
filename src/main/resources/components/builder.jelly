@@ -75,7 +75,7 @@
               </div>
 
               <span class="jenkins-checkbox" tooltip="${%protectedTooltip}">
-                <input type="checkbox" name="protected" id="protected" />
+                <input type="checkbox" name="protected" id="protected" checked="true" />
                 <label for="protected">Protected</label>
               </span>
             </div>
