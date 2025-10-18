@@ -9,8 +9,8 @@
     <j:set var="publicText"  value="${app.rootUrl}buildStatus/text?job=${fullJobName}"/>
 
     <l:header>
-      <script src="${app.rootUrl}/plugin/embeddable-build-status/css/builder.js" type="text/javascript" defer="true" />
-      <link rel='stylesheet' href='${app.rootUrl}/plugin/embeddable-build-status/css/design.css' type='text/css'/>
+      <script src="${rootURL}/plugin/embeddable-build-status/css/builder.js" type="text/javascript" defer="true" />
+      <link rel='stylesheet' href='${rootURL}/plugin/embeddable-build-status/css/design.css' type='text/css'/>
     </l:header>
 
     <l:main-panel>
