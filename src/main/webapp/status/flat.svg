@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="{{fullwidth}}" height="20">
+<svg xmlns="http://www.w3.org/2000/svg" width="{{fullwidth}}" height="20">{{linkStart}}
     <linearGradient id="a" x2="0" y2="100%">
         <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
         <stop offset="1" stop-opacity=".1"/>
@@ -14,5 +14,5 @@
         <text x="{{subjectPos}}" y="14">{{subject}}</text>
         <text x="{{statusPos}}" y="15" fill="#010101" fill-opacity=".3">{{status}}</text>
         <text x="{{statusPos}}" y="14">{{status}}</text>
-    </g>
+    </g>{{linkEnd}}
 </svg>

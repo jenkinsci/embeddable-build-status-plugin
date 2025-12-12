@@ -153,7 +153,8 @@ class StatusImage implements HttpResponse {
             String subjectPos = String.valueOf((widths[0] / 2) + 1);
             String statusPos = String.valueOf(widths[0] + (widths[1] / 2) - 1);
             String animatedOverlay = "";
-            String linkCode = "<svg xmlns";
+            String linkStart = "";
+            String linkEnd = "";
 
             // first: add animated overlay
             if (animatedSnippet != null) {
@@ -170,9 +171,8 @@ class StatusImage implements HttpResponse {
                     URL url = new URL(link);
                     final String protocol = url.getProtocol();
                     if ("http".equals(protocol) || "https".equals(protocol)) {
-                        linkCode = "<svg onclick=\"window.open(&quot;"
-                                + link
-                                + "&quot;);\" style=\"cursor: pointer;\" xmlns";
+                        linkStart = "<a href=\"" + link + "\" target=\"_blank\">";
+                        linkEnd = "</a>";
                     } else {
                         LOGGER.log(Level.FINE, "Invalid link protocol: {0}", protocol);
                     }
@@ -192,7 +192,8 @@ class StatusImage implements HttpResponse {
                         .replace("{{subject}}", subject)
                         .replace("{{status}}", status)
                         .replace("{{color}}", color)
-                        .replace("<svg xmlns", linkCode)
+                        .replace("{{linkStart}}", linkStart)
+                        .replace("{{linkEnd}}", linkEnd)
                         .getBytes(StandardCharsets.UTF_8);
             }
 
