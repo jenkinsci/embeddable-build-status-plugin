@@ -80,9 +80,9 @@ class PublicBuildStatusActionSecurityTest {
         ExtensionList.lookup(JobSelectorExtensionPoint.class).add(0, jobSelector);
 
         try (ACLContext c = ACL.as(User.getById("alice", true))) {
-            HttpResponses.HttpResponseException ex =
-                    assertThrows(HttpResponses.HttpResponseException.class, () -> new PublicBuildStatusAction()
-                            .doText(null, null, job.getName(), null));
+            HttpResponses.HttpResponseException ex = assertThrows(
+                    HttpResponses.HttpResponseException.class,
+                    () -> new PublicBuildStatusAction().doText(null, null, job.getName(), null));
             assertThat(ex, instanceOf(HttpResponses.notFound().getClass()));
         }
     }
