@@ -70,9 +70,6 @@ public class RunBadgeAction implements Action, IconSpec {
         if (project == null) {
             return "null-project-no-url-encoded-fullName";
         }
-        if (project.getFullName() == null) {
-            return "null-project-fullName-no-url-encoded-fullName";
-        }
         String fullName = URLEncoder.encode(project.getFullName(), StandardCharsets.UTF_8);
         return fullName == null ? "null-url-encoded-fullName" : fullName;
     }
