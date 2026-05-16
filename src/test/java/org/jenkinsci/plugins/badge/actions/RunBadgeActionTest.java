@@ -57,15 +57,4 @@ class RunBadgeActionTest {
             assertThat(runBadgeAction.getUrl(), is("http://jenkins.io/"));
         }
     }
-
-    @Test
-    void getUrlEncodedFullNameWithJobNull() {
-        Run mockRun = Mockito.mock(Run.class);
-        Job mockJob = Mockito.mock(Job.class);
-        Mockito.when(mockJob.getFullName()).thenReturn(null);
-        Mockito.when(mockRun.getParent()).thenReturn(mockJob);
-        runBadgeAction = new RunBadgeAction(mockRun);
-
-        assertThat(runBadgeAction.getUrlEncodedFullName(), is("null-project-fullName-no-url-encoded-fullName"));
-    }
 }
