@@ -75,6 +75,10 @@ public class JobBadgeAction implements Action, IconSpec {
         return fullName == null ? "null-url-encoded-fullName" : fullName;
     }
 
+    public Integer getNumber() {
+        return null;
+    }
+
     @WebMethod(name = "icon")
     public HttpResponse doIcon(
             @QueryParameter String build,

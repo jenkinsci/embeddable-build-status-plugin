@@ -74,6 +74,10 @@ public class RunBadgeAction implements Action, IconSpec {
         return fullName == null ? "null-url-encoded-fullName" : fullName;
     }
 
+    public Integer getNumber() {
+        return run.getNumber();
+    }
+
     @WebMethod(name = "icon")
     public HttpResponse doIcon(
             @QueryParameter String style,

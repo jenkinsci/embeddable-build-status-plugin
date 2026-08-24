@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.badge.actions;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,5 +52,28 @@ class RunBadgeActionJenkinsRuleTest {
     @Test
     void doText() {
         assertThat(action.doText(), is("Success"));
+    }
+
+    @Test
+    void getNumber() {
+        assertThat(action.getNumber(), is(1));
+    }
+
+    @Test
+    void badgePagePublicMarkdownIncludesBuildNumber() throws Exception {
+        String jenkinsUrl = j.getURL().toString();
+        String pageUrl = jenkinsUrl + action.run.getUrl() + "badge/";
+        String expectedPublicBadgeUrl = jenkinsUrl + "buildStatus/icon?job=" + action.getUrlEncodedFullName()
+                + "&amp;build=" + action.getNumber();
+        String expectedPublicTextUrl = jenkinsUrl + "buildStatus/text?job=" + action.getUrlEncodedFullName()
+                + "&amp;build=" + action.getNumber();
+
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            webClient.setJavaScriptEnabled(false);
+            String html = webClient.getPage(pageUrl).getWebResponse().getContentAsString();
+
+            assertThat(html, containsString("data-public-badge-url=\"" + expectedPublicBadgeUrl + "\""));
+            assertThat(html, containsString("data-public-text-url=\"" + expectedPublicTextUrl + "\""));
+        }
     }
 }

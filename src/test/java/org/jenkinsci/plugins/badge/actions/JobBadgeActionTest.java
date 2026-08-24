@@ -188,4 +188,26 @@ class JobBadgeActionTest {
         assertThat(notBuiltAction.doText(), is("Not built"));
         assertThat(successfulAction.doText(), is("Success"));
     }
+
+    @Test
+    void testGetNumber() {
+        assertThat(notBuiltAction.getNumber(), is(nullValue()));
+        assertThat(successfulAction.getNumber(), is(nullValue()));
+    }
+
+    @Test
+    void testBadgePagePublicMarkdownHasNoBuildNumber() throws Exception {
+        String jenkinsUrl = j.getURL().toString();
+        String pageUrl = jenkinsUrl + "job/" + successfulAction.getUrlEncodedFullName() + "/badge/";
+        String expectedPublicBadgeUrl = jenkinsUrl + "buildStatus/icon?job=" + successfulAction.getUrlEncodedFullName();
+        String expectedPublicTextUrl = jenkinsUrl + "buildStatus/text?job=" + successfulAction.getUrlEncodedFullName();
+
+        try (JenkinsRule.WebClient webClient = j.createWebClient()) {
+            webClient.setJavaScriptEnabled(false);
+            String html = webClient.getPage(pageUrl).getWebResponse().getContentAsString();
+
+            assertThat(html, containsString("data-public-badge-url=\"" + expectedPublicBadgeUrl + "\""));
+            assertThat(html, containsString("data-public-text-url=\"" + expectedPublicTextUrl + "\""));
+        }
+    }
 }

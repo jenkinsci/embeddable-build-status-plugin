@@ -5,8 +5,9 @@
     <j:set var="jobUrl"      value="${it.url}"/>
     <j:set var="badgeUrl"    value="${jobUrl}badge/icon"/>
     <j:set var="textUrl"     value="${jobUrl}badge/text"/>
-    <j:set var="publicBadge" value="${app.rootUrl}buildStatus/icon?job=${fullJobName}"/>
-    <j:set var="publicText"  value="${app.rootUrl}buildStatus/text?job=${fullJobName}"/>
+    <j:set var="publicBuildPart" value="${it.number != null ? '&amp;build=' + it.number : ''}"/>
+    <j:set var="publicBadge" value="${app.rootUrl}buildStatus/icon?job=${fullJobName}${publicBuildPart}"/>
+    <j:set var="publicText"  value="${app.rootUrl}buildStatus/text?job=${fullJobName}${publicBuildPart}"/>
 
     <l:header>
       <script src="${rootURL}/plugin/embeddable-build-status/css/builder.js" type="text/javascript" defer="true" />
