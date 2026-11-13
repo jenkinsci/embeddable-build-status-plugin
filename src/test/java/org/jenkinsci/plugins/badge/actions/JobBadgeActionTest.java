@@ -97,25 +97,24 @@ class JobBadgeActionTest {
         String[] styles = {"plastic", "flat", "flat-square"};
         String style = styles[random.nextInt(styles.length)];
         String expectedStyle;
-        String unexpectedStyle =
-                switch (style) {
-                    case "plastic" -> {
-                        expectedStyle = "<stop offset=\".1\"";
-                        yield " fill=\"white\" fill-opacity=\"0.1\"/>";
-                    }
-                    case "flat" -> {
-                        expectedStyle = "<linearGradient id=\"a\" x2=\"0\" y2=\"100%\">";
-                        yield "<stop offset=\".1\"";
-                    }
-                    case "flat-square" -> {
-                        expectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
-                        yield "fill-opacity=\".3\">" + subject + "</text>";
-                    }
-                    default -> {
-                        expectedStyle = "not-a-valid-style";
-                        yield "never-should-be-used";
-                    }
-                };
+        String unexpectedStyle = switch (style) {
+            case "plastic" -> {
+                expectedStyle = "<stop offset=\".1\"";
+                yield " fill=\"white\" fill-opacity=\"0.1\"/>";
+            }
+            case "flat" -> {
+                expectedStyle = "<linearGradient id=\"a\" x2=\"0\" y2=\"100%\">";
+                yield "<stop offset=\".1\"";
+            }
+            case "flat-square" -> {
+                expectedStyle = " fill=\"white\" fill-opacity=\"0.1\"/>";
+                yield "fill-opacity=\".3\">" + subject + "</text>";
+            }
+            default -> {
+                expectedStyle = "not-a-valid-style";
+                yield "never-should-be-used";
+            }
+        };
 
         // Get the Jenkins URL
         String jenkinsUrl = j.getURL().toString() + "job/" + action.getUrlEncodedFullName() + "/badge/" + lastComponent;
