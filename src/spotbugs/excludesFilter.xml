@@ -36,6 +36,11 @@
     <Bug pattern="DM_CONVERT_CASE" />
     <Class name="org.jenkinsci.plugins.badge.StatusImage" />
   </Match>
+  <Match>
+    <!-- Accepted that this won't be fixed - retain compatibility -->
+    <Bug pattern="MC_OVERRIDABLE_METHOD_CALL_IN_CONSTRUCTOR" />
+    <Class name="org.jenkinsci.plugins.badge.StatusImage" />
+  </Match>
 
   <!--
     Here lies technical debt. Exclusions in this section have not yet
